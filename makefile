@@ -66,6 +66,7 @@ repro_files = \
 	$(repro_dir)/28mer_models.py \
 	$(repro_dir)/codon_scores.py \
 	$(repro_dir)/aggregate_mses.py \
+	$(repro_dir)/aggregate_linreg_mses.py \
 	$(repro_dir)/plot_nn.py \
 	$(repro_dir)/plot_genes.py \
 	$(repro_dir)/paper_data.py \
@@ -461,7 +462,7 @@ iwasaki_gene_seq_file = $(genome_dir)/gencode.v22.transcript.13cds10.fa
 
 iwasaki_raw_fastq_files = \
 	$(iwasaki_proc_dir)/SI1DMSO1.fastq \
-	$(iwasaki_proc_dir)/SI1DMSO2.fastq \
+	$(iwasaki_proc_dir)/SI1DMSO2.fastq 
 iwasaki_trimmer_script = $(iwasaki_proc_dir)/trim_linker.pl
 iwasaki_mapping_script = $(iwasaki_proc_dir)/iwasaki.sh
 
@@ -590,7 +591,7 @@ green_gene_seq_file = $(genome_dir)/yeast_13cds10.fa
 
 green_raw_fastq_files = \
 	$(green_proc_dir)/SRR5008134.fastq \
-	$(green_proc_dir)/SRR5008135.fastq \
+	$(green_proc_dir)/SRR5008135.fastq 
 green_trimmer_script = $(green_proc_dir)/trim_linker_green.pl
 green_mapping_script = $(green_proc_dir)/green.sh
 
@@ -855,14 +856,14 @@ $(weinberg_subdirs_pattern): | $(weinberg_expt_dir)
 
 #NOTE: This is missing a bunch of prereqs
 $(weinberg_raw_sam_file): \
-		$(weinberg_raw_fastq_file) \
+		| $(weinberg_raw_fastq_file) \
 		$(weinberg_trimmer_script) \
 		$(weinberg_mapping_script) \
-		| $(weinberg_proc_dir)
+		$(weinberg_proc_dir)
 	bash $(weinberg_mapping_script) $(genome_dir) $(weinberg_proc_dir)
 
-$(weinberg_sam_file): $(weinberg_raw_sam_file) \
-                       | $(weinberg_proc_dir) $(weinberg_expt_dir)
+$(weinberg_sam_file): | $(weinberg_raw_sam_file) \
+                      $(weinberg_proc_dir) $(weinberg_expt_dir)
 	python $(repro_dir)/process_data.py edit_sam_file weinberg \
 		$(weinberg_expt_dir) $(weinberg_raw_sam_file)
 

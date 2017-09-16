@@ -245,6 +245,8 @@ def load_lasagne_feedforward_nn(nn_dir, epoch):
         params["max_struc_width"] = None
     if not params.get("aa_feats", False):
         params["aa_feats"] = False
+    if not params.get("nonnegative", False):
+        params["nonnegative"] = False
     X_tr, _, X_te, _ = proc.load_lasagne_data(
         params["gene_len_fname"], params["gene_seq_fname"],
         params["tr_codons_fname"], params["te_codons_fname"],
@@ -255,6 +257,7 @@ def load_lasagne_feedforward_nn(nn_dir, epoch):
         max_struc_start_idx=params["max_struc_start_idx"], 
         max_struc_width=params["max_struc_width"], 
         aa_feats=params["aa_feats"],
+        nonnegative=params["nonnegative"],
         filter_pct=params["filter_pct"])
 
     my_nn = lasagnenn.FeedforwardMLP(
