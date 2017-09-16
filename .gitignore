@@ -2,6 +2,7 @@
 *scer.transcripts*
 *.fold
 *.27.31.*
+*.27.30.*
 *.27.29.*
 *.28.28.*
 *.footprints.bowtiestats
@@ -10,6 +11,8 @@
 *.ncrna.sam
 *.rrna.bowtiestats
 *.rrna.sam
+*.rrna_trna.bowtiestats
+*.rrna_trna.sam
 *.genes.results
 *.isoforms.results
 *.rsem.stderr
@@ -22,3 +25,4 @@
 *lasagne_nn
 *linreg
 *plots
+*results
