@@ -713,7 +713,7 @@ fig_files = \
 	$(fig_dir)/figure_1C_mse.pdf \
 	$(fig_dir)/figure_1D_scatter.pdf \
 	$(fig_dir)/figure_1E_indiv_gene.pdf \
-	$(fig_dir)/figure_1F_binnederror.pdf \
+	$(fig_dir)/figure_1F_binned_error.pdf \
 	$(fig_dir)/figure_2A_codonmse.pdf \
 	$(fig_dir)/figure_2B_heatmap.pdf \
 	$(fig_dir)/figure_2C_tai.pdf \
@@ -883,7 +883,7 @@ $(weinberg_27_31_proc_sam_pattern): \
 		$(weinberg_expt_dir) $(weinberg_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(yeast_paralogs_file)
-		
+
 $(weinberg_28_proc_sam_pattern): \
 		$(weinberg_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) | \
@@ -936,7 +936,7 @@ $(weinberg_leaveout_series_pattern): \
 		$(model_name) $(model_rep) \
 		$(weinberg_expt_dir) $(weinberg_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
-        	$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
+		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
 		$(weinberg_27_31_outputs) 30
 
 $(weinberg_28mer_pattern): \
@@ -1051,7 +1051,7 @@ $(weinberg_results_28_epoch_dir): | $(weinberg_results_28_dir)
 
 #$(weinberg_28_codon_scores_files_pattern): | $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25
 #	python $(repro_dir)/codon_scores.py $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17 25
-		
+
 
 #NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
 $(weinberg_full_codon_scores_results_files_pattern): \
@@ -1168,7 +1168,7 @@ $(weinberg_final_model_y_te_hat): \
 	python $(repro_dir)/pkl2txt.py \
 		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/y_te_hat.pkl \
 		$(weinberg_final_model_y_te_hat)
-		
+
 $(weinberg_results_final_model_y_te): \
 		$(weinberg_final_model_y_te) \
 		| $(weinberg_results_struc_epoch_dir) 
@@ -1808,11 +1808,11 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_27_31_te_data_table) \
 		$(weinberg_results_final_model_y_te_hat) \
 		| $(repro_dir)/figure_1B_scaledcts.R $(fig_dir)
-	Rscript $(repro_dir)/figure_1B_scaledcts.pdf \
+	Rscript $(repro_dir)/figure_1B_scaledcts.R \
 		YOL086C 166 \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
-	
+
 $(fig_dir)/figure_1C_mse.pdf: \
 		$(weinberg_feat_nb_mses_file) \
 		$(weinberg_feat_nb_linreg_mses_file) \
@@ -1847,14 +1847,14 @@ $(fig_dir)/figure_1E_indiv_gene.pdf: \
 		$(yeast_gene_symbol_file) \
 		$(fig_dir)/figure_1E_indiv_gene.pdf
 
-$(fig_dir)/figure_1F_binnederror.pdf: \
+$(fig_dir)/figure_1F_binned_error.pdf: \
 		$(weinberg_results_final_model_y_te) \
 		$(weinberg_results_final_model_y_te_hat) \
-		| $(repro_dir)/figure_1F_binnederror.R $(fig_dir)
-	Rscript $(repro_dir)/figure_1F_binnederror.R \
+		| $(repro_dir)/figure_1F_binned_error.R $(fig_dir)
+	Rscript $(repro_dir)/figure_1F_binned_error.R \
 		$(weinberg_results_final_model_y_te) \
 		$(weinberg_results_final_model_y_te_hat) \
-		$(fig_dir)/figure_1F_binnederror.pdf
+		$(fig_dir)/figure_1F_binned_error.pdf
 
 $(fig_dir)/figure_2A_codonmse.pdf: \
 		$(weinberg_leaveout_mses_file) \
@@ -1883,8 +1883,8 @@ $(fig_dir)/figure_2C_tai.pdf: \
 $(fig_dir)/figure_2D_wobble.pdf: \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(yeast_codon_anticodon_file) \
-		| $(repro_dir)/figure_2D_wobble.pdf.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2D_wobble.pdf.R \
+		| $(repro_dir)/figure_2D_wobble.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2D_wobble.R \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(yeast_codon_anticodon_file) \
 		$(fig_dir)/figure_2D_wobble.pdf
