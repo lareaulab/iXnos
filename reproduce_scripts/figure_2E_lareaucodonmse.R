@@ -23,9 +23,10 @@ label2 = c(NA,-6,NA,-4,NA,"E",NA,"A",NA,2,NA,4,NA)
 ymin = min( diff - 2 * diff.se )
 ymax = max( diff + 2 * diff.se )
 
-pdf( out_fname, width=2, height=1.67, pointsize = 7)
+#pdf( out_fname, width=2, height=1.67, pointsize = 7, useDingbats = F, bg = "white" )
+cairo_pdf( out_fname, width=2, height=1.67, pointsize = 7)
 par( mex = 0.65 )
-par( mar = c(6,5.5,1,3) )
+par( mar = c(6,5.5,5,3) )
 par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
 centers = barplot( diff,

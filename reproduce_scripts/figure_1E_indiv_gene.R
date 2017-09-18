@@ -1,5 +1,5 @@
 # individual example gene
-# figure 1F
+# figure 1E
 # data: Weinberg yeast
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -16,9 +16,9 @@ data$yhat = y_hat$V1
 ### gene name matching
 namemap = read.delim( id_fname, header=F, row.names=1 )
 
-g = data[data$gene == paste0(id,"_13cds10"),]
+g = data[data$gene == id,]
 
-prepend = data.frame(gene = rep(paste0(id,"_13cds10"), 20), 
+prepend = data.frame(gene = rep(id, 20), 
                      cod_idx = 0:19, cod_seq = rep(NA, 20), 
                      raw_cts = rep(NA, 20), scaled_cts = rep(NA, 20), 
                      yhat = rep(NA,20))
@@ -31,6 +31,9 @@ if(is.na(symbol)) { symbol = id }
 ymax = max( g$scaled_cts, g$yhat, na.rm = T )
 xmax = max( g$cod_idx, na.rm = T )
 raw.ymax = max( g$raw_cts, na.rm = T )
+
+message("ymax is ", ymax)
+message("xmax is ", xmax)
 
 ymean = sum( g$raw_cts, na.rm = T ) / (xmax - 20) # check these numbers...
 

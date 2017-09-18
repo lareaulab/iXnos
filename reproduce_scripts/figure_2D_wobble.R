@@ -62,9 +62,10 @@ P.pvals = unlist(P.pvals[levels(bp$pair)[myorder]])
 
 n = length(levels(bp$pair))
 
+#pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 cairo_pdf( out_fname, width=2, height=1.67, pointsize=7)
 par( mex = 0.65 ) 
-par( mar =c(6,5.5,5,3) )
+par( mar = c(6,5.5,5,3) )
 par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
 stripchart( P.site.score ~ factor(pair, levels = levels(pair)[myorder]), 
@@ -77,11 +78,13 @@ stripchart( P.site.score ~ factor(pair, levels = levels(pair)[myorder]),
             axes = F,
             ylab = "P site weight",
             col = s.cols[levels(bp$pair)[myorder]])
-axis( 2, at = seq(0, 1.2, by = 0.6), lwd = 0.75)
+# axis( 2, at = seq(0, 1.2, by = 0.6), lwd = 0.75)
+axis( 2, seq( round(min(bp$P.site.score)/2,1)*2, round(max(bp$P.site.score/2),1)*2, by = 0.4 ), lwd = 0.75)
 axis( 1, at = 1:n, labels = levels(bp$pair)[myorder], lwd = 0, cex.axis = 0.7)
-axis( 1, pos = -0.3, lwd = 0,
-      at = which( P.pvals * n < 0.05 ), labels = rep("**",length(which(P.pvals * n < 0.05))))
-
+axis( 1, pos = min(bp$P.site.score,na.rm=T) - (max(bp$P.site.score,na.rm=T) - min(bp$P.site.score,na.rm=T))/4,
+      lwd = 0,
+      at = which( P.pvals * n < 0.05 ),
+      labels = rep("**",length(which(P.pvals * n < 0.05))))
 mtext( "D", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
 

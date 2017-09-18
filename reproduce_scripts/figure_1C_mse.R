@@ -35,6 +35,7 @@ colors = c("mediumpurple1", "purple", "cornflowerblue", "darkslateblue")
 struc.colors = c("firebrick1", "firebrick")
 all.colors = c( rep(colors, 4), NA, NA, struc.colors)
 
+#pdf( out_fname, width = 2, height = 1.67, pointsize = 7, useDingbats = F, bg = "white" )
 cairo_pdf( out_fname, width = 2, height = 1.67, pointsize = 7 )
 par( mex = 0.65 ) # sets margin stuff (stupidly)
 par( mar = c(6,4.5,7,3) )

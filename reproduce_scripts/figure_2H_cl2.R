@@ -78,6 +78,11 @@ cl2.se.abs = cl2.ratio * cl2.se.percent
 
 ymax = max( cl1.ratio + cl1.se.abs, cl2.ratio + cl2.se.abs )
 
+ord = order(scores$cl2.lareau)
+up = ord[c(2,5)]
+down = ord[c(1,3,4,6)]
+
+#pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 cairo_pdf( out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar = c(6,8.5,5,6) )
@@ -97,6 +102,8 @@ arrows( scores$cl2.lareau, cl2.ratio - cl2.se.abs,
         scores$cl2.lareau, cl2.ratio + cl2.se.abs,
         angle = 90, code = 3, length = 0.025, lwd = 0.75, col = "gray50" )
 points( scores$cl2.lareau, cl2.ratio, pch=20, col = "blue" )
-text( scores$cl2.lareau, cl2.ratio - cl2.se.abs - 0.075, labels = row.names(scores), cex = 0.5, col = "gray50" )#mycols )
+par( xpd = NA )
+text( scores$cl2.lareau[down], cl2.ratio[down] - cl2.se.abs[down] - 0.075, labels = row.names(scores)[down], cex = 0.5, col = "gray50" )
+text( scores$cl2.lareau[up], cl2.ratio[up] + cl2.se.abs[up] + 0.075, labels = row.names(scores)[up], cex = 0.5, col = "gray50" )
 mtext( "H", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
