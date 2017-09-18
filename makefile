@@ -1809,7 +1809,7 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		| $(repro_dir)/figure_1B_scaledcts.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1B_scaledcts.R \
-		YOL086C 166 \
+		YLR044C 166 \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
 
@@ -1841,7 +1841,7 @@ $(fig_dir)/figure_1E_indiv_gene.pdf: \
 		$(yeast_gene_symbol_file) \
 		| $(repro_dir)/figure_1E_indiv_gene.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1E_indiv_gene.R \
-		YOL086C \
+		YLR044C \
 		$(weinberg_27_31_te_data_table) \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(yeast_gene_symbol_file) \
