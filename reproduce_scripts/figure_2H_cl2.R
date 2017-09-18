@@ -90,7 +90,7 @@ par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
 plot( scores$cl2.lareau, cl2.ratio,
       xlab = "bias score", ylab = "relative ligation", 
-      xlim = c(-1, 1.25), 
+#      xlim = c(-1, 1.25), 
       ylim = c(0,ymax),
       axes = F,
       pch = NA, bty = "n"
