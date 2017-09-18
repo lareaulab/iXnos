@@ -195,9 +195,9 @@ weinberg_27_31_proc_sam_files = \
 	$(weinberg_27_31_cts_by_codon) \
 	$(weinberg_27_31_outputs) \
 	$(weinberg_27_31_te_bounds) \
-	#$(weinberg_27_31_te_data_table) \
+#	$(weinberg_27_31_te_data_table) \
 	$(weinberg_27_31_tr_bounds) \
-	#$(weinberg_27_31_tr_data_table)
+#	$(weinberg_27_31_tr_data_table)
 
 weinberg_27_31_proc_sam_pattern = \
 	$(subst .txt,%txt,$(weinberg_27_31_cts_by_codon)) \
@@ -218,9 +218,9 @@ weinberg_28_proc_sam_files = \
 	$(weinberg_28_cts_by_codon) \
 	$(weinberg_28_outputs) \
 	$(weinberg_28_te_bounds) \
-	#$(weinberg_28_te_data_table) \
+#	$(weinberg_28_te_data_table) \
 	$(weinberg_28_tr_bounds) \
-	#$(weinberg_28_tr_data_table)
+#	$(weinberg_28_tr_data_table)
 
 weinberg_28_proc_sam_pattern = \
 	$(subst .txt,%txt,$(weinberg_28_cts_by_codon)) \
@@ -280,25 +280,25 @@ weinberg_full_codon_scores_results_files = \
 	$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 	$(weinberg_results_full_epoch_dir)/codon_scores_colormap.pdf
 
-	#$(weinberg_results_full_epoch_dir)/codon_scores.pkl \
+#	$(weinberg_results_full_epoch_dir)/codon_scores.pkl \
 
 weinberg_full_codon_scores_results_files_pattern = \
 	$(weinberg_results_full_epoch_dir)/codon_scores%tsv \
 	$(weinberg_results_full_epoch_dir)/codon_scores_colormap%pdf
 
-	#$(weinberg_results_full_epoch_dir)/codon_scores%pkl \
+#	$(weinberg_results_full_epoch_dir)/codon_scores%pkl \
 
 weinberg_28_codon_scores_results_files = \
 	$(weinberg_results_28_epoch_dir)/codon_scores.tsv \
 	$(weinberg_results_28_epoch_dir)/codon_scores_colormap.pdf
 
-	#$(weinberg_results_28_epoch_dir)/codon_scores.pkl \
+#	$(weinberg_results_28_epoch_dir)/codon_scores.pkl \
 
 weinberg_28_codon_scores_results_files_pattern = \
 	$(weinberg_results_28_epoch_dir)/codon_scores%tsv \
 	$(weinberg_results_28_epoch_dir)/codon_scores_colormap%pdf
 
-	#$(weinberg_results_28_epoch_dir)/codon_scores%pkl \
+#	$(weinberg_results_28_epoch_dir)/codon_scores%pkl \
 
 weinberg_feat_nb_mses_file = \
 	$(weinberg_results_feat_neighborhood_dir)/feat_neighborhood_mses.txt
@@ -756,7 +756,7 @@ install: \
 	$(yeast_30_windows_str_scores_file)
 
 $(top_dir):
-	#Make main directory
+#	Make main directory
 	mkdir $(top_dir)
 
 $(lib_dir): | $(top_dir)
