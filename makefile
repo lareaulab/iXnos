@@ -1809,7 +1809,7 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		| $(repro_dir)/figure_1B_scaledcts.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1B_scaledcts.R \
-		YLR044C 166 \
+		YLR044C 40 \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
 
