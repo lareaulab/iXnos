@@ -198,7 +198,7 @@ def make_lasagne_feedforward_nn(
         filter_pct=filter_pct, rel_struc_idxs=rel_struc_idxs, 
         struc_fname=struc_fname, max_struc_start_idx=max_struc_start_idx, 
         max_struc_width=max_struc_width, aa_feats=aa_feats,
-        learning_rate=learning_rate, 
+        learning_rate=learning_rate, nonnegative=nonnegative,
         momentum=momentum, batch_size=batch_size, raw_psct=raw_psct)
     
     if log_y:
@@ -558,7 +558,7 @@ def plot_linreg(
             name + " Test fraction of points below error threshold",
             "{0}/te_err_thresh.{1}".format(plot_dir, ext))
 
-def get_linreg_optimal_codons(linreg_dir, aa_seq, maximum=True):
+def get_linreg_optimal_codons(linreg_dir, aa_seq, maximum=False):
     linreg_data_fname = linreg_dir + "/linreg_data.txt"
     d = proc.load_linreg_data_file(linreg_data_fname)
     rel_cod_idxs = d["rel_cod_idxs"]
@@ -566,7 +566,7 @@ def get_linreg_optimal_codons(linreg_dir, aa_seq, maximum=True):
     opt_total_seq, opt_vit_score = opt.get_optimal_codons_linreg(aa_seq, wts, rel_cod_idxs, maximum=maximum)
     return opt_total_seq, opt_vit_score
 
-def get_nn_optimal_codons(expt_dir, name, epoch, aa_seq, maximum=True):
+def get_nn_optimal_codons(expt_dir, name, epoch, aa_seq, maximum=False):
     my_nn = load_nn(expt_dir, name, epoch)
     init_data_fname = expt_dir + "/nn_data/{0}/init_data/init_data.txt".format(name)
     d = proc.load_init_data_file(init_data_fname)
@@ -575,7 +575,7 @@ def get_nn_optimal_codons(expt_dir, name, epoch, aa_seq, maximum=True):
     return opt_total_seq, opt_vit_score
 
 def get_lasagne_optimal_codons(
-        nn_dir, epoch, aa_seq, nn_type="Feedforward", maximum=True, 
+        nn_dir, epoch, aa_seq, nn_type="Feedforward", maximum=False, 
         nt_feats=False):
     init_data_pkl = nn_dir + "/init_data/init_data.pkl"
     params = proc.load_obj(init_data_pkl)

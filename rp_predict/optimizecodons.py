@@ -187,6 +187,13 @@ def get_seqs_to_lasagne_outputs(aa_seq, Asite_idx, my_nn, rel_cod_idxs, nt_feats
     return seqs_to_outputs
 
 def get_suffs_to_opt_prefs(seqs_to_vit_scores, maximum=True):
+    """
+        Input: dictionary of sequence neighborhoods to viterbi scores at one 
+        codon position
+
+        Output: dictionary of n-1 codon suffixes to 1 codon prefix that 
+        maximizes the viterbi score of the suffix
+    """
     suffs_to_opt_prefs = {}
     cod2let = get_codon_to_letters()
     let2cod = get_letter_to_codons()
