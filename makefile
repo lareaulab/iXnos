@@ -78,7 +78,8 @@ repro_files = \
 	$(repro_dir)/figure_2D.R \
 	$(repro_dir)/figure_2E.R \
 	$(repro_dir)/figure_2F.R \
-	$(repro_dir)/figure_2G.R
+	$(repro_dir)/figure_2G.R \
+	$(repro_dir)/supp_table_codon_scores.py
 
 expts_dir_name = expts
 expts_dir = $(top_dir)/$(expts_dir_name)
@@ -722,7 +723,8 @@ fig_files = \
 	$(fig_dir)/figure_2F_5prime.pdf \
 	$(fig_dir)/figure_2G_asite.pdf \
 	$(fig_dir)/figure_2H_cl2.pdf \
-	$(fig_dir)/figure_2I_cl1.pdf
+	$(fig_dir)/figure_2I_cl1.pdf \
+	$(fig_dir)/supp_table_codon_scores.csv
 
 ### paper data files
 
@@ -1937,6 +1939,14 @@ $(fig_dir)/figure_2I_cl1.pdf: \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(wetlab_dir)/circligase_qpcr.csv \
 		$(fig_dir)/figure_2I_cl1.pdf
+
+$(fig_dir)/supp_table_codon_scores.csv: \
+		| $(repro_dir)/supp_table_codon_scores.py \
+		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
+		$(fig_dir)
+	python $(repro_dir)/supp_table_codon_scores.py \
+		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
+		$(fig_dir)/supp_table_codon_scores.csv
 
 #################
 ### Paper data
