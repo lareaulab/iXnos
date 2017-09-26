@@ -12,11 +12,11 @@ def make_heatmap_tex_table(in_fname, out_fname):
     alpha = "ACGT"
     cods = [x + y + z for x in alpha for y in alpha for z in alpha]
     stops = ["TAA", "TAG", "TGA"]
-    header ="\t" + "\t".join([str(elt) for elt in range(-7,6)]) + "\n"
+    header ="codon," + ",".join([str(elt) for elt in range(-7,6)]) + "\n"
     out_file.write(header)
     for idx, cod in enumerate(cods):
         if cod not in stops:
-            line = "\t".join([cod] + [str(elt) for elt in dt[idx]]) + "\n"
+            line = ",".join([cod] + [str(elt) for elt in dt[idx]]) + "\n"
             out_file.write(line)
     in_file.close()
     out_file.close()
