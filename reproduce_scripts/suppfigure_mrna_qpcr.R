@@ -29,7 +29,7 @@ nn.scores =  sapply( colnames(mrna.ratio), function(x) { rep( cit[x,]$nn.score, 
 cols = rep( c("magenta","red","purple","cyan"), each = 3)
 
 
-cairo_pdf("supp_mrna.pdf", width=2, height=1.67, pointsize=7 )
+cairo_pdf("suppfigure_mrna_qpcr.pdf", width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )

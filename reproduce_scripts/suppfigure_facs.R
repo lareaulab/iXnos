@@ -27,7 +27,7 @@ nn.scores = as.data.frame( sapply( names(medians), function(x) { rep( cit[x,]$nn
 
 cols = rep( c("magenta", "red", "purple", "blue", "cyan", "green", "orange"), each = 8)
 
-cairo_pdf("supp_facs.pdf", width=2, height=1.67, pointsize=7 )
+cairo_pdf("suppfigure_facs.pdf", width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )
