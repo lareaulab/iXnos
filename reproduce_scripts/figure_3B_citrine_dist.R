@@ -1,0 +1,31 @@
+# plot the distribution of citrine scores
+
+sample = read.delim("sample_score_dist.tsv",header=F)
+cit = read.delim("citrine_scores.txt", header=T, row.names = 1, comment.char="#")
+names = c("CHA2", "MAX", "MIN", "Y000", "Y333", "Y666", "Y999")
+nn.scores = cit[names,"nn.score"]
+
+cols = c("magenta", "red", "purple", "blue", "cyan", "green", "orange")
+
+# not including CHA2
+cairo_pdf("figure_3B_citrine_dist.pdf", width=2, height=1.167, pointsize=7 )
+par( mex = 0.65 ) # sets margin stuff
+par( mar =c(6,2.5,3,3) )
+par( oma = c(0,0.5,1,0) )
+par( xpd = NA )
+hist( sample$V1, 
+      breaks = 30, 
+      col = "lightgrey",
+      border = NA,
+      xlim=c(150,400), 
+      axes=F, 
+      xlab = "NN score", 
+      ylab = NA,
+      main = NA )
+axis( 1 )#, lwd = 0, lwd.ticks = 1 )
+points(nn.scores[2:7], rep(750, length(nn.scores[2:7])), col = cols[2:7], pch = 20)
+text(nn.scores[c(3,2)],c(10000,10000),labels = c("best","worst"), col = c("purple", "red"))
+mtext( "B", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
+dev.off()
+
+
