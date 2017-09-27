@@ -1,7 +1,12 @@
-## mRNA
-cit = read.delim("citrine_scores.txt", header=T, row.names = 1, comment.char="#")
+args <- commandArgs(trailingOnly = TRUE)
+citrine_construct_scores_file = args[1]
+mrna_data_file = args[2]
+out_file = args[3]
 
-qpcr.data = read.delim("~/Berkeley/RegressionPaperLL/CodOpt/qpcr_20170906/cy0_summary.csv", sep=",", header=T )
+## mRNA
+cit = read.delim(citrine_construct_scores_file, header=T, row.names = 1, comment.char="#")
+
+qpcr.data = read.delim(mrna_data_file, sep=",", header=T )
 qpcr.data = qpcr.data[which(!(qpcr.data$Strain == "MAX" & qpcr.data$Isolate == 3)),]
 # this sample's pellet was aspirated - removing from all analysis
 
@@ -29,7 +34,7 @@ nn.scores =  sapply( colnames(mrna.ratio), function(x) { rep( cit[x,]$nn.score, 
 cols = rep( c("magenta","red","purple","cyan"), each = 3)
 
 
-cairo_pdf("suppfigure_mrna_qpcr.pdf", width=2, height=1.67, pointsize=7 )
+cairo_pdf(out_file, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )

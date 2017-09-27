@@ -1,14 +1,20 @@
 # plot the distribution of citrine scores
 
-sample = read.delim("sample_score_dist.tsv",header=F)
-cit = read.delim("citrine_scores.txt", header=T, row.names = 1, comment.char="#")
+args <- commandArgs(trailingOnly = TRUE)
+random_citrine_scores <- args[1]
+citrine_construct_scores <- args[2]
+out_fname <- args[3]
+
+sample = read.delim(random_citrine_scores,header=F)
+cit = read.delim( citrine_construct_scores, header=T, row.names = 1, 
+		  comment.char="#")
 names = c("CHA2", "MAX", "MIN", "Y000", "Y333", "Y666", "Y999")
 nn.scores = cit[names,"nn.score"]
 
 cols = c("magenta", "red", "purple", "blue", "cyan", "green", "orange")
 
 # not including CHA2
-cairo_pdf("figure_3B_citrine_dist.pdf", width=2, height=1.167, pointsize=7 )
+cairo_pdf(out_fname, width=2, height=1.167, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,2.5,3,3) )
 par( oma = c(0,0.5,1,0) )

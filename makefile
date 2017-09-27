@@ -37,7 +37,7 @@ genome_files = \
 	$(yeast_gene_symbol_file) \
 	$(yeast_codon_props_file) \
 	$(human_gene_len_file) \
-	$(human_gene_seq_file) \
+	$(human_gene_seq_file) 
 
 struc_dir_name = structure_data
 struc_dir = $(top_dir)/$(struc_dir_name)
@@ -47,13 +47,20 @@ yeast_30_windows_seqs_file = $(struc_dir)/scer.13cds10.windows.30len.fa
 yeast_30_windows_str_scores_file = $(struc_dir)/scer.13cds10.windows.30len.fold
 struc_files = \
 	$(yeast_30_windows_seqs_file) \
-	$(yeast_30_windows_str_scores_file) \
+	$(yeast_30_windows_str_scores_file) 
 
 wetlab_dir_name = wetlab_data
 wetlab_dir = $(top_dir)/$(wetlab_dir_name)
 circligase_qpcr_file = $(wetlab_dir)/circligase_qpcr.csv
+mrna_data_file = $(wetlab_dir)/mrna_cy0_summary_20170906.csv
+facs_data_zip_file = $(wetlab_dir)/gated-facs-data-20170829.csv.gz
+facs_data_file = $(wetlab_dir)/gated-facs-data-20170829.csv
+
 wetlab_files = \
 	$(circligase_qpcr_file) \
+	$(mrna_data_file) \
+	$(facs_data_zip_file) \
+	$(facs_data_file) 
 
 repro_dir_name = reproduce_scripts
 repro_dir = $(top_dir)/$(repro_dir_name)
@@ -71,15 +78,28 @@ repro_files = \
 	$(repro_dir)/plot_genes.py \
 	$(repro_dir)/paper_data.py \
 	$(repro_dir)/pkl2txt.py \
-	$(repro_dir)/figure_1E.R \
-	$(repro_dir)/figure_2A.R \
-	$(repro_dir)/figure_2B.R \
-	$(repro_dir)/figure_2C.R \
-	$(repro_dir)/figure_2D.R \
-	$(repro_dir)/figure_2E.R \
-	$(repro_dir)/figure_2F.R \
-	$(repro_dir)/figure_2G.R \
-	$(repro_dir)/supp_table_codon_scores.py
+	$(repro_dir)/figure_1B_scaledcts.R \
+	$(repro_dir)/figure_1C_mse.R \
+	$(repro_dir)/figure_1D_scatter.R \
+	$(repro_dir)/figure_1E_indiv_gene.R \
+	$(repro_dir)/figure_1F_binned_error.R \
+	$(repro_dir)/figure_2A_codonmse.R \
+	$(repro_dir)/figure_2B_heatmap.R \
+	$(repro_dir)/figure_2C_tai.R \
+	$(repro_dir)/figure_2D_wobble.R \
+	$(repro_dir)/figure_2E_lareaucodonmse.R \
+	$(repro_dir)/figure_2F_5prime.R \
+	$(repro_dir)/figure_2G_asite.R \
+	$(repro_dir)/figure_2H_cl2.R \
+	$(repro_dir)/figure_2I_cl1.R \
+	$(repro_dir)/figure_3B_citrine_dist.R \
+	$(repro_dir)/figure_3C_facs.R \
+	$(repro_dir)/figure_3D_te.R \
+	$(repro_dir)/supp_table_codon_scores.py \
+	$(repro_dir)/supp_figure_facs.R \
+	$(repro_dir)/supp_figure_mrna_qpcr.R \
+	$(repro_dir)/supp_figure_greenmse.R \
+	$(repro_dir)/supp_figure_iwasakimse.R
 
 expts_dir_name = expts
 expts_dir = $(top_dir)/$(expts_dir_name)
@@ -724,7 +744,14 @@ fig_files = \
 	$(fig_dir)/figure_2G_asite.pdf \
 	$(fig_dir)/figure_2H_cl2.pdf \
 	$(fig_dir)/figure_2I_cl1.pdf \
-	$(fig_dir)/supp_table_codon_scores.csv
+	$(fig_dir)/figure_3B_citrine_dist.pdf \
+	$(fig_dir)/figure_3C_facs.pdf \
+	$(fig_dir)/figure_3D_te.pdf \
+	$(fig_dir)/supp_table_codon_scores.csv \
+	$(fig_dir)/supp_figure_mrna_qpcr.pdf \
+	$(fig_dir)/supp_figure_facs.pdf \
+	$(fig_dir)/supp_figure_greenmse.pdf \
+	$(fig_dir)/supp_figure_iwasakimse.pdf
 
 ### paper data files
 
@@ -785,8 +812,8 @@ $(lib_files): | $(lib_dir)
 #$(struc_files): | $(struc_dir)
 #	cp /mnt/lareaulab/rtunney/Regression/structure_data/$(subst $(struc_dir)/,,$@) $@
 
-$(wetlab_files): | $(wetlab_dir)
-	cp /mnt/lareaulab/rtunney/Regression/wetlab_data/$(subst $(wetlab_dir)/,,$@) $@
+#$(wetlab_files): | $(wetlab_dir)
+#	cp /mnt/lareaulab/rtunney/Regression/wetlab_data/$(subst $(wetlab_dir)/,,$@) $@
 
 #$(repro_files): | $(repro_dir)
 #	cp /mnt/lareaulab/rtunney/Regression/reproduce_scripts/$(subst $(repro_dir)/,,$@) $@
@@ -1805,6 +1832,9 @@ green_clean:
 
 figures: $(fig_files) | $(fig_dir)
 
+$(facs_data_file): | $(facs_data_zip_file)
+	gunzip -c $(facs_data_zip_file) > $(facs_data_file)
+
 #NOTE: Update first two parameter entries
 $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_27_31_te_data_table) \
@@ -1940,6 +1970,33 @@ $(fig_dir)/figure_2I_cl1.pdf: \
 		$(wetlab_dir)/circligase_qpcr.csv \
 		$(fig_dir)/figure_2I_cl1.pdf
 
+$(fig_dir)/figure_3B_citrine_dist.pdf: \
+		| $(repro_dir)/figure_3B_citrine_dist.R \
+		$(paper_data_dir)/random_citrine_score_dist.txt \
+		$(paper_data_dir)/citrine_construct_scores.txt 
+	Rscript $(repro_dir)/figure_3B_citrine_dist.R \
+		$(paper_data_dir)/random_citrine_score_dist.txt \
+		$(paper_data_dir)/citrine_construct_scores.txt \
+		$(fig_dir)/figure_3B_citrine_dist.pdf
+
+$(fig_dir)/figure_3C_facs.pdf: \
+		| $(repro_dir)/figure_3C_facs.R \
+		$(facs_data_file) \
+		$(paper_data_dir)/citrine_construct_scores.txt $(fig_dir)
+	Rscript $(repro_dir)/figure_3C_facs.R \
+		$(facs_data_file) \
+		$(paper_data_dir)/citrine_construct_scores.txt \
+		$(fig_dir)/figure_3C_facs.pdf
+
+$(fig_dir)/figure_3D_te.pdf: \
+		| $(repro_dir)/figure_3C_facs.R \
+		$(paper_data_dir)/citrine_construct_scores.txt \
+		$(mrna_data_file) 
+	Rscript $(repro_dir)/figure_3D_te.R \
+		$(paper_data_dir)/citrine_construct_scores.txt \
+		$(mrna_data_file) \
+		$(fig_dir)/figure_3D_te.pdf
+
 $(fig_dir)/supp_table_codon_scores.csv: \
 		| $(repro_dir)/supp_table_codon_scores.py \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
@@ -1947,6 +2004,38 @@ $(fig_dir)/supp_table_codon_scores.csv: \
 	python $(repro_dir)/supp_table_codon_scores.py \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(fig_dir)/supp_table_codon_scores.csv
+
+$(fig_dir)/supp_figure_mrna_qpcr.pdf: \
+		| $(repro_dir)/supp_figure_mrna_qpcr.R \
+		$(paper_data_dir)/citrine_construct_scores.txt \
+		$(mrna_data_file) 
+	Rscript $(fig_dir)/supp_figure_mrna_qpcr.R 
+		$(paper_data_dir)/citrine_construct_scores.txt \
+		$(mrna_data_file) \
+		$(fig_dir)/supp_figure_mrna_qpcr.pdf
+
+$(fig_dir)/supp_figure_facs.pdf: \
+		| $(repro_dir)/supp_figure_facs.R \
+		$(facs_data_file) \
+		$(paper_data_dir)/citrine_construct_scores.txt
+	Rscript $(repro_dir)/supp_figure_facs.R \
+		$(facs_data_file) \
+		$(paper_data_dir)/citrine_construct_scores.txt
+		$(fig_dir)/supp_figure_facs.pdf
+
+$(fig_dir)/supp_figure_greenmse.pdf: \
+		$(green_leaveout_mses_file) \
+		| $(repro_dir)/supp_figure_greenmse.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_greenmse.R \
+		$(green_leaveout_mses_file) \
+		$(fig_dir)/supp_figure_greenmse.pdf
+
+$(fig_dir)/supp_figure_iwasakimse.pdf: \
+		$(iwasaki_leaveout_mses_file) \
+		| $(repro_dir)/supp_figure_iwasakimse.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_iwasakimse.R \
+		$(iwasaki_leaveout_mses_file) \
+		$(fig_dir)/supp_figure_iwasakimse.pdf
 
 #################
 ### Paper data

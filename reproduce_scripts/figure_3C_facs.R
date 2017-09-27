@@ -1,5 +1,11 @@
-facs.data = read.delim("~/Berkeley/RegressionPaperLL/CodOpt/remeasuring_diploids_20170829/gated-facs-data.csv", sep=",", header=T )
-cit = read.delim("citrine_scores.txt", header=T, row.names = 1, comment.char="#")
+args <- commandArgs(trailingOnly = TRUE)
+facs_fname = args[1]
+citrine_construct_scores_fname = args[2]
+out_fname = args[3]
+
+facs.data = read.delim(facs_fname, sep=",", header=T )
+cit = read.delim(citrine_construct_scores_fname, header=T, row.names = 1, 
+		 comment.char="#")
 
 medians = data.frame(tapply( facs.data$green / facs.data$red, list(facs.data$Isolate, facs.data$Strain), median ))
 vars = data.frame(tapply( facs.data$green / facs.data$red, list(facs.data$Isolate, facs.data$Strain), var ))
@@ -33,7 +39,7 @@ nn.scores.nocha = subset( nn.scores, select = -c(CHA2))
 cols.nocha =  rep( c("red", "purple", "blue", "cyan", "green", "orange"), each = 8)
 
 
-cairo_pdf("figure_3C_facs.pdf", width=2, height=1.67, pointsize=7 )
+cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )

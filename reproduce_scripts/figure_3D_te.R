@@ -1,7 +1,12 @@
-## mRNA
-cit = read.delim("citrine_scores.txt", header=T, row.names = 1, comment.char="#")
+args <- commandArgs(trailingOnly = TRUE)
+citrine_construct_scores_fname = args[1]
+mrna_data_fname = args[2]
+out_fname = args[3]
 
-qpcr.data = read.delim("~/Berkeley/RegressionPaperLL/CodOpt/qpcr_20170906/cy0_summary.csv", sep=",", header=T )
+## mRNA
+cit = read.delim(citrine_construct_scores_fname, header=T, row.names = 1, comment.char="#")
+
+qpcr.data = read.delim(mrna_data_fname, sep=",", header=T )
 qpcr.data = qpcr.data[which(!(qpcr.data$Strain == "MAX" & qpcr.data$Isolate == 3)),]
 # this sample's pellet was aspirated - removing from all analysis
 
