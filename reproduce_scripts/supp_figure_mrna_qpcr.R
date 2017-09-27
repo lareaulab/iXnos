@@ -29,7 +29,7 @@ mrna.ratio = mch.amp / cit.amp
 # ADD IN A NORMALIZATION TO THE CHA MCHERRY:CITRINE RATIO
 mrna.ratio = mrna.ratio / median( mrna.ratio[,"CHA2"])
 
-nn.scores =  sapply( colnames(mrna.ratio), function(x) { rep( cit$nn.score[x], 3 )}) 
+nn.scores =  sapply( colnames(mrna.ratio), function(x) { rep( cit[x,"nn.score"], 3 )}) 
 
 cols = rep( c("magenta","red","purple","cyan"), each = 3)
 

@@ -28,7 +28,7 @@ lapply(bad, function(x) {
   vars[x[2], x[1]] <<- NA
 })
 
-nn.scores = as.data.frame( sapply( names(medians), function(x) { rep( cit$nn.score[x], 8 )}) )
+nn.scores = as.data.frame( sapply( names(medians), function(x) { rep( cit[x,"nn.score"], 8 )}) )
 
 cols = rep( c("magenta", "red", "purple", "blue", "cyan", "green", "orange"), each = 8)
 
