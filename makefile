@@ -1989,12 +1989,14 @@ $(fig_dir)/figure_3C_facs.pdf: \
 		$(fig_dir)/figure_3C_facs.pdf
 
 $(fig_dir)/figure_3D_te.pdf: \
-		| $(repro_dir)/figure_3C_facs.R \
+		| $(repro_dir)/figure_3D_te.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(mrna_data_file) 
+		$(mrna_data_file) \
+		$(facs_data_file)
 	Rscript $(repro_dir)/figure_3D_te.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(mrna_data_file) \
+		$(facs_data_file) \
 		$(fig_dir)/figure_3D_te.pdf
 
 $(fig_dir)/supp_table_codon_scores.csv: \
@@ -2009,7 +2011,7 @@ $(fig_dir)/supp_figure_mrna_qpcr.pdf: \
 		| $(repro_dir)/supp_figure_mrna_qpcr.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(mrna_data_file) 
-	Rscript $(fig_dir)/supp_figure_mrna_qpcr.R 
+	Rscript $(repro_dir)/supp_figure_mrna_qpcr.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(mrna_data_file) \
 		$(fig_dir)/supp_figure_mrna_qpcr.pdf
@@ -2020,7 +2022,7 @@ $(fig_dir)/supp_figure_facs.pdf: \
 		$(paper_data_dir)/citrine_construct_scores.txt
 	Rscript $(repro_dir)/supp_figure_facs.R \
 		$(facs_data_file) \
-		$(paper_data_dir)/citrine_construct_scores.txt
+		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(fig_dir)/supp_figure_facs.pdf
 
 $(fig_dir)/supp_figure_greenmse.pdf: \

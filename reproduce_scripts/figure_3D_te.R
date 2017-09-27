@@ -1,7 +1,8 @@
 args <- commandArgs(trailingOnly = TRUE)
 citrine_construct_scores_fname = args[1]
 mrna_data_fname = args[2]
-out_fname = args[3]
+facs_data_fname = args[3]
+out_fname = args[4]
 
 ## mRNA
 cit = read.delim(citrine_construct_scores_fname, header=T, row.names = 1, comment.char="#")
@@ -34,7 +35,7 @@ nn.scores =  sapply( colnames(mrna.ratio), function(x) { rep( cit$nn.score[x], 3
 cols = rep( c("magenta","red","purple","cyan"), each = 3)
 
 # protein
-facs.data = read.delim("~/Berkeley/RegressionPaperLL/CodOpt/remeasuring_diploids_20170829/gated-facs-data.csv", sep=",", header=T )
+facs.data = read.delim(facs_data_fname, sep=",", header=T )
 # median green/red ratio of all cells included in analysis 
 facs.medians = data.frame(tapply( facs.data$green / facs.data$red, list(facs.data$Isolate, facs.data$Strain), median ))
 facs.medians = subset(facs.medians, select = c(CHA2, MAX, MIN, Y333))
@@ -43,7 +44,7 @@ facs.medians = facs.medians[c(3,5,6),]
 # one per strain+isolate
 te = facs.medians/mrna.ratio
 
-cairo_pdf("figure_3D_te.pdf", width=2, height=1.67, pointsize=7 )
+cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )
