@@ -35,6 +35,7 @@ par( mex = 0.65 )
 par( mar = c(6,8.5,5,6) )
 par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
+par( xpd = NA )
 plot( iwasaki$X0, lareau$X0, 
       axes = F,
       cex = 0.5,
