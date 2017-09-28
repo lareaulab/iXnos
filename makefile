@@ -99,7 +99,8 @@ repro_files = \
 	$(repro_dir)/supp_figure_facs.R \
 	$(repro_dir)/supp_figure_mrna_qpcr.R \
 	$(repro_dir)/supp_figure_greenmse.R \
-	$(repro_dir)/supp_figure_iwasakimse.R
+	$(repro_dir)/supp_figure_iwasakimse.R \
+	$(repro_dir)/supp_figure_cl1v2.R
 
 expts_dir_name = expts
 expts_dir = $(top_dir)/$(expts_dir_name)
@@ -751,7 +752,8 @@ fig_files = \
 	$(fig_dir)/supp_figure_mrna_qpcr.pdf \
 	$(fig_dir)/supp_figure_facs.pdf \
 	$(fig_dir)/supp_figure_greenmse.pdf \
-	$(fig_dir)/supp_figure_iwasakimse.pdf
+	$(fig_dir)/supp_figure_iwasakimse.pdf \
+	$(fig_dir)/supp_figure_cl1v2.pdf
 
 ### paper data files
 
@@ -2038,6 +2040,15 @@ $(fig_dir)/supp_figure_iwasakimse.pdf: \
 	Rscript $(repro_dir)/supp_figure_iwasakimse.R \
 		$(iwasaki_leaveout_mses_file) \
 		$(fig_dir)/supp_figure_iwasakimse.pdf
+
+$(fig_dir)/supp_figure_cl1v2.pdf: \
+		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
+		$(green_results_28_epoch_dir)/codon_scores.tsv \
+		| $(repro_dir)/supp_figure_cl1v2.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_cl1v2.R \
+		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
+		$(green_results_28_epoch_dir)/codon_scores.tsv \
+		$(fig_dir)/supp_figure_cl1v2.pdf
 
 #################
 ### Paper data
