@@ -44,7 +44,8 @@ facs.medians = facs.medians[c(3,5,6),]
 # one per strain+isolate
 te = facs.medians/mrna.ratio
 
-cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
+pdf(out_fname, width=2, height=1.167, pointsize=7, useDingbats = F, bg="white" )
+#cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )

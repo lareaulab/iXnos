@@ -14,7 +14,8 @@ nn.scores = cit[names,"nn.score"]
 cols = c("magenta", "red", "purple", "blue", "cyan", "green", "orange")
 
 # not including CHA2
-cairo_pdf(out_fname, width=2, height=1.167, pointsize=7 )
+pdf(out_fname, width=2, height=1.167, pointsize=7, useDingbats = F, bg="white" )
+#cairo_pdf(out_fname, width=2, height=1.167, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,2.5,3,3) )
 par( oma = c(0,0.5,1,0) )

@@ -26,8 +26,8 @@ avg_errs = sapply( seq(1, pts, by = binsize), function(x){sum(sq_errs[x:(x+binsi
 # scaled count value at the boundary of each bin
 bin_cutoffs = y_te_ordered[ seq(1, pts, by = binsize) ]
 
-#pdf( out_fname, width=2, height=1.67, pointsize = 7, useDingbats = F, bg = "white" )
-cairo_pdf( out_fname, width=2, height=1.67, pointsize = 7 )
+pdf( out_fname, width=2, height=1.67, pointsize = 7, useDingbats = F, bg = "white" )
+#cairo_pdf( out_fname, width=2, height=1.67, pointsize = 7 )
 par( mex = 0.65 )
 par( mar = c(6,4.5,5,3) )
 par( oma = c(0,1.5,1,0))

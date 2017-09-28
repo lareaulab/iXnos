@@ -82,8 +82,8 @@ ord = order(scores$cl1.green)
 up = ord[c(2,5)]
 down = ord[c(1,3,4,6)]
 
-#pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
-cairo_pdf( out_fname, width=2, height=1.67, pointsize=7 )
+pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
+#cairo_pdf( out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar = c(6,8.5,5,6) )
 par( oma = c(0,1.5,1,0) )

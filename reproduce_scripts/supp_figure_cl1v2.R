@@ -20,8 +20,8 @@ scores = data.frame( cl1.green = round( cl1[tested,]$X.5, 3 ),
 )
 row.names(scores) = tested
 
-
-cairo_pdf( out_fname, width=3, height=3, pointsize=7 )
+pdf( out_fname, width=3, height=3, pointsize=7, useDingbats=F, bg="white" )
+#cairo_pdf( out_fname, width=3, height=3, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
 par( oma = c(0,0.5,1,0) )

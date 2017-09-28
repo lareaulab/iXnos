@@ -62,8 +62,8 @@ P.pvals = unlist(P.pvals[levels(bp$pair)[myorder]])
 
 n = length(levels(bp$pair))
 
-#pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
-cairo_pdf( out_fname, width=2, height=1.67, pointsize=7)
+pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
+#cairo_pdf( out_fname, width=2, height=1.67, pointsize=7)
 par( mex = 0.65 ) 
 par( mar = c(6,5.5,5,3) )
 par( oma = c(0,1.5,1,0) )
