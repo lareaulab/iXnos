@@ -46,7 +46,7 @@ plot(unlist(nn.scores), unlist(medians),
      pch = 3,
      #     pch = 20,
      xlab = "NN score",
-     ylab = "citrine / mCherry\nfluorescence ratio"
+     ylab = "eCitrine / mCherry\nfluorescence ratio"
 )
 axis( 1 )
 axis( 2, at = seq(0, max(medians,na.rm=T), by=0.5))

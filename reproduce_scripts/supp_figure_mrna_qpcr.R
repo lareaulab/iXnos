@@ -47,7 +47,7 @@ plot(as.numeric(nn.scores), as.numeric(mrna.ratio),
      pch = 3,
 #     pch = 20,
      xlab = "NN score",
-     ylab = "citrine / mCherry\nrelative mRNA ratio"
+     ylab = "eCitrine / mCherry\nrelative mRNA ratio"
 )
 axis( 1 )
 axis( 2, at = c(0,0.5,1) )

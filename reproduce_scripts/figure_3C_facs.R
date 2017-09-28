@@ -52,7 +52,7 @@ plot(unlist(nn.scores.nocha), unlist(meds.nocha),
      pch = 3,
 #     pch = 20,
      xlab = "NN score",
-     ylab = "citrine / mCherry\nfluorescence ratio"
+     ylab = "eCitrine / mCherry\nfluorescence ratio"
 )
 axis( 1 )
 axis( 2, at = seq(0, 0.4, by=0.1))
