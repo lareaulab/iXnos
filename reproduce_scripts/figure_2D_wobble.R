@@ -52,15 +52,17 @@ gu = which(bp$pair == "G:U")
 ia = which(bp$pair == "I:A")
 
 P.pvals = list()
-P.pvals["I:C"] = wilcox.test(bp$P.site.score[ic], bp$P.site.score[setdiff(1:len, ic)], alternative="t", paired=F)$p.value
-P.pvals["I:U"] = wilcox.test(bp$P.site.score[iu], bp$P.site.score[setdiff(1:len, iu)], alternative="t", paired=F)$p.value
-P.pvals["I:A"] = wilcox.test(bp$P.site.score[ia], bp$P.site.score[setdiff(1:len, ia)], alternative="t", paired=F)$p.value
-P.pvals["G:U"] = wilcox.test(bp$P.site.score[gu], bp$P.site.score[setdiff(1:len, gu)], alternative="t", paired=F)$p.value
-P.pvals["G:C"] = wilcox.test(bp$P.site.score[gc], bp$P.site.score[setdiff(1:len, gc)], alternative="t", paired=F)$p.value
-P.pvals["U:A"] = wilcox.test(bp$P.site.score[ua], bp$P.site.score[setdiff(1:len, ua)], alternative="t", paired=F)$p.value
+P.pvals["I:C"] = wilcox.test(bp$P.site.score[ic], bp$P.site.score[-ic], alternative="t", paired=F)$p.value
+P.pvals["I:U"] = wilcox.test(bp$P.site.score[iu], bp$P.site.score[-iu], alternative="t", paired=F)$p.value
+P.pvals["I:A"] = wilcox.test(bp$P.site.score[ia], bp$P.site.score[-ia], alternative="t", paired=F)$p.value
+P.pvals["G:U"] = wilcox.test(bp$P.site.score[gu], bp$P.site.score[-gu], alternative="t", paired=F)$p.value
+P.pvals["G:C"] = wilcox.test(bp$P.site.score[gc], bp$P.site.score[-gc], alternative="t", paired=F)$p.value
+P.pvals["U:A"] = wilcox.test(bp$P.site.score[ua], bp$P.site.score[-ua], alternative="t", paired=F)$p.value
 P.pvals = unlist(P.pvals[levels(bp$pair)[myorder]])
 
 n = length(levels(bp$pair))
+
+#write.table(data.frame( pval = P.pvals, corrected = P.pvals * n), file = "pval.txt")
 
 pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 #cairo_pdf( out_fname, width=2, height=1.67, pointsize=7)
