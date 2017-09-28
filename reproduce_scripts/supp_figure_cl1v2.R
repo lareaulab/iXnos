@@ -5,7 +5,7 @@
 args <- commandArgs(trailingOnly = TRUE)
 lareau_scores_fname = args[1] # 28mers only!
 green_scores_fname = args[2] # 28mers only!
-out_fname = args[4]
+out_fname = args[3]
 
 codons = sort( apply( expand.grid( c("A","C","G","T"), c("A","C","G","T"), c("A","C","G","T")), 1, paste, collapse = "" ))
 pos = -7:5
