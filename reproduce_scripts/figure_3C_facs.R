@@ -38,7 +38,7 @@ vars.nocha = subset(vars, select = -c(CHA2))
 nn.scores.nocha = subset( nn.scores, select = -c(CHA2))
 cols.nocha =  rep( c("red", "purple", "blue", "cyan", "green", "orange"), each = 8)
 
-pdf(out_fname, width=2, height=1.167, pointsize=7, useDingbats = F, bg="white" )
+pdf(out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg="white" )
 #cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(6,6.5,5,3) )
