@@ -79,8 +79,8 @@ cl2.se.abs = cl2.ratio * cl2.se.percent
 ymax = max( cl1.ratio + cl1.se.abs, cl2.ratio + cl2.se.abs )
 
 ord = order(scores$cl1.green)
-up = ord[c(2,5)]
-down = ord[c(1,3,4,6)]
+down = ord[c(2,5)]
+up = ord[c(1,3,4,6)]
 
 pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 #cairo_pdf( out_fname, width=2, height=1.67, pointsize=7 )
