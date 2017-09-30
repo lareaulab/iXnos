@@ -21,6 +21,11 @@ These packages can be installed with:
 pip install [options] <package>
 ```
 
+The current released version of Lasagne (v. 0.1) is not compatible with the current released version of theano (v. 0.9.0), so please install the development version of lasagne with: 
+```
+pip install [options] https://github.com/Lasagne/Lasagne/archive/master.zip
+```
+
 iXnos also depends on the following software. The binaries for these packages should be accessible on your PATH:
 * Bowtie 1
 * RSEM
