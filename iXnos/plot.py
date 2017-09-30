@@ -10,7 +10,7 @@ from scipy.interpolate import LSQUnivariateSpline
 import pickle
 import os
 from sklearn.metrics import roc_curve, auc
-from rp_predict.process import load_codon_set_bounds, expand_codon_set, \
+from iXnos.process import load_codon_set_bounds, expand_codon_set, \
     load_outputs, get_y, load_cts_by_codon, has_enough_cts, \
     sort_genes_by_density, get_y_data, get_gene2symbol_dict, \
     get_mat_idxs_by_gene, save_gene_list, sort_genes_by_density, \

@@ -1,13 +1,12 @@
 #print "importing libraries"
 import os
 import inspect
-import rp_predict.neuralnetwork as nn
-import rp_predict.process as proc
-import rp_predict.plot as plot
-import rp_predict.linreg as linreg
-import rp_predict.optimizecodons as opt
-import rp_predict.lasagnenn as lasagnenn
-import rp_predict.featureanalysis as feat
+import iXnos.process as proc
+import iXnos.plot as plot
+import iXnos.linreg as linreg
+import iXnos.optimizecodons as opt
+import iXnos.lasagnenn as lasagnenn
+import iXnos.featureanalysis as feat
 import numpy as np
 from shutil import copyfile
 import math
@@ -136,23 +135,6 @@ def make_bin_outputs(expt_dir, outputs_fname, cutoff):
     bin_outputs = proc.bin_transform_outputs(outputs, cutoff)
     bin_out_fname = expt_dir + "/process/bin_outputs.cutoff_{0}.txt".format(cutoff)
     proc.write_outputs(bin_outputs, bin_out_fname)
-
-def make_nn(
-        name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, 
-        te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False, 
-        cost_fn="squared", act_fn="tanh", num_hidden=[200], num_outputs=1, 
-        lam=0, filter_pct=False, rel_struc_idxs=False, struc_fname=False):
-    out_dir = expt_dir + "/nn_data"
-    X_tr, X_te, y_tr, y_te = proc.process_data(
-        out_dir, name, gene_seq_fname, gene_len_fname, tr_codons_fname, 
-        te_codons_fname, outputs_fname, cost_fn, act_fn, num_hidden, 
-        num_outputs, lam, rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs, 
-        filter_pct=filter_pct, rel_struc_idxs=rel_struc_idxs, 
-        struc_fname=struc_fname)
-    my_nn = nn.NeuralNetwork(
-        name, X_tr, y_tr, X_te, y_te, out_dir=out_dir, cost_fn=cost_fn, 
-        act_fn=act_fn, num_hidden=num_hidden, num_outputs=num_outputs, lam=lam)
-    return my_nn
 
 def setup_lasagne_nn(
         name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, 
@@ -423,17 +405,6 @@ def load_lasagne_split_nn(nn_dir, epoch):
 
     return my_nn
 
-def plot_nn(
-        expt_dir, name, epoch, xlims, ylims, textpos, rel_cod_idxs=False, 
-        rel_nt_idxs=False, rel_struc_idxs=False, cost_by_epoch_plots=True, 
-        weight_plots=True, scat_plots=True, overwrite=False, ext="pdf"):
-    out_dir = expt_dir + "/nn_data"
-    plot.make_all_plots(
-        out_dir, name, epoch, xlims, ylims, textpos, rel_cod_idxs=rel_cod_idxs, 
-        rel_nt_idxs=rel_nt_idxs, rel_struc_idxs=rel_struc_idxs, 
-        cost_by_epoch_plots=cost_by_epoch_plots, weight_plots=weight_plots, 
-        scat_plots=scat_plots, overwrite=overwrite, ext=ext)
-    
 def plot_lasagne_nn(
         expt_dir, name, epoch, xlims, ylims, textpos, rel_cod_idxs=False,
         rel_nt_idxs=False, rel_struc_idxs=False, cost_by_epoch_plots=True,
@@ -447,29 +418,6 @@ def plot_lasagne_nn(
         scat_plots=scat_plots, cum_err_plots=cum_err_plots, 
         overwrite=overwrite, ext=ext, scat_bins=scat_bins
         )
-
-def load_nn(expt_dir, name, epoch):
-    nn_dir = "{0}/nn_data/{1}".format(expt_dir, name)
-    init_data_fname = nn_dir + "/init_data/init_data.txt"
-    d = proc.load_init_data_file(init_data_fname)    
-    len_dict = proc.get_len_dict(d["gene_len_fname"])
-    cds_dict = proc.get_cds_dict(d["gene_seq_fname"], len_dict)
-    X_tr, X_te, y_tr, y_te = proc.get_data_matrices(
-        cds_dict, d["tr_codons_fname"], d["te_codons_fname"], 
-        d["outputs_fname"], rel_cod_idxs=d.get("rel_cod_idxs", False), 
-        rel_nt_idxs=d.get("rel_nt_idxs", False))
-    num_tr = X_tr.shape[1]
-    num_stoch_iters = num_tr * epoch
-    out_dir = expt_dir + "/nn_data"
-    epoch_dir = nn_dir + "/epoch{0}".format(epoch)
-    weights = proc.load_obj(epoch_dir + "/weights.pkl")
-    tr_cost_by_epoch = proc.load_obj(epoch_dir + "/tr_cost_by_epoch.pkl")
-    te_cost_by_epoch = proc.load_obj(epoch_dir + "/te_cost_by_epoch.pkl")
-    my_nn = nn.load(
-        name, X_tr, y_tr, X_te, y_te, out_dir, d["cost_fn"], d["act_fn"], 
-        d["num_hidden"], d["num_outputs"], d["lam"], epoch, num_stoch_iters, 
-        weights, tr_cost_by_epoch, te_cost_by_epoch)
-    return my_nn
 
 def make_linreg(
         expt_dir, name, gene_seq_fname, gene_len_fname, tr_codons_fname, 
@@ -566,14 +514,6 @@ def get_linreg_optimal_codons(linreg_dir, aa_seq, maximum=False):
     opt_total_seq, opt_vit_score = opt.get_optimal_codons_linreg(aa_seq, wts, rel_cod_idxs, maximum=maximum)
     return opt_total_seq, opt_vit_score
 
-def get_nn_optimal_codons(expt_dir, name, epoch, aa_seq, maximum=False):
-    my_nn = load_nn(expt_dir, name, epoch)
-    init_data_fname = expt_dir + "/nn_data/{0}/init_data/init_data.txt".format(name)
-    d = proc.load_init_data_file(init_data_fname)
-    rel_cod_idxs = d["rel_cod_idxs"]
-    opt_total_seq, opt_vit_score = opt.get_optimal_codons_nn(aa_seq, my_nn, rel_cod_idxs, maximum=maximum)
-    return opt_total_seq, opt_vit_score
-
 def get_lasagne_optimal_codons(
         nn_dir, epoch, aa_seq, nn_type="Feedforward", maximum=False, 
         nt_feats=False):
@@ -608,7 +548,6 @@ def save_lasagne_optimal_codons(
     f.write("min score: {0}\n".format(min_vit_score))
     f.close()
 
-    
 def make_structure_fasta(out_fname, gene_seq_fname, gene_len_fname, window_len):
     seq_dict = proc.get_seq_dict(gene_seq_fname)
     len_dict = proc.get_len_dict(gene_len_fname)

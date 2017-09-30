@@ -12,8 +12,8 @@ import theano
 import theano.tensor as T
 
 import lasagne
-from rp_predict import process as proc
-from rp_predict import plot
+from iXnos import process as proc
+from iXnos import plot
 
 class LSTM(object):
     def __init__(

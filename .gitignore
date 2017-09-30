@@ -1,3 +1,4 @@
+*.pyc
 *human.transcripts*
 *scer.transcripts*
 *.fold
