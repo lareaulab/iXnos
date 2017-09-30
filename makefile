@@ -483,8 +483,8 @@ iwasaki_gene_len_file = $(genome_dir)/gencode.v22.transcript.13cds10.lengths.txt
 iwasaki_gene_seq_file = $(genome_dir)/gencode.v22.transcript.13cds10.fa
 
 iwasaki_raw_fastq_files = \
-	$(iwasaki_proc_dir)/SI1DMSO1.fastq \
-	$(iwasaki_proc_dir)/SI1DMSO2.fastq 
+	$(iwasaki_proc_dir)/SRR2075925.fastq \
+	$(iwasaki_proc_dir)/SRR2075926.fastq 
 iwasaki_trimmer_script = $(iwasaki_proc_dir)/trim_linker.pl
 iwasaki_mapping_script = $(iwasaki_proc_dir)/iwasaki.sh
 
@@ -876,14 +876,24 @@ weinberg_expt: \
 $(weinberg_expt_dir): | $(expts_dir)
 	mkdir $(weinberg_expt_dir)
 
-$(weinberg_subdirs_pattern): | $(weinberg_expt_dir)
-	mkdir $(weinberg_expt_dir)/process
-	mkdir $(weinberg_expt_dir)/plots
-	mkdir $(weinberg_expt_dir)/lasagne_nn
-	mkdir $(weinberg_expt_dir)/linreg
+$(weinberg_proc_dir): | $(weinberg_expt_dir)
+	mkdir $(weinberg_proc_dir)
+
+$(weinberg_plot_dir): | $(weinberg_expt_dir)
+	mkdir $(weinberg_plot_dir)
+
+$(weinberg_nn_dir): | $(weinberg_expt_dir)
+	mkdir $(weinberg_nn_dir)
+
+$(weinberg_lr_dir): | $(weinberg_expt_dir)
+	mkdir $(weinberg_lr_dir)
 
 #$(weinberg_raw_sam_file): | $(weinberg_proc_dir)
 #	samtools view /mnt/lareaulab/lareau/HumanFP/NeuralNet/weinberg/weinberg2/weinberg.transcript.bam > $(weinberg_raw_sam_file)
+
+$(weinberg_raw_fastq_file) : \
+		| $(weinberg_proc_dir)
+	fastq-dump SRR1049521 -O $(weinberg_proc_dir)
 
 #NOTE: This is missing a bunch of prereqs
 $(weinberg_raw_sam_file): \
@@ -1236,11 +1246,17 @@ lareau_expt: $(lareau_sam_file) ${lareau_plot_files} \
 $(lareau_expt_dir): | $(expts_dir)
 	mkdir $(lareau_expt_dir)
 
-$(lareau_subdirs_pattern): | $(lareau_expt_dir)
-	mkdir $(lareau_expt_dir)/process
-	mkdir $(lareau_expt_dir)/plots
-	mkdir $(lareau_expt_dir)/lasagne_nn
-	mkdir $(lareau_expt_dir)/linreg
+$(lareau_proc_dir): | $(lareau_expt_dir)
+	mkdir $(lareau_proc_dir)
+
+$(lareau_plot_dir): | $(lareau_expt_dir)
+	mkdir $(lareau_plot_dir)
+
+$(lareau_nn_dir): | $(lareau_expt_dir)
+	mkdir $(lareau_nn_dir)
+
+$(lareau_lr_dir): | $(lareau_expt_dir)
+	mkdir $(lareau_lr_dir)
 
 #$(lareau_raw_sam_file): | $(lareau_proc_dir)
 #	samtools view /mnt/lareaulab/lareau/YeastFootprints/LLMG004_LLMG005_merged_20170519redo/untr01_merged/untr01_merged.transcript.bam > $(lareau_raw_sam_file)
@@ -1439,11 +1455,17 @@ iwasaki_expt: $(iwasaki_sam_file) ${iwasaki_plot_files} \
 $(iwasaki_expt_dir): | $(expts_dir)
 	mkdir $(iwasaki_expt_dir)
 
-$(iwasaki_subdirs_pattern): | $(iwasaki_expt_dir)
-	mkdir $(iwasaki_expt_dir)/process
-	mkdir $(iwasaki_expt_dir)/plots
-	mkdir $(iwasaki_expt_dir)/lasagne_nn
-	mkdir $(iwasaki_expt_dir)/linreg
+$(iwasaki_proc_dir): | $(iwasaki_expt_dir)
+	mkdir $(iwasaki_proc_dir)
+
+$(iwasaki_plot_dir): | $(iwasaki_expt_dir)
+	mkdir $(iwasaki_plot_dir)
+
+$(iwasaki_nn_dir): | $(iwasaki_expt_dir)
+	mkdir $(iwasaki_nn_dir)
+
+$(iwasaki_lr_dir): | $(iwasaki_expt_dir)
+	mkdir $(iwasaki_lr_dir)
 
 #Replace these when you fix doing RSEM on merged Iwasaki data
 #$(iwasaki_raw_sam_file): | $(iwasaki_proc_dir)
@@ -1452,6 +1474,11 @@ $(iwasaki_subdirs_pattern): | $(iwasaki_expt_dir)
 ##Remove this when you fix doing RSEM on merged Iwasaki data
 #$(iwasaki_sam_file): | $(iwasaki_proc_dir) $(iwasaki_expt_dir)
 #	cat /mnt/lareaulab/rtunney/Regression/expts/shin1/process/shin1.transcript.mapped.wts.sam /mnt/lareaulab/rtunney/Regression/expts/shin2/process/shin2.transcript.mapped.wts.sam > $(iwasaki_sam_file)
+
+$(iwasaki_raw_fastq_files): \
+		| $(iwasaki_proc_dir)
+	fastq-dump SRR2075925 -O $(iwasaki_proc_dir)
+	fastq-dump SRR2075926 -O $(iwasaki_proc_dir)
 
 #NOTE: This is missing a bunch of prereqs
 $(iwasaki_raw_sam_file): \
@@ -1645,14 +1672,25 @@ green_expt: $(green_sam_file) ${green_plot_files} \
 $(green_expt_dir): | $(expts_dir)
 	mkdir $(green_expt_dir)
 
-$(green_subdirs_pattern): | $(green_expt_dir)
-	mkdir $(green_expt_dir)/process
-	mkdir $(green_expt_dir)/plots
-	mkdir $(green_expt_dir)/lasagne_nn
-	mkdir $(green_expt_dir)/linreg
+$(green_proc_dir): | $(green_expt_dir)
+	mkdir $(green_proc_dir)
+
+$(green_plot_dir): | $(green_expt_dir)
+	mkdir $(green_plot_dir)
+
+$(green_nn_dir): | $(green_expt_dir)
+	mkdir $(green_nn_dir)
+
+$(green_lr_dir): | $(green_expt_dir)
+	mkdir $(green_lr_dir)
 
 #$(green_raw_sam_file): | $(green_proc_dir)
 #	samtools view /mnt/lareaulab/lareau/YeastFootprints/WuGreen2017/wu_green_wt/wu_green_wt.transcript.bam > $(green_raw_sam_file)
+
+$(green_raw_fastq_files): \
+		$(green_proc_dir) 
+	fastq-dump SRR5008134 -O $(green_proc_dir)
+	fastq-dump SRR5008135 -O $(green_proc_dir)
 
 #NOTE: This is missing a bunch of prereqs
 $(green_raw_sam_file): \
