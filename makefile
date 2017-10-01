@@ -1223,7 +1223,6 @@ $(weinberg_results_final_model_y_te_hat): \
 		$(weinberg_results_struc_epoch_dir)/y_te_hat.txt
 
 weinberg_clean: 
-	rm $(weinberg_raw_sam_file)
 	rm $(weinberg_mapped_sam_file)
 
 ##########################
@@ -1432,7 +1431,6 @@ $(lareau_28_plot_pattern): \
 		$(lareau_results_28_dir)
 
 lareau_clean: 
-	rm $(lareau_raw_sam_file)
 	rm $(lareau_mapped_sam_file)
 
 #########################
@@ -1649,7 +1647,6 @@ $(iwasaki_28_plot_pattern): \
 		$(iwasaki_results_28_dir)
 
 iwasaki_clean: 
-	rm $(iwasaki_raw_sam_file)
 	rm $(iwasaki_mapped_sam_file)
 
 ##########################
@@ -1863,7 +1860,6 @@ $(green_28_plot_pattern): \
 		$(green_results_28_dir)
 
 green_clean: 
-	rm $(green_raw_sam_file)
 	rm $(green_mapped_sam_file)
 
 ##############
