@@ -67,13 +67,13 @@ We provide genome and mapping files for S. cerevisiae, and humans, in iXnos/geno
 For yeast data, an example workflow is provided in iXnos/expts/weinberg/process/weinberg.sh. 
 * filter out rRNA reads by mapping against ScerRRNA bowtie1 index with options bowtie -v 2 -p 36 -S 
 * filter out noncoding RNA reads by mapping against rna_coding bowtie1 index with options bowtie -v 2 -p 36 -S
-* map to yeast transcriptome with bowtie1 index scer.transcripts.13cds10 and options owtie -a --norc -v 2 -p 36 -S
+* map to yeast transcriptome with bowtie1 index scer.transcripts.13cds10 and options bowtie -a --norc -v 2 -p 36 -S
 * (recommended) obtain mapping weights with rsem-calculate-expression on our bowtie output and an RSEM index built on scer.transcripts.13cds10, then convert bam output to sam format with samtools view -h
 
 A similar example is provided for human data in iXnos/expts/iwasaki/process/iwasaki.sh
 
 You can use your own rRNA and noncoding RNA files to filter unwanted reads, but you need to make your own bowtie indices. 
-You can use your own transcriptome fasta file, but you need to create your own bowtie/RNSEM indices. In addition, you need to create your own gene_lengths_file in iXnos/genome_data with one line for each gene in your transcriptome, in the format: 
+You can use your own transcriptome fasta file, but you need to create your own bowtie and RSEM indices. In addition, you need to create your own gene_lengths_file in iXnos/genome_data with one line for each gene in your transcriptome, in the format: 
 
 <fasta_gene_name> <5' UTR length (nt)> <CDS length (nt)> <3' UTR length (nt)>
 
@@ -97,7 +97,7 @@ inter.edit_sam_file(
 ```
 If you did not use RSEM to get mapping weights, change sam_add_simple_map_wts to True, and RSEM_add_map_wts to False. This will assign uniform weights to all mappings for multimapping reads. By default, RSEM includes unmapped reads in the output file. If you have already filtered these out, you can set filter_unmapped to False. 
 
-After this step, your new sam file will be located in .../<expt_dir>/process, and will end in ".wts.sam". Use this file for future commands.
+After this step, your new sam file will be located in .../<expt_dir>/process, and will end in ".wts.sam". Use this sam file for future commands.
 
 Next, we choose A site assignment rules for our reads. We start by plotting the frames of the 5' ends of our footprints, for each footprint size. 
 ```
@@ -109,10 +109,11 @@ inter.do_frame_and_size_analysis(
 ```
 You can find the output plots in .../<expt_dir>/plots. 
 
-Use these plots to define A site offset rules. Generally, we find that 28mers map consistently to the 0th frame, and their A site offset is 15 nt. You can assign additional offsets by looking for adjacent footprint lengths that map consistently to 1-2 frames, and reasoning about the over/underdigestion that led to this class of reads. For example, a 29mer mapping to the 0th frame is underdigested by 1 nt at the 3' end relative to a 28mer in the 0th frame. A 29mer in the 2nd frame is underdigested by 1 nt at its 5' end. We do this for all footprint sizes with large amounts of data in our experiment. A histogram of overall counts by size is also provided in <expt_dir>/plots.
+Use these plots to define A site offset rules. Generally, we find that 28mers map consistently to the 0th frame, and their A site offset is 15 nt from the 5' end. You can assign additional offsets by looking for adjacent footprint lengths that map consistently to 1-2 frames, and reasoning about the over/underdigestion that led to this class of reads. For example, a 29mer mapping to the 0th frame is underdigested by 1 nt at the 3' end relative to a 28mer in the 0th frame, so its A site offset is still 15 nt from the 5' end. A 29mer in the 2nd frame is underdigested by 1 nt at its 5' end, so its A site offset is 16 nt from the 5' end. We do this for all footprint sizes with large amounts of data in our experiment. A histogram of overall counts by size is also provided in <expt_dir>/plots.
 
-Finally, we process our sam file for use in model training. A site rules are used to define a shift_dict. 
-You can pass an optional paralog_groups_file if you wish to only allow one member from each group of annotated paralogs. This file should be tab delimited, with one group of paralog gene names on each line. See an example in .../iXnos/genome_data/scer_100_80.paralogs.id.txt
+Finally, we process our sam file for use in model training. A site offset rules are used to define a shift_dict. 
+
+You can pass an optional paralog_groups_file if you wish to only allow one member from each group of annotated paralogs. This file should be tab delimited, with one set of paralogous gene names on each line. See an example in .../iXnos/genome_data/scer_100_80.paralogs.id.txt
 ```
 # A site offset rules
 shift_dict = {
@@ -174,8 +175,8 @@ update_method = "nesterov"
 neural_net = inter.make_lasagne_feedforward_nn(
     name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname,
     te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs,
-    rel_nt_idxs=rel_nt_idxs,
-    nonlinearity="tanh", widths=[200], update_method="nesterov")
+    rel_nt_idxs=rel_nt_idxs, nonlinearity=nonlinearity, widths=widths, 
+    update_method=update_method)
 # Run neural network for a desired Number of epochs
 num_epochs = 30
 neural_net.run_epochs(num_epochs)
