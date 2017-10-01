@@ -51,4 +51,18 @@ source <config_filename>
 
 ## Reproducible Research
 
-You can re-run most of the analyses in our research paper with the makefile provided in the root iXnos directory 
+You can re-run most of the analyses in our research paper with the makefile provided in the root iXnos directory. There is some variability in the results, due to randomness in parameter initialization and model training.
+
+We train a large number of models for each experiment, so we recommend running make for the experiments separately, with multithreading (make -j #threads) enabled. 
+```
+make -j 20 weinberg_expt
+make -j 10 lareau_expt
+make -j 10 iwasaki_expt
+make -j 10 green_expt
+make figures
+make paper_data
+```
+
+The results, figures, and values presented in the paper can be found in iXnos/results/[weinberg|lareau|iwasaki|green|figures|paper_data]
+
+Currently only weinberg_expt, iwasaki_expt, and green_expt can be run in the makefile, because we have not released our lareau_expt data yet.
