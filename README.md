@@ -41,7 +41,7 @@ git clone https://github.com/lareaulab/iXnos.git
 
 And then add iXnos to your PYTHONPATH by appending the following line to your config file of choice (e.g. .profile, .bash_rc, etc.)
 ```
-export PYTHONPATH="/path/above/repo/iXnos/"
+export PYTHONPATH="${PYTHONPATH}:/path/above/repo/iXnos/"
 ```
 
 And update your PYTHONPATH in your shell
@@ -149,6 +149,7 @@ This will populate all the necessary files in .../<expt_dir>/process to run a ne
 
 ### Training a Neural Network Model
 
+An example for training a neural network model on your processed data is provided below:
 ```
 import iXnos.interface as inter
 name = <your_nn_name>
@@ -164,7 +165,7 @@ te_codons_fname = expt_dir + "/process/te_set_bounds.size.<min_fp_size>.<max_fp_
 # Indices of codons and nts in desired sequence neighborhood
 rel_cod_idxs = range(-5,5)
 rel_nt_idxs = range(-15,15)
-# Number of hidden units per layer (1st, 2nd, ...)
+# Number of hidden units per layer [1st, 2nd, ...]
 # Number of elements specifies model depth
 widths = [200]
 # Specify activation function on hidden layers, [tanh|rectify|linear]
@@ -201,7 +202,7 @@ Instructions will be added later
 
 Instructions will be added later
 
-## Reproducible Research
+## Reproducing Research
 
 You can re-run most of the analyses in our research paper with the makefile provided in the root iXnos directory. There is some variability in the results, due to randomness in parameter initialization and model training.
 
