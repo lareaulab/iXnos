@@ -25,7 +25,7 @@ if __name__ == "__main__":
     out_file.write(min_seq + "\n")
     for i in [0, 33333, 66666, 99999]:
         out_file.write(">{0} score: {1}\n".format(i, rand_scores[i]))
-        out_file.write(rand_seqs[i])
+        out_file.write(rand_seqs[i] + "\n")
     out_file.write(">Maximum score: {0}\n".format(max_score))
     out_file.write(max_seq + "\n")
     out_file.close()
