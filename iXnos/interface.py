@@ -239,7 +239,6 @@ def load_lasagne_feedforward_nn(nn_dir, epoch):
         max_struc_start_idx=params["max_struc_start_idx"], 
         max_struc_width=params["max_struc_width"], 
         aa_feats=params["aa_feats"],
-        nonnegative=params["nonnegative"],
         filter_pct=params["filter_pct"])
 
     my_nn = lasagnenn.FeedforwardMLP(
@@ -252,6 +251,7 @@ def load_lasagne_feedforward_nn(nn_dir, epoch):
         hidden_drop_rate=params["hidden_drop_rate"], 
         num_outputs=params["num_outputs"],
         momentum=params["momentum"], batch_size=params["batch_size"], 
+        nonnegative=params["nonnegative"],
         reloaded=True)
 
     my_nn.unpickle_epoch(epoch)
@@ -547,6 +547,15 @@ def save_lasagne_optimal_codons(
     f.write("min seq: {0}\n".format(min_total_seq))
     f.write("min score: {0}\n".format(min_vit_score))
     f.close()
+
+def get_protein_score_dist(nn_dir, epoch, aa_seq, num_samples, nt_feats=False):
+    init_data_pkl = nn_dir + "/init_data/init_data.pkl"
+    params = proc.load_obj(init_data_pkl)
+    rel_cod_idxs = params["rel_cod_idxs"]
+    my_nn = load_lasagne_feedforward_nn(nn_dir, epoch)
+    scores_sorted, cod_seqs_sorted = opt.get_score_dist(
+        aa_seq, my_nn, rel_cod_idxs, num_samples, nt_feats=nt_feats)
+    return scoreso_sorted, cod_seqs_sorted
 
 def make_structure_fasta(out_fname, gene_seq_fname, gene_len_fname, window_len):
     seq_dict = proc.get_seq_dict(gene_seq_fname)

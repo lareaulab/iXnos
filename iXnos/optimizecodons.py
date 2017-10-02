@@ -402,9 +402,9 @@ def score_cod_seq(cod_seq, my_nn, rel_cod_idxs, nt_feats=False, unlog=False):
 def get_random_cod_seqs(aa_seq, num_samples):
     return [get_random_cod_seq(aa_seq) for i in range(num_samples)]
 
-def get_score_dist(aa_seq, my_nn, rel_cod_idxs, num_samples):
+def get_score_dist(aa_seq, my_nn, rel_cod_idxs, num_samples, nt_feats=False):
     cod_seqs = get_random_cod_seqs(aa_seq, num_samples)
-    scores = [score_cod_seq(cod_seq, my_nn, rel_cod_idxs) 
+    scores = [score_cod_seq(cod_seq, my_nn, rel_cod_idxs, nt_feats=nt_feats) 
         for cod_seq in cod_seqs]
     idxs = sorted(range(len(scores)), key=lambda x: scores[x])
     scores_sorted = [scores[idx] for idx in idxs]
