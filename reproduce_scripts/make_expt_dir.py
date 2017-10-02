@@ -1,5 +1,5 @@
 import sys
-import rp_predict.interface as inter
+import iXnos.interface as inter
 
 if __name__ == "__main__":
     expts_dir = sys.argv[1]

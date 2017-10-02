@@ -1,4 +1,4 @@
-import rp_predict.interface as inter
+import iXnos.interface as inter
 import sys
 
 if __name__ == "__main__":

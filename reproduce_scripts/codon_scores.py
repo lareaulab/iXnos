@@ -2,7 +2,7 @@
 import sys
 import pickle
 import numpy as np
-import rp_predict.interface as inter
+import iXnos.interface as inter
 
 if __name__ == "__main__":
     nn_dir = sys.argv[1]

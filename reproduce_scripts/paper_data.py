@@ -140,5 +140,3 @@ if __name__ == "__main__":
    
     out_file.close()
 
-#project_dir = "/mnt/lareaulab/rtunney/Copy_Regression6/rp_predict"
-#/mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/expts/weinberg/lasagne_nn/str_n17n15_cod_n7p5_nt_n21p17_rep0 30 /mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/results/weinberg/feat_neighborhood_series/feat_neighborhood_mses.txt /mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/results/weinberg/leaveout_series/leaveout_mses.txt /mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/results/weinberg/structure_series/struc_mses.txt /mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/results/lareau/s28_cod_n7p5_nt_n21p17/epoch10/codon_scores.tsv /mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/results/iwasaki/s28_cod_n7p5_nt_n21p17/epoch10/codon_scores.tsv /mnt/lareaulab/rtunney/Copy_Regression6/rp_predict/results/paper_data.txt
