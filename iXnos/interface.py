@@ -555,7 +555,7 @@ def get_protein_score_dist(nn_dir, epoch, aa_seq, num_samples, nt_feats=False):
     my_nn = load_lasagne_feedforward_nn(nn_dir, epoch)
     scores_sorted, cod_seqs_sorted = opt.get_score_dist(
         aa_seq, my_nn, rel_cod_idxs, num_samples, nt_feats=nt_feats)
-    return scoreso_sorted, cod_seqs_sorted
+    return scores_sorted, cod_seqs_sorted
 
 def make_structure_fasta(out_fname, gene_seq_fname, gene_len_fname, window_len):
     seq_dict = proc.get_seq_dict(gene_seq_fname)
