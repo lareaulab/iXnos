@@ -3,9 +3,6 @@
 
 parent_dir = $(shell pwd)
 
-#top_dir_name = rp_predict
-#top_dir = $(parent_dir)/$(top_dir_name)
-
 top_dir = $(parent_dir)
 
 lib_dir_name = iXnos
@@ -77,6 +74,7 @@ repro_files = \
 	$(repro_dir)/plot_nn.py \
 	$(repro_dir)/plot_genes.py \
 	$(repro_dir)/paper_data.py \
+	$(repro_dir)/optimize_cds.py \
 	$(repro_dir)/pkl2txt.py \
 	$(repro_dir)/figure_1B_scaledcts.R \
 	$(repro_dir)/figure_1C_mse.R \
@@ -111,6 +109,8 @@ results_dir_name = results
 results_dir = $(top_dir)/$(results_dir_name)
 
 fig_dir = $(results_dir)/figures
+
+citrine_aa_seq = MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLGYGLMCFARYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSYQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK
 
 ### General experiment variable definitions
 
@@ -217,9 +217,9 @@ weinberg_27_31_proc_sam_files = \
 	$(weinberg_27_31_cts_by_codon) \
 	$(weinberg_27_31_outputs) \
 	$(weinberg_27_31_te_bounds) \
-#	$(weinberg_27_31_te_data_table) \
+	$(weinberg_27_31_te_data_table) \
 	$(weinberg_27_31_tr_bounds) \
-#	$(weinberg_27_31_tr_data_table)
+	$(weinberg_27_31_tr_data_table)
 
 weinberg_27_31_proc_sam_pattern = \
 	$(subst .txt,%txt,$(weinberg_27_31_cts_by_codon)) \
@@ -240,9 +240,9 @@ weinberg_28_proc_sam_files = \
 	$(weinberg_28_cts_by_codon) \
 	$(weinberg_28_outputs) \
 	$(weinberg_28_te_bounds) \
-#	$(weinberg_28_te_data_table) \
+	$(weinberg_28_te_data_table) \
 	$(weinberg_28_tr_bounds) \
-#	$(weinberg_28_tr_data_table)
+	$(weinberg_28_tr_data_table)
 
 weinberg_28_proc_sam_pattern = \
 	$(subst .txt,%txt,$(weinberg_28_cts_by_codon)) \
@@ -294,6 +294,8 @@ weinberg_results_full_dir = $(weinberg_results_dir)/full_cod_n7p5_nt_n21p17_rep0
 weinberg_results_full_epoch_dir = $(weinberg_results_full_dir)/epoch30
 weinberg_results_28_dir = $(weinberg_results_dir)/s28_cod_n7p5_nt_n21p17
 weinberg_results_28_epoch_dir = $(weinberg_results_28_dir)/epoch25
+weinberg_results_opt_model_dir = $(weinberg_results_dir)/full_cod_n3p2_nt_n9p8_rep0
+weinberg_results_opt_model_epoch_dir = $(weinberg_results_opt_model_dir)/epoch30
 
 weinberg_full_analysis_epoch_dir = $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch30
 weinberg_28_analysis_epoch_dir = $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25
@@ -302,25 +304,17 @@ weinberg_full_codon_scores_results_files = \
 	$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 	$(weinberg_results_full_epoch_dir)/codon_scores_colormap.pdf
 
-#	$(weinberg_results_full_epoch_dir)/codon_scores.pkl \
-
 weinberg_full_codon_scores_results_files_pattern = \
 	$(weinberg_results_full_epoch_dir)/codon_scores%tsv \
 	$(weinberg_results_full_epoch_dir)/codon_scores_colormap%pdf
-
-#	$(weinberg_results_full_epoch_dir)/codon_scores%pkl \
 
 weinberg_28_codon_scores_results_files = \
 	$(weinberg_results_28_epoch_dir)/codon_scores.tsv \
 	$(weinberg_results_28_epoch_dir)/codon_scores_colormap.pdf
 
-#	$(weinberg_results_28_epoch_dir)/codon_scores.pkl \
-
 weinberg_28_codon_scores_results_files_pattern = \
 	$(weinberg_results_28_epoch_dir)/codon_scores%tsv \
 	$(weinberg_results_28_epoch_dir)/codon_scores_colormap%pdf
-
-#	$(weinberg_results_28_epoch_dir)/codon_scores%pkl \
 
 weinberg_feat_nb_mses_file = \
 	$(weinberg_results_feat_neighborhood_dir)/feat_neighborhood_mses.txt
@@ -336,6 +330,8 @@ weinberg_final_model_y_te_hat = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17
 
 weinberg_results_final_model_y_te = $(weinberg_results_struc_epoch_dir)/y_te.txt
 weinberg_results_final_model_y_te_hat = $(weinberg_results_struc_epoch_dir)/y_te_hat.txt
+
+weinberg_opt_series_file = $(weinberg_results_opt_model_epoch_dir)/citrine_opt_series.txt
 
 ### Lareau variable definitions
 
@@ -772,10 +768,12 @@ all: install expts paper_data
 ### Installation: Build basic top level file structures
 ##########################################################
 
+# NOTE: This is where I test definitions in the makefile
 test: 
 	echo $(weinberg_plot_files_pattern)
 
-install: \
+# NOTE: Installation graveyard. Has been (mostly?) replaced by cloning git repo
+#install: \
 	$(lib_files) \
 	$(genome_files) \
 	$(repro_files) \
@@ -786,24 +784,24 @@ install: \
 	$(yeast_30_windows_seqs_file) \
 	$(yeast_30_windows_str_scores_file)
 
+# Make main directory
 $(top_dir):
-#	Make main directory
 	mkdir $(top_dir)
 
-$(lib_dir): | $(top_dir)
-	if ! [ -a $(lib_dir) ] ; then mkdir $(lib_dir) ; fi;
+#$(lib_dir): | $(top_dir)
+#	if ! [ -a $(lib_dir) ] ; then mkdir $(lib_dir) ; fi;
 
-$(genome_dir): | $(top_dir)
-	mkdir $(genome_dir)
+#$(genome_dir): | $(top_dir)
+#	mkdir $(genome_dir)
 
-$(struc_dir): | $(top_dir)
-	mkdir $(struc_dir)
+#$(struc_dir): | $(top_dir)
+#	mkdir $(struc_dir)
 
-$(wetlab_dir): | $(top_dir)
-	mkdir $(wetlab_dir)
+#$(wetlab_dir): | $(top_dir)
+#	mkdir $(wetlab_dir)
 
-$(repro_dir): | $(top_dir)
-	mkdir $(repro_dir)
+#$(repro_dir): | $(top_dir)
+#	mkdir $(repro_dir)
 
 #$(lib_files): | $(lib_dir)
 #	cp /mnt/lareaulab/rtunney/Regression/rp_predict/$(subst $(lib_dir)/,,$@) $@
@@ -820,8 +818,8 @@ $(repro_dir): | $(top_dir)
 #$(repro_files): | $(repro_dir)
 #	cp /mnt/lareaulab/rtunney/Regression/reproduce_scripts/$(subst $(repro_dir)/,,$@) $@
 
-$(expts_dir): | $(top_dir)
-	mkdir $(expts_dir)
+#$(expts_dir): | $(top_dir)
+#	mkdir $(expts_dir)
 
 $(results_dir): | $(top_dir)
 	mkdir $(results_dir)
@@ -871,6 +869,7 @@ weinberg_expt: \
 		$(weinberg_final_model_y_te_hat)\
 		$(weinberg_results_final_model_y_te)\
 		$(weinberg_results_final_model_y_te_hat)\
+		$(weinberg_opt_series_file) \
 		| $(weinberg_expt_dir) $(weinberg_subdirs)
 
 $(weinberg_expt_dir): | $(expts_dir)
@@ -888,9 +887,6 @@ $(weinberg_nn_dir): | $(weinberg_expt_dir)
 $(weinberg_lr_dir): | $(weinberg_expt_dir)
 	mkdir $(weinberg_lr_dir)
 
-#$(weinberg_raw_sam_file): | $(weinberg_proc_dir)
-#	samtools view /mnt/lareaulab/lareau/HumanFP/NeuralNet/weinberg/weinberg2/weinberg.transcript.bam > $(weinberg_raw_sam_file)
-
 $(weinberg_raw_fastq_file) : \
 		| $(weinberg_proc_dir)
 	fastq-dump SRR1049521 -O $(weinberg_proc_dir)
@@ -903,12 +899,13 @@ $(weinberg_raw_sam_file): \
 		$(weinberg_proc_dir)
 	bash $(weinberg_mapping_script) $(genome_dir) $(weinberg_proc_dir)
 
-$(weinberg_sam_file): | $(weinberg_raw_sam_file) \
-                      $(weinberg_proc_dir) $(weinberg_expt_dir)
+$(weinberg_sam_file): \
+		| $(weinberg_raw_sam_file) \
+		$(weinberg_proc_dir) $(weinberg_expt_dir)
 	python $(repro_dir)/process_data.py edit_sam_file weinberg \
 		$(weinberg_expt_dir) $(weinberg_raw_sam_file)
 
-$(weinberg_plot_files_pattern):\
+$(weinberg_plot_files_pattern): \
 		| $(weinberg_sam_file) $(yeast_gene_len_file) \
 		${weinberg_plot_dir} $(weinberg_expt_dir)
 	python $(repro_dir)/process_data.py size_and_frame_analysis weinberg \
@@ -1086,14 +1083,16 @@ $(weinberg_results_28_dir): | $(weinberg_results_dir)
 $(weinberg_results_28_epoch_dir): | $(weinberg_results_28_dir)
 	mkdir $(weinberg_results_28_epoch_dir)
 
-#$(weinberg_full_codon_scores_files_pattern): | $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl
-#	python $(repro_dir)/codon_scores.py $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 30
+$(weinberg_results_opt_model_dir): | $(weinberg_results_dir)
+	mkdir $(weinberg_results_opt_model_dir)
 
-#$(weinberg_28_codon_scores_files_pattern): | $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25
-#	python $(repro_dir)/codon_scores.py $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17 25
+$(weinberg_results_opt_model_epoch_dir): | $(weinberg_results_opt_model_dir)
+	mkdir $(weinberg_results_opt_model_epoch_dir)
 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no
+# rule to create it, and then make can't place the targets properly in its DAG.
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
 $(weinberg_full_codon_scores_results_files_pattern): \
 		| $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl \
 		$(weinberg_results_full_epoch_dir) 
@@ -1104,7 +1103,9 @@ $(weinberg_full_codon_scores_results_files_pattern): \
 	cp $(weinberg_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(weinberg_results_full_epoch_dir)/codon_scores_colormap.pdf
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no 
+# rule to create it, and then make can't place the targets properly in its DAG.
 
 $(weinberg_28_codon_scores_results_files_pattern): \
 		| $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25/te_cost_by_epoch.pkl \
@@ -1223,6 +1224,13 @@ $(weinberg_results_final_model_y_te_hat): \
 	cp $(weinberg_final_model_y_te_hat) \
 		$(weinberg_results_struc_epoch_dir)/y_te_hat.txt
 
+$(weinberg_opt_series_file): \
+		| $(repro_dir)/optimize_cds.py \
+		$(weinberg_results_opt_model_epoch_dir) 
+	python $(repro_dir)/optimize_cds.py \
+		$(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0 30 True \
+		$(citrine_aa_seq) $(weinberg_opt_series_file) 
+
 weinberg_clean: 
 	rm $(weinberg_mapped_sam_file)
 
@@ -1257,9 +1265,6 @@ $(lareau_nn_dir): | $(lareau_expt_dir)
 
 $(lareau_lr_dir): | $(lareau_expt_dir)
 	mkdir $(lareau_lr_dir)
-
-#$(lareau_raw_sam_file): | $(lareau_proc_dir)
-#	samtools view /mnt/lareaulab/lareau/YeastFootprints/LLMG004_LLMG005_merged_20170519redo/untr01_merged/untr01_merged.transcript.bam > $(lareau_raw_sam_file)
 
 #NOTE: This is missing a bunch of prereqs
 $(lareau_raw_sam_file): \
@@ -1377,7 +1382,10 @@ $(lareau_results_28_dir): | $(lareau_results_dir)
 $(lareau_results_28_epoch_dir): | $(lareau_results_28_dir)
 	mkdir $(lareau_results_28_epoch_dir)
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no 
+# rule to create it, and then make can't place the targets properly in its DAG. 
+
 $(lareau_full_codon_scores_results_files_pattern): \
 		| $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch15/te_cost_by_epoch.pkl \
 		$(lareau_results_full_epoch_dir)
@@ -1388,7 +1396,9 @@ $(lareau_full_codon_scores_results_files_pattern): \
 	cp $(lareau_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(lareau_results_full_epoch_dir)/codon_scores_colormap.pdf
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no
+# rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(lareau_28_codon_scores_results_files_pattern): \
 		| $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl \
@@ -1467,14 +1477,6 @@ $(iwasaki_nn_dir): | $(iwasaki_expt_dir)
 
 $(iwasaki_lr_dir): | $(iwasaki_expt_dir)
 	mkdir $(iwasaki_lr_dir)
-
-#Replace these when you fix doing RSEM on merged Iwasaki data
-#$(iwasaki_raw_sam_file): | $(iwasaki_proc_dir)
-#	cat /mnt/lareaulab/rtunney/Regression/expts/shin1/process/shin1.transcript.mapped.wts.sam /mnt/lareaulab/rtunney/Regression/expts/shin2/process/shin2.transcript.mapped.wts.sam > $(iwasaki_raw_sam_file)
-
-##Remove this when you fix doing RSEM on merged Iwasaki data
-#$(iwasaki_sam_file): | $(iwasaki_proc_dir) $(iwasaki_expt_dir)
-#	cat /mnt/lareaulab/rtunney/Regression/expts/shin1/process/shin1.transcript.mapped.wts.sam /mnt/lareaulab/rtunney/Regression/expts/shin2/process/shin2.transcript.mapped.wts.sam > $(iwasaki_sam_file)
 
 $(iwasaki_raw_fastq_files): \
 		| $(iwasaki_proc_dir)
@@ -1596,7 +1598,10 @@ $(iwasaki_results_28_dir): | $(iwasaki_results_dir)
 $(iwasaki_results_28_epoch_dir): | $(iwasaki_results_28_dir)
 	mkdir $(iwasaki_results_28_epoch_dir)
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no rule
+# to create it, and then make can't place the targets properly in its DAG. 
+
 $(iwasaki_full_codon_scores_results_files_pattern): \
 		| $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch10/te_cost_by_epoch.pkl \
 		$(iwasaki_results_full_epoch_dir)
@@ -1607,7 +1612,9 @@ $(iwasaki_full_codon_scores_results_files_pattern): \
 	cp $(iwasaki_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(iwasaki_results_full_epoch_dir)/codon_scores_colormap.pdf
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no
+# rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(iwasaki_28_codon_scores_results_files_pattern): \
 		| $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl \
@@ -1811,7 +1818,10 @@ $(green_results_28_dir): | $(green_results_dir)
 $(green_results_28_epoch_dir): | $(green_results_28_dir)
 	mkdir $(green_results_28_epoch_dir)
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no
+# rule to create it, and then make can't place the targets properly in its DAG. 
+
 $(green_full_codon_scores_results_files_pattern): \
 		| $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch20/te_cost_by_epoch.pkl \
 		$(green_results_full_epoch_dir)
@@ -1822,7 +1832,9 @@ $(green_full_codon_scores_results_files_pattern): \
 	cp $(green_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(green_results_full_epoch_dir)/codon_scores_colormap.pdf
 
-#NOTE: We put an example .pkl file as a dependency so we can be sure this epoch is made. We can't put the epoch file as a dependency bc there's no rule to create it, and then make can't place the targets properly in its DAG. 
+#NOTE: We put an example .pkl file as a dependency so we can be sure this
+# epoch is made. We can't put the epoch file as a dependency bc there's no
+# rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(green_28_codon_scores_results_files_pattern): \
 		| $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl \
