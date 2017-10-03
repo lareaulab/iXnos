@@ -404,8 +404,10 @@ def get_random_cod_seqs(aa_seq, num_samples):
 
 def get_score_dist(aa_seq, my_nn, rel_cod_idxs, num_samples, nt_feats=False):
     cod_seqs = get_random_cod_seqs(aa_seq, num_samples)
+    print "computing score dist"
     scores = [score_cod_seq(cod_seq, my_nn, rel_cod_idxs, nt_feats=nt_feats) 
         for cod_seq in cod_seqs]
+    print "done computing score dist"
     idxs = sorted(range(len(scores)), key=lambda x: scores[x])
     scores_sorted = [scores[idx] for idx in idxs]
     cod_seqs_sorted = [cod_seqs[idx] for idx in idxs]
