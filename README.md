@@ -217,5 +217,3 @@ make paper_data
 ```
 
 Then the results, figures, and values computed in the paper can be found in iXnos/results/[weinberg|lareau|iwasaki|green|figures|paper_data]
-
-Currently only weinberg_expt, iwasaki_expt, and green_expt can be run in the makefile, because we have not released our lareau_expt data yet.
