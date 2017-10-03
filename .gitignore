@@ -19,6 +19,7 @@
 *.rsem.stderr
 *.stat
 *.fastq
+*.fastq.gz
 *.transcript.bam
 *.transcript.sam
 *.transcript.mapped.sam
