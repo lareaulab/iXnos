@@ -347,6 +347,9 @@ lareau_subdirs_pattern = $(addprefix $(lareau_expt_dir)%,$(expt_subdirs))
 lareau_gene_len_file = $(genome_dir)/yeast_13cds10_lengths.txt
 lareau_gene_seq_file = $(genome_dir)/yeast_13cds10.fa
 
+lareau_raw_fastq_file_1 = $(lareau_proc_dir)/LLMG004_S31_L007_R1_001.fastq
+lareau_raw_fastq_file_2 = $(lareau_proc_dir)/LLMG005_S1_L001_R1_001.fastq
+
 lareau_raw_fastq_files = \
 	$(lareau_proc_dir)/LLMG004_S31_L007_R1_001.fastq \
 	$(lareau_proc_dir)/LLMG005_S1_L001_R1_001.fastq 
@@ -1265,6 +1268,14 @@ $(lareau_nn_dir): | $(lareau_expt_dir)
 
 $(lareau_lr_dir): | $(lareau_expt_dir)
 	mkdir $(lareau_lr_dir)
+
+$(lareau_raw_fastq_file_1): | $(lareau_proc_dir)
+	wget storage.ingolia-lab.org/lareaulab/iXnos/LLMG004_S31_L007_R1_001.fastq.gz -O $(lareau_proc_dir)/LLMG004_S31_L007_R1_001.fastq.gz 
+	gunzip -k $(lareau_proc_dir)/LLMG004_S31_L007_R1_001.fastq.gz 
+
+$(lareau_raw_fastq_file_2): | $(lareau_proc_dir)
+	wget storage.ingolia-lab.org/lareaulab/iXnos/LLMG005_S1_L001_R1_001.fastq.gz -O $(lareau_proc_dir)/LLMG005_S1_L001_R1_001.fastq.gz
+	gunzip -k $(lareau_proc_dir)/LLMG005_S1_L001_R1_001.fastq.gz 
 
 #NOTE: This is missing a bunch of prereqs
 $(lareau_raw_sam_file): \
