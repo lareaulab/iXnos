@@ -19,7 +19,7 @@ if __name__ == "__main__":
     out_file = open(out_fname, "w")
     model_name = nn_dir.split("/")[-1]
     header = "CDS series under model {0}\n".format(model_name)
-    header += "Protein sequence {1}\n".format(aa_seq)
+    header += "Protein sequence: {0}\n".format(aa_seq)
     out_file.write(header)
     out_file.write(">Minimum score: {0}\n".format(min_score))
     out_file.write(min_seq + "\n")
