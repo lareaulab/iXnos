@@ -212,8 +212,10 @@ make -j 20 weinberg_expt
 make -j 10 lareau_expt
 make -j 10 iwasaki_expt
 make -j 10 green_expt
+```
+After all experiment analyses have been run, you can recreate the figures and values cited in the publication with:
+```
 make figures
 make paper_data
 ```
-
-Then the results, figures, and values computed in the paper can be found in iXnos/results/[weinberg|lareau|iwasaki|green|figures|paper_data]
+The results, figures, and values generated can be found in iXnos/results/[weinberg|lareau|iwasaki|green|figures|paper_data]
