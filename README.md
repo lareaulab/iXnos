@@ -41,7 +41,7 @@ git clone https://github.com/lareaulab/iXnos.git
 
 And then add iXnos to your PYTHONPATH by appending the following line to your config file of choice (e.g. .profile, .bash_rc, etc.)
 ```
-export PYTHONPATH="${PYTHONPATH}:/path/above/repo/iXnos/"
+export PYTHONPATH="${PYTHONPATH}:/path/above/repo/iXnos"
 ```
 
 And update your PYTHONPATH in your shell
@@ -200,7 +200,32 @@ Instructions will be added later
 
 ### Optimizing Gene Sequences Under a Neural Network Model
 
-Instructions will be added later
+After you have trained a neural network model, you can use iXnos to find the minimum and maximum translation speed coding sequence for a given protein, under that model. 
+
+We currently support optimization for models that are only trained with sequence input features (i.e. no structure features). The sequence input features must satisfy one of these conditions: 
+* Codon features only (set nt_feats=False)
+* Nucleotide features spanning the same sequence neighborhood as the codon features (set nt_feats=True)
+```
+import iXnos.interface as inter
+# Specify the directory of your trained neural network
+nn_dir = /path/to/repo/iXnos/expts/<expt_name>/lasagne_nn/<model_name>
+# Specify the final epoch of your model training
+epoch = <int>
+# The amino acid sequence of your protein for optimization, as a string
+aa_seq = "MACDEFGHIKLNPQRSTVWY"
+# Say we trained a neural network model with only codon features
+nt_feats = False
+# By default, maximum=False, yielding the minimum translation time coding sequence. 
+# If you want the maximum translation time coding sequence, set maximum=True
+min_seq, min_score = inter.get_lasagne_optimal_codons(
+        nn_dir, epoch, aa_seq, maximum=False, nt_feats=nt_feats)
+max_seq, max_score = inter.get_lasagne_optimal_codons(
+        nn_dir, epoch, aa_seq, maximum=True, nt_feats=nt_feats)
+```
+
+min_seq and max_seq are the sequences of the minimum and maximum translation time coding sequence of aa_seq, under your model. 
+
+min_score and max_score are the total translation time score of these sequences under our model, which is equal to the sum of the predicted scaled counts under the model at all codons in the sequence.
 
 ## Reproducing Research
 
