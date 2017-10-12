@@ -16,11 +16,11 @@ fi
 
 cat $IWASAKI_PROC_DIR/SRR2075925.fastq $IWASAKI_PROC_DIR/SRR2075925.fastq | $IWASAKI_PROC_DIR/trim_linker.pl > $IWASAKI_PROC_DIR/SRR2075925_SRR2075926.trimmed.fastq
 
-~/bowtie-1.2.1.1/bowtie -v 2 -p 36 -S --un $IWASAKI_PROC_DIR/iwasaki.not_rrna_trna.fastq \
+bowtie -v 2 -p 36 -S --un $IWASAKI_PROC_DIR/iwasaki.not_rrna_trna.fastq \
 	$GENOME_DIR/human_rrna_trna \
 	$IWASAKI_PROC_DIR/SRR2075925_SRR2075926.trimmed.fastq > $IWASAKI_PROC_DIR/iwasaki.rrna_trna.sam 2> $IWASAKI_PROC_DIR/iwasaki.rrna_trna.bowtiestats
 
-~/bowtie-1.2.1.1/bowtie -a --norc -v 2 -p 36 -S --un $IWASAKI_PROC_DIR/iwasaki.unmapped.fastq \
+bowtie -a --norc -v 2 -p 36 -S --un $IWASAKI_PROC_DIR/iwasaki.unmapped.fastq \
 	$GENOME_DIR/human.transcripts.13cds10 \
 	$IWASAKI_PROC_DIR/iwasaki.not_rrna_trna.fastq > $IWASAKI_PROC_DIR/iwasaki.footprints.sam 2> $IWASAKI_PROC_DIR/iwasaki.footprints.bowtiestats
 

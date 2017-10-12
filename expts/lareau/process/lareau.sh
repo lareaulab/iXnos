@@ -13,15 +13,15 @@ fi
 		
 cat $LAREAU_PROC_DIR/LLMG004_S31_L007_R1_001.fastq $LAREAU_PROC_DIR/LLMG005_S1_L001_R1_001.fastq | $LAREAU_PROC_DIR/trim_linker_bc.pl AGCTA > $LAREAU_PROC_DIR/LLMG004_005.trimmed.fastq
 
-~/bowtie-1.2.1.1/bowtie -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.not_rrna.fastq \
+bowtie -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.not_rrna.fastq \
 	$GENOME_DIR/ScerRRNA \
 	$LAREAU_PROC_DIR/LLMG004_005.trimmed.fastq > $LAREAU_PROC_DIR/lareau.rrna.sam 2> $LAREAU_PROC_DIR/lareau.rrna.bowtiestats
 
-~/bowtie-1.2.1.1/bowtie -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.not_ncrna.fastq \
+bowtie -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.not_ncrna.fastq \
        $GENOME_DIR/rna_coding \
        $LAREAU_PROC_DIR/lareau.not_rrna.fastq > $LAREAU_PROC_DIR/lareau.ncrna.sam 2> $LAREAU_PROC_DIR/lareau.ncrna.bowtiestats
 
-~/bowtie-1.2.1.1/bowtie -a --norc -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.unmapped.fastq \
+bowtie -a --norc -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.unmapped.fastq \
        $GENOME_DIR/scer.transcripts.13cds10 \
        $LAREAU_PROC_DIR/lareau.not_ncrna.fastq > $LAREAU_PROC_DIR/lareau.footprints.sam 2> $LAREAU_PROC_DIR/lareau.footprints.bowtiestats
 
