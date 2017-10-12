@@ -1228,7 +1228,8 @@ $(weinberg_results_final_model_y_te_hat): \
 		$(weinberg_results_struc_epoch_dir)/y_te_hat.txt
 
 $(weinberg_opt_series_file): \
-		| $(repro_dir)/optimize_cds.py \
+		| $(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0/init_data/init_data.pkl \
+		$(repro_dir)/optimize_cds.py \
 		$(weinberg_results_opt_model_epoch_dir) 
 	python $(repro_dir)/optimize_cds.py \
 		$(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0 30 True \
