@@ -74,7 +74,7 @@ def process_sam_file(
         expt_dir, sam_fname, gene_seq_fname, gene_len_fname, shift_dict, 
         cod_trunc_5p, cod_trunc_3p, min_fp_size, max_fp_size, num_tr_genes, 
         num_te_genes, min_cts_per_gene, min_cod_w_data, raw_psct=0, 
-        paralog_groups_fname=False, overwrite=False):
+        paralog_groups_fname=False, overwrite=False, folds=False):
     #Load CDS dict, len dict
     len_dict = proc.get_len_dict(gene_len_fname)
     cds_dict = proc.get_cds_dict(gene_seq_fname, len_dict)
@@ -84,9 +84,6 @@ def process_sam_file(
     cts_by_codon_fname = expt_dir + \
         "/process/cts_by_codon.size.{0}.{1}.txt".format(
             min_fp_size, max_fp_size)
-    #assert not os.path.isfile(cts_by_codon_fname), \
-    #    "Error: counts by codon file {0} already exists".format(
-    #        cts_by_codon_fname)
     if not os.path.isfile(cts_by_codon_fname):
         print "making file " + cts_by_codon_fname
         proc.write_cts_by_codon(cts_by_codon_fname, cts_by_codon)
@@ -100,8 +97,6 @@ def process_sam_file(
     if raw_psct:
         outputs_fname = outputs_fname[:-4] +\
             ".raw_psct.{0}.txt".format(raw_psct)
-    #assert not os.path.isfile(outputs_fname), \
-    #    "Error: outputs file {0} already exists".format(outputs_fname)
     if not os.path.isfile(outputs_fname):
         print "making file " + outputs_fname
         proc.write_outputs(outputs_fname, outputs)
@@ -116,6 +111,10 @@ def process_sam_file(
         "{0}.{1}.trunc.{2}.{3}.min_cts.{4}.min_cod.{5}.top.{6}.txt".format(
             min_fp_size, max_fp_size, cod_trunc_5p, cod_trunc_3p, 
             min_cts_per_gene, min_cod_w_data, num_tr_genes + num_te_genes)
+    #codon_set_fname_pattern = expt_dir + "/process/{0}." +\
+    #    "size.{0}.{1}.trunc.{2}.{3}.min_cts.{4}.min_cod.{5}.top.{6}.txt".format(
+    #        min_fp_size, max_fp_size, cod_trunc_5p, cod_trunc_3p, 
+    #        min_cts_per_gene, min_cod_w_data, num_tr_genes + num_te_genes)
     print "making file " + tr_set_fname
     print "making file " + te_set_fname
     proc.make_codon_set_files(
@@ -180,7 +179,7 @@ def make_lasagne_feedforward_nn(
         filter_pct=filter_pct, rel_struc_idxs=rel_struc_idxs, 
         struc_fname=struc_fname, max_struc_start_idx=max_struc_start_idx, 
         max_struc_width=max_struc_width, aa_feats=aa_feats,
-        learning_rate=learning_rate, nonnegative=nonnegative,
+        learning_rate=learning_rate, 
         momentum=momentum, batch_size=batch_size, raw_psct=raw_psct)
     
     if log_y:

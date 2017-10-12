@@ -8,15 +8,7 @@ import os
 import imp
 import glob
 
-#fastatools = imp.load_source("fastatools", "/mnt/lareaulab/rtunney/Bias/Scripts/fastatools.py")
-#seq_dict = fastatools.load_fasta("/mnt/lareaulab/rtunney/YeastGenome/S_cer_transcripts.fa")
-#cds_dict = fastatools.cds_dict("/mnt/lareaulab/rtunney/YeastGenome/S_cer_transcripts.fa")
-#len_dict = fastatools.len_dict("/mnt/lareaulab/rtunney/YeastGenome/S_cer_transcripts.fa")
-
-#weinberg_shift_dict = {27:{0:False, 1:14, 2:False}, 28:{0:15, 1:False, 2:False}, 29:{0:15, 1:False, 2:16}, 30:{0:15, 1:False, 2:16}, 31:{0:15, 1:False, 2:16}}
-#hu_shift_dict = {20: {0:15, 1:14, 2:False}, 21:{0:15, 1:False, 2:False}, 22:{0:15, 1:False, 2:16}, 27:{0:15, 1:14, 2:False}, 28:{0:15, 1:False, 2:False}, 29:{0:15, 1:False, 2:16}, 30:{0:15, 1:False, 2:16}, 31:{0:15, 1:False, 2:16}}
-#shin_shift_dict = {27:{0:15, 1:14, 2:False}, 28:{0:15, 1:False, 2:False}, 29:{0:15, 1:False, 2:False}}
-shift_dict = {27:{0:15, 1:14, 2:False}, 28:{0:15, 1:False, 2:False}, 29:{0:15, 1:False, 2:False}}
+#shift_dict = {27:{0:15, 1:14, 2:False}, 28:{0:15, 1:False, 2:False}, 29:{0:15, 1:False, 2:False}}
 
 alpha="ACGT"
 codons = [x+y+z for x in alpha for y in alpha for z in alpha]
@@ -493,7 +485,8 @@ def shuffle_outputs(outputs, cdtr_5p, cdtr_3p):
     for gene in outputs:
         num_cods = len(outputs[gene])
         num_in_rng = num_cods - cdtr_5p - cdtr_3p
-        shuffled = random.sample(outputs[gene][cdtr_5p:cdtr_5p + num_in_rng], num_in_rng)
+        shuffled = random.sample(
+            outputs[gene][cdtr_5p:cdtr_5p + num_in_rng], num_in_rng)
         shuffled_outputs[gene] = [0 for i in range(cdtr_5p)] + shuffled + [0 for i in range(cdtr_3p)]
     return shuffled_outputs
 
@@ -613,11 +606,12 @@ def check_codon_set(codon_set, rel_cod_idxs, rel_nt_idxs, cds_dict):
 def get_fp_density(cts_vector):
     return float(sum(cts_vector))/len(cts_vector)
 
-def sort_genes_by_density(genes, cts_by_codon, cod_trunc_5p, cod_trunc_3p, descend=True):
-    long_enough_genes = filter(lambda x: len(cts_by_codon[x]) > (cod_trunc_5p + 
-                               cod_trunc_3p), genes)    
+def sort_genes_by_density(
+        genes, cts_by_codon, cod_trunc_5p, cod_trunc_3p, descend=True):
+    long_enough_genes = filter(
+        lambda x: len(cts_by_codon[x]) > (cod_trunc_5p + cod_trunc_3p), genes)  
     genes_by_density = sorted(long_enough_genes, key=lambda x: get_fp_density(
-                 cts_by_codon[x][cod_trunc_5p:-cod_trunc_3p]), reverse=descend)
+        cts_by_codon[x][cod_trunc_5p:-cod_trunc_3p]), reverse=descend)
     return genes_by_density
 
 def get_top_n_genes(cts_by_codon, cod_trunc_5p, cod_trunc_3p, n):
@@ -785,13 +779,10 @@ def make_init_data_dir(out_dir, name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
-#def make_lasagne_nn_dirs(out_dir, name):
-#    make_out_dir(out_dir)
-#    make_nn_dir(out_dir, name)
-#    make_init_data_dir(out_dir, name)
-#    #NOTE make init_data file here (?) in future
-
-def make_init_data_file(out_dir, name, gene_seq_fname, gene_len_fname, tr_codons_fname, te_codons_fname, outputs_fname, cost_fn, act_fn, num_hidden, num_outputs, lam, rel_cod_idxs=False, rel_nt_idxs=False):
+def make_init_data_file(
+        out_dir, name, gene_seq_fname, gene_len_fname, tr_codons_fname, 
+        te_codons_fname, outputs_fname, cost_fn, act_fn, num_hidden,
+        num_outputs, lam, rel_cod_idxs=False, rel_nt_idxs=False):
     f = open("{0}/{1}/init_data/init_data.txt".format(out_dir, name), "w")
     #f.write("**************\nInit data\n**************\n")
     f.write("Transcripts_fasta_file: {0}".format(gene_seq_fname) + "\n")
@@ -844,13 +835,22 @@ def load_linreg_data_file(linreg_data_fname):
         value = "\t".join(line[1:])
         d[key] = value
     f.close()
-    if d.get("Transcripts_fasta_file:", False): d["gene_seq_fname"] = d["Transcripts_fasta_file:"]
-    if d.get("Transcripts_length_file:", False): d["gene_len_fname"] = d["Transcripts_length_file:"]
-    if d.get("Training_codon_bounds:", False): d["tr_codons_fname"] = d["Training_codon_bounds:"]
-    if d.get("Test_codon_bounds:", False): d["te_codons_fname"] = d["Test_codon_bounds:"]
-    if d.get("Outputs:", False): d["outputs_fname"] = d["Outputs:"]
-    if d.get("Relative_codon_indices:", False): d["rel_cod_idxs"] = [int(elt) for elt in d["Relative_codon_indices:"].split()]
-    if d.get("Relative_nt_indices:", False): d["rel_nt_idxs"] = [int(elt) for elt in d["Relative_nt_indices:"].split()]
+    if d.get("Transcripts_fasta_file:", False): 
+        d["gene_seq_fname"] = d["Transcripts_fasta_file:"]
+    if d.get("Transcripts_length_file:", False): 
+        d["gene_len_fname"] = d["Transcripts_length_file:"]
+    if d.get("Training_codon_bounds:", False): 
+        d["tr_codons_fname"] = d["Training_codon_bounds:"]
+    if d.get("Test_codon_bounds:", False): 
+        d["te_codons_fname"] = d["Test_codon_bounds:"]
+    if d.get("Outputs:", False): 
+        d["outputs_fname"] = d["Outputs:"]
+    if d.get("Relative_codon_indices:", False): 
+        d["rel_cod_idxs"] = \
+            [int(elt) for elt in d["Relative_codon_indices:"].split()]
+    if d.get("Relative_nt_indices:", False): 
+        d["rel_nt_idxs"] = \
+            [int(elt) for elt in d["Relative_nt_indices:"].split()]
     return d
 
 def has_enough_cts(gene_cts_by_codon, min_tot_cts, min_cod_w_cts):
@@ -864,14 +864,6 @@ def make_codon_set_files(
         te_out_fname, num_tr_genes, num_te_genes, cod_trunc_5p, cod_trunc_3p, 
         min_tot_cts, min_cod_w_cts, skip_genes=0, overwrite=False, verbose=True,
         paralog_groups_fname=False):
-    #if not overwrite:
-    #    # assert that t[r|e]_codon_bounds files don't already exist
-    #    assert not os.path.isfile(tr_out_fname), \
-    #        "Error: training set file {0} already exists".format(tr_out_fname) \
-    #        + "\nUse parameter overwrite=True to overwrite"
-    #    assert not os.path.isfile(te_out_fname), \
-    #        "Error: test set file {0} already exists".format(tr_out_fname) \
-    #        + "\nUse parameter overwrite=True to overwrite"
     cts_by_codon = load_cts_by_codon(cts_by_codon_fname)
     tot_set_sizes = num_tr_genes + num_te_genes
     gene_set = cts_by_codon.keys()
@@ -1012,7 +1004,10 @@ def filter_paralogs(genes_by_density, paralog_groups):
     print "finished filtering paralogs"
     return filtered_genes_by_density
 
-def get_data_matrices(cds_dict, tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False, rel_struc_idxs=False, struc_dict=False):
+def get_data_matrices(
+        cds_dict, tr_codons_fname, te_codons_fname, outputs_fname, 
+        rel_cod_idxs=False, rel_nt_idxs=False, rel_struc_idxs=False, 
+        struc_dict=False):
     tr_codon_bounds = load_codon_set_bounds(tr_codons_fname)
     te_codon_bounds = load_codon_set_bounds(te_codons_fname)
     tr_codon_set = expand_codon_set(tr_codon_bounds)
@@ -1052,19 +1047,19 @@ def process_data(
     make_nn_dir(out_dir, name)
     make_init_data_dir(out_dir, name)
     make_init_data_file(out_dir, name, gene_seq_fname, gene_len_fname, 
-                        tr_codons_fname, te_codons_fname, outputs_fname, 
-                        cost_fn, act_fn, num_hidden, num_outputs, lam, 
-                        rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs)
+        tr_codons_fname, te_codons_fname, outputs_fname, 
+        cost_fn, act_fn, num_hidden, num_outputs, lam, 
+        rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs)
     len_dict = get_len_dict(gene_len_fname)
     cds_dict = get_cds_dict(gene_seq_fname, len_dict)
     if struc_fname:
         struc_dict = get_struc_dict(struc_fname)
     else:
         struc_dict = False
-    X_tr, X_te, y_tr, y_te = get_data_matrices(cds_dict, tr_codons_fname, 
-                             te_codons_fname, outputs_fname, 
-                             rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs,
-                             rel_struc_idxs=rel_struc_idxs, struc_dict=struc_dict)
+    X_tr, X_te, y_tr, y_te = get_data_matrices(
+        cds_dict, tr_codons_fname, te_codons_fname, outputs_fname, 
+        rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs,
+        rel_struc_idxs=rel_struc_idxs, struc_dict=struc_dict)
     if filter_max: 
         X_tr, y_tr = filter_by_max_output(X_tr, y_tr, filter_max)
     if filter_pct:
@@ -1107,8 +1102,24 @@ def get_data_matrices_lasagne(
         rel_cod_idxs, rel_nt_idxs, rel_struc_idxs, struc_dict, 
         max_struc_start_idx, max_struc_width, aa_feats):
 
-    tr_codon_bounds = load_codon_set_bounds(tr_codons_fname)
-    te_codon_bounds = load_codon_set_bounds(te_codons_fname)
+    # Load tr_codon_bounds
+    if type(tr_codons_fname) == str:
+        tr_codon_bounds = load_codon_set_bounds(tr_codons_fname)
+    elif type(tr_codons_fname) == list:
+        tr_bounds_subsets = \
+            [load_codon_set_bounds(tr_subset_fname) 
+                for tr_subset_fname in tr_codons_fname]
+        tr_codon_bounds = {k:v for d in tr_bounds_subsets for k,v in d.items()}
+    
+    # Load te_codon_bounds
+    if type(te_codons_fname) == str:
+        te_codon_bounds = load_codon_set_bounds(te_codons_fname)
+    elif type(te_codons_fname) == list:
+        te_bounds_subsets = \
+            [load_codon_set_bounds(te_subset_fname) 
+                for te_subset_fname in te_codons_fname]
+        te_codon_bounds = {k:v for d in te_bounds_subsets for k,v in d.items()}
+
     tr_codon_set = expand_codon_set(tr_codon_bounds)
     te_codon_set = expand_codon_set(te_codon_bounds)
 
@@ -1250,18 +1261,6 @@ def get_mat_idxs_by_gene(sorted_gene_list, codon_set):
         gene_data[gene] = { "length":num_codons, "start_idx":start_idx }
         start_idx += num_codons
     return gene_data
-
-#def sort_genes_by_density(
-#        gene_list, cts_by_codon, cod_trunc_5p, cod_trunc_3p):
-#    """
-#        Inputs: list of genes, cts_by_codon dict and trunc lengths
-#        Output: Sorted list of genes in descending order by data density
-#    """
-#    def sort_fn(gene):
-#        return sum(cts_by_codon[gene][cod_trunc_5p:-cod_trunc_3p]) /\
-#        float(len(cts_by_codon[gene]) - cod_trunc_5p - cod_trunc_3p)
-#
-#    return sorted(gene_list, key=sort_fn, reverse=True)
 
 def save_gene_list(gene_list, out_fname, gene2symbol):
     f = open(out_fname, "w")
