@@ -200,7 +200,9 @@ Instructions will be added later
 
 ### Optimizing Gene Sequences Under a Neural Network Model
 
-After you have trained a neural network model, you can use iXnos to find the minimum and maximum translation speed coding sequence for a given protein, under that model. 
+After you have trained a neural network model, you can use iXnos to find the minimum and maximum translation elongation time coding sequence for a given protein, under that model. 
+
+For optimization, we recommend a model with an input sequence neighborhood that excludes the 5' and 3' flanking ends of ribosome footprints. The value of the ends of footprints in predicting scaled ribosome footprint counts likely reflects in vitro ligation biases. For translation elongation time optimization, we would like to optimize our CDS based on features that determine the biological contribution to ribosome footprint counts, namely features of the coding sequence that influence translation elongation speed in vivo. We use a sequence neighborhood from codons -3 to +2 in our paper, but you can choose your own sequence neighborhood as desired.  
 
 We currently support optimization for models that are only trained with sequence input features (i.e. no structure features). The sequence input features must satisfy one of these conditions: 
 * Codon features only (set nt_feats=False)
@@ -218,14 +220,31 @@ nt_feats = False
 # By default, maximum=False, yielding the minimum translation time coding sequence. 
 # If you want the maximum translation time coding sequence, set maximum=True
 min_seq, min_score = inter.get_lasagne_optimal_codons(
-        nn_dir, epoch, aa_seq, maximum=False, nt_feats=nt_feats)
+    nn_dir, epoch, aa_seq, maximum=False, nt_feats=nt_feats)
 max_seq, max_score = inter.get_lasagne_optimal_codons(
-        nn_dir, epoch, aa_seq, maximum=True, nt_feats=nt_feats)
+    nn_dir, epoch, aa_seq, maximum=True, nt_feats=nt_feats)
 ```
 
-min_seq and max_seq are the sequences of the minimum and maximum translation time coding sequence of aa_seq, under your model. 
+min_seq and max_seq are the sequences of the minimum and maximum translation elongation time coding sequence of aa_seq, under your model. 
 
-min_score and max_score are the total translation time score of these sequences under our model, which is equal to the sum of the predicted scaled counts under the model at all codons in the sequence.
+min_score and max_score are the total translation elongation time score of these sequences under our model, which is equal to the sum of the predicted scaled counts under the model at all codons in the sequence.
+
+You can score the translation time of an arbitrary CDS, for a neural network that satisfies one of the conditions on its input sequence features enumerated above. To score your CDS of choice, you can run:
+```
+from iXnos import interface as inter
+# Load your neural network, nn_dir and epoch parameters as above
+my_nn = load_lasagne_feedforward_nn(nn_dir, epoch)
+# Your CDS to score
+cod_seq = "ATGGAGCCT<...>TGA"
+# The indices of codon features in your sequence neighborhood
+#  Remember that python's range function excludes the last index!
+rel_cod_idxs = range(-3,3)
+# Whether or not your model includes nt features, as described in the conditions above
+nt_feats = False
+cds_score = inter.opt.score_cod_seq(
+    cod_seq, my_nn, rel_cod_idxs, nt_feats=nt_feats)
+```
+The resulting cds_score is the total translation elongation time score of your CDS, under your neural network model.
 
 ## Reproducing Research
 
