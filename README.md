@@ -257,9 +257,20 @@ make -j 10 lareau_expt
 make -j 10 iwasaki_expt
 make -j 10 green_expt
 ```
-After all experiment analyses have been run, you can recreate the figures and values cited in the publication with:
+After all experiment analyses have been run, you can recreate the figures and values cited in the publication.
+
+Compute the values cited in the publication with:
 ```
-make figures
 make paper_data
 ```
+
+To generate the figures from the publication with your data run, first install the R package "fields" in an R console with:
+```
+install.packages("fields")
+```
+And then run:
+```
+make figures
+```
+
 The results, figures, and values generated can be found in iXnos/results/[weinberg|lareau|iwasaki|green|figures|paper_data]
