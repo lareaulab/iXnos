@@ -230,7 +230,7 @@ class RegressionMLP(object):
         train_err = self.train_epoch(
             self.X_tr, self.y_tr, self.batch_size, self.train_fn)
         test_err = self.test_epoch(
-            self.X_te, self.y_te, self.batch_size, self.test_fn)
+            self.X_te, self.y_te, self.test_fn)
         end = time.time()
         total = end - start
         self.num_epochs += 1
