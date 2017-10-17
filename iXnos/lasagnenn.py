@@ -407,15 +407,13 @@ class FeedforwardMLP(RegressionMLP):
         self.pred_fn = self.get_pred_fn(self.input_var, self.te_pred_var)
         #Initialize batch training and test errors
         #try:
-        train_err = self.test_epoch(self.X_tr, self.y_tr, 
-                                     self.batch_size, self.test_fn)
+        train_err = self.test_epoch(self.X_tr, self.y_tr, self.test_fn)
         #except AssertionError:
         #    print self.X_tr
         #    print self.y_tr
         #    print self.X_tr.shape
         #    print self.y_tr.shape
-        test_err = self.test_epoch(self.X_te, self.y_te, 
-                                   self.batch_size, self.test_fn)
+        test_err = self.test_epoch(self.X_te, self.y_te, self.test_fn)
         self.train_err_by_epoch.append(train_err)
         self.test_err_by_epoch.append(test_err)
         self.y_tr_hat = self.pred_fn(self.X_tr)
@@ -477,16 +475,19 @@ class FeedforwardMLP(RegressionMLP):
             train_batches += 1
         return train_err / train_batches
 
-    def test_epoch(self, X_te, y_te, batch_size, test_fn):
-        test_err = 0
-        test_batches = 0
-        for batch in self.iterate_minibatches(
-                X_te, y_te, batch_size, shuffle=False):
-            inputs, targets = batch
-            err = test_fn(*[inputs, targets])
-            test_err += err
-            test_batches += 1
-        return test_err / test_batches
+    #def test_epoch(self, X_te, y_te, batch_size, test_fn):
+        #test_err = 0
+        #test_batches = 0
+        #for batch in self.iterate_minibatches(
+        #        X_te, y_te, batch_size, shuffle=False):
+        #    inputs, targets = batch
+        #    err = test_fn(*[inputs, targets])
+        #    test_err += err
+        #    test_batches += 1
+        #return test_err / test_batches
+    def test_epoch(self, X_te, y_te, test_fn):
+        test_err = test_fn(*[X_te, y_te])
+        return test_err
 
 class SplitMLP(RegressionMLP):    
     def __init__(
@@ -548,10 +549,8 @@ class SplitMLP(RegressionMLP):
             self.input_vars, self.output_var, self.te_loss_var)
         self.pred_fn = self.get_pred_fn(self.input_vars, self.te_pred_var)
         #Initialize batch training and test errors
-        train_err = self.test_epoch(self.X_tr, self.y_tr, 
-                                     self.batch_size, self.test_fn)
-        test_err = self.test_epoch(self.X_te, self.y_te, 
-                                   self.batch_size, self.test_fn)
+        train_err = self.test_epoch(self.X_tr, self.y_tr, self.test_fn)
+        test_err = self.test_epoch(self.X_te, self.y_te, self.test_fn)
         self.train_err_by_epoch.append(train_err)
         self.test_err_by_epoch.append(test_err)
         self.y_tr_hat = self.pred_fn(*self.X_tr_split)
@@ -916,169 +915,169 @@ def load_dataset(
     y_test = y_val
     return X_train, y_train, X_val, y_val, X_test, y_test
 
-def load_weinberg_dataset():    
-    project_dir = "/mnt/lareaulab/rtunney/Regression"
-    expt_dir = project_dir + "/expts/weinberg"
-    sam_fname = expt_dir + "/process/weinberg.transcript.sam"
-    gene_seq_fname = project_dir + "/genome_data/yeast_13cds10.fa"
-    gene_len_fname = project_dir + "/genome_data/yeast_13cds10_lengths.txt"
-    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.500.txt"
-    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.500.txt"
-    outputs_fname = expt_dir + "/process/outputs.txt"
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-20, 18)
-    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
-        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
-        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
-        rel_nt_idxs)
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-def load_human_unt_large_dataset():
-    project_dir = "/mnt/lareaulab/rtunney/Regression"
-    expt_dir = project_dir + "/expts/human_unt_large"
-    sam_fname = expt_dir + "/process/human_unt.transcript.sam"
-    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
-    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
-    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
-    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
-    outputs_fname = expt_dir + "/process/outputs.txt"
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-20, 18)
-    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
-        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
-        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
-        rel_nt_idxs)
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-def load_human_unt_small_dataset():
-    project_dir = "/mnt/lareaulab/rtunney/Regression"
-    expt_dir = project_dir + "/expts/human_unt_small"
-    sam_fname = expt_dir + "/process/human_unt.transcript.sam"
-    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
-    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
-    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
-    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
-    outputs_fname = expt_dir + "/process/outputs.txt"
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-20, 18)
-    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
-        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
-        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
-        rel_nt_idxs)
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-def load_stanford12_large_dataset():
-    project_dir = "/mnt/lareaulab/rtunney/Regression"
-    expt_dir = project_dir + "/expts/stanford12_large"
-    sam_fname = expt_dir + "/process/yeast12.transcript.sam"
-    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
-    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
-    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.400.txt"
-    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.400.txt"
-    outputs_fname = expt_dir + "/process/outputs.txt"
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-20, 18)
-    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
-        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
-        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
-        rel_nt_idxs)
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-def load_stanford12_small_dataset():
-    project_dir = "/mnt/lareaulab/rtunney/Regression"
-    expt_dir = project_dir + "/expts/stanford12_small"
-    sam_fname = expt_dir + "/process/yeast12.transcript.sam"
-    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
-    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
-    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
-    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
-    outputs_fname = expt_dir + "/process/outputs.txt"
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-20, 18)
-    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
-        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
-        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
-        rel_nt_idxs)
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-def run_all_models():
-    X_tr, y_tr, X_val, y_val, X_te, y_te = load_weinberg_dataset()
-    my_nn = FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
-    my_nn.run_epochs(10)
-    print my_nn.y_te.transpose()
-    print my_nn.y_te_hat.transpose()
-    params = lasagne.layers.get_all_params(my_nn.network, trainable=True)
-    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/weinberg/lasagne_wts/L1W200"
-    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
-    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
-    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
-    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
-
-    X_tr, y_tr, X_val, y_val, X_te, y_te = load_human_unt_large_dataset()
-    my_nn1 = FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
-    my_nn1.run_epochs(10)
-    print my_nn1.y_te.transpose()
-    print my_nn1.y_te_hat.transpose()
-    params = lasagne.layers.get_all_params(my_nn1.network, trainable=True)
-    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/human_unt_large/lasagne_wts/L1W200"
-    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
-    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
-    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
-    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
-
-    X_tr, y_tr, X_val, y_val, X_te, y_te = load_human_unt_small_dataset()
-    my_nn2 = lasagnenn.FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
-    my_nn2.run_epochs(5)
-    print my_nn2.y_te.transpose()
-    print my_nn2.y_te_hat.transpose()
-    params = lasagne.layers.get_all_params(my_nn2.network, trainable=True)
-    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/human_unt_small/lasagne_wts/L1W200"
-    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
-    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
-    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
-    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
-
-    X_tr, y_tr, X_val, y_val, X_te, y_te = lasagnenn.load_human_unt_large_dataset()
-    my_nn3 = lasagnenn.FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
-    my_nn3.run_epochs(10)
-    print my_nn3.y_te.transpose()
-    print my_nn3.y_te_hat.transpose()
-    params = lasagne.layers.get_all_params(my_nn3.network, trainable=True)
-    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/stanford12_large/lasagne_wts/L1W200"
-    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
-    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
-    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
-    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
-
-    X_tr, y_tr, X_val, y_val, X_te, y_te = lasagnenn.load_human_unt_small_dataset()
-    my_nn4 = lasagnenn.FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
-    my_nn4.run_epochs(5)
-    print my_nn4.y_te.transpose()
-    print my_nn4.y_te_hat.transpose()
-    params = lasagne.layers.get_all_params(my_nn4.network, trainable=True)
-    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/stanford12_small/lasagne_wts/L1W200"
-    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
-    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
-    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
-    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
-
-if __name__ == "__main__":
-    X_tr, y_tr, X_val, y_val, X_te, y_te = load_weinberg_dataset()
-    rel_cod_idxs = range(-7, 6)
-    cod_adj_idxs = range(-3, 3)
-    rel_nt_idxs = range(-20, 18)
-    nt_adj_idxs = range(-20, -10) + range(8, 18)
+#def load_weinberg_dataset():    
+#    project_dir = "/mnt/lareaulab/rtunney/Regression"
+#    expt_dir = project_dir + "/expts/weinberg"
+#    sam_fname = expt_dir + "/process/weinberg.transcript.sam"
+#    gene_seq_fname = project_dir + "/genome_data/yeast_13cds10.fa"
+#    gene_len_fname = project_dir + "/genome_data/yeast_13cds10_lengths.txt"
+#    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.500.txt"
+#    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.500.txt"
+#    outputs_fname = expt_dir + "/process/outputs.txt"
+#    rel_cod_idxs = range(-7, 6)
+#    rel_nt_idxs = range(-20, 18)
+#    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
+#        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
+#        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
+#        rel_nt_idxs)
+#    return X_train, y_train, X_val, y_val, X_test, y_test
+#
+#def load_human_unt_large_dataset():
+#    project_dir = "/mnt/lareaulab/rtunney/Regression"
+#    expt_dir = project_dir + "/expts/human_unt_large"
+#    sam_fname = expt_dir + "/process/human_unt.transcript.sam"
+#    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
+#    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
+#    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
+#    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
+#    outputs_fname = expt_dir + "/process/outputs.txt"
+#    rel_cod_idxs = range(-7, 6)
+#    rel_nt_idxs = range(-20, 18)
+#    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
+#        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
+#        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
+#        rel_nt_idxs)
+#    return X_train, y_train, X_val, y_val, X_test, y_test
+#
+#def load_human_unt_small_dataset():
+#    project_dir = "/mnt/lareaulab/rtunney/Regression"
+#    expt_dir = project_dir + "/expts/human_unt_small"
+#    sam_fname = expt_dir + "/process/human_unt.transcript.sam"
+#    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
+#    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
+#    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
+#    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
+#    outputs_fname = expt_dir + "/process/outputs.txt"
+#    rel_cod_idxs = range(-7, 6)
+#    rel_nt_idxs = range(-20, 18)
+#    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
+#        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
+#        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
+#        rel_nt_idxs)
+#    return X_train, y_train, X_val, y_val, X_test, y_test
+#
+#def load_stanford12_large_dataset():
+#    project_dir = "/mnt/lareaulab/rtunney/Regression"
+#    expt_dir = project_dir + "/expts/stanford12_large"
+#    sam_fname = expt_dir + "/process/yeast12.transcript.sam"
+#    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
+#    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
+#    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.400.txt"
+#    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.400.txt"
+#    outputs_fname = expt_dir + "/process/outputs.txt"
+#    rel_cod_idxs = range(-7, 6)
+#    rel_nt_idxs = range(-20, 18)
+#    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
+#        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
+#        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
+#        rel_nt_idxs)
+#    return X_train, y_train, X_val, y_val, X_test, y_test
+#
+#def load_stanford12_small_dataset():
+#    project_dir = "/mnt/lareaulab/rtunney/Regression"
+#    expt_dir = project_dir + "/expts/stanford12_small"
+#    sam_fname = expt_dir + "/process/yeast12.transcript.sam"
+#    gene_seq_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.fa"
+#    gene_len_fname = project_dir + "/genome_data/gencode.v22.transcript.13cds10.lengths.txt"
+#    tr_codons_fname = expt_dir + "/process/tr_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
+#    te_codons_fname = expt_dir + "/process/te_set_bounds.trunc.20.20.min_cts.200.min_cod.100.top.300.txt"
+#    outputs_fname = expt_dir + "/process/outputs.txt"
+#    rel_cod_idxs = range(-7, 6)
+#    rel_nt_idxs = range(-20, 18)
+#    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset(
+#        project_dir, expt_dir, sam_fname, gene_seq_fname, gene_len_fname,
+#        tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs,
+#        rel_nt_idxs)
+#    return X_train, y_train, X_val, y_val, X_test, y_test
+#
+#def run_all_models():
+#    X_tr, y_tr, X_val, y_val, X_te, y_te = load_weinberg_dataset()
+#    my_nn = FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
+#    my_nn.run_epochs(10)
+#    print my_nn.y_te.transpose()
+#    print my_nn.y_te_hat.transpose()
+#    params = lasagne.layers.get_all_params(my_nn.network, trainable=True)
+#    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/weinberg/lasagne_wts/L1W200"
+#    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
+#    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
+#    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
+#    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
+#
+#    X_tr, y_tr, X_val, y_val, X_te, y_te = load_human_unt_large_dataset()
+#    my_nn1 = FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
+#    my_nn1.run_epochs(10)
+#    print my_nn1.y_te.transpose()
+#    print my_nn1.y_te_hat.transpose()
+#    params = lasagne.layers.get_all_params(my_nn1.network, trainable=True)
+#    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/human_unt_large/lasagne_wts/L1W200"
+#    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
+#    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
+#    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
+#    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
+#
+#    X_tr, y_tr, X_val, y_val, X_te, y_te = load_human_unt_small_dataset()
+#    my_nn2 = lasagnenn.FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
+#    my_nn2.run_epochs(5)
+#    print my_nn2.y_te.transpose()
+#    print my_nn2.y_te_hat.transpose()
+#    params = lasagne.layers.get_all_params(my_nn2.network, trainable=True)
+#    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/human_unt_small/lasagne_wts/L1W200"
+#    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
+#    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
+#    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
+#    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
+#
+#    X_tr, y_tr, X_val, y_val, X_te, y_te = lasagnenn.load_human_unt_large_dataset()
+#    my_nn3 = lasagnenn.FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
+#    my_nn3.run_epochs(10)
+#    print my_nn3.y_te.transpose()
+#    print my_nn3.y_te_hat.transpose()
+#    params = lasagne.layers.get_all_params(my_nn3.network, trainable=True)
+#    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/stanford12_large/lasagne_wts/L1W200"
+#    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
+#    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
+#    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
+#    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
+#
+#    X_tr, y_tr, X_val, y_val, X_te, y_te = lasagnenn.load_human_unt_small_dataset()
+#    my_nn4 = lasagnenn.FeedforwardMLP(X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", widths=[200])
+#    my_nn4.run_epochs(5)
+#    print my_nn4.y_te.transpose()
+#    print my_nn4.y_te_hat.transpose()
+#    params = lasagne.layers.get_all_params(my_nn4.network, trainable=True)
+#    wts_dir = "/mnt/lareaulab/rtunney/Regression/expts/stanford12_small/lasagne_wts/L1W200"
+#    proc.pickle_obj(params[0].get_value(), wts_dir + "/W_0.pkl")
+#    proc.pickle_obj(params[1].get_value(), wts_dir + "/b_0.pkl")
+#    proc.pickle_obj(params[2].get_value(), wts_dir + "/W_1.pkl")
+#    proc.pickle_obj(params[3].get_value(), wts_dir + "/b_1.pkl")
+#
+#if __name__ == "__main__":
+#    X_tr, y_tr, X_val, y_val, X_te, y_te = load_weinberg_dataset()
+#    rel_cod_idxs = range(-7, 6)
+#    cod_adj_idxs = range(-3, 3)
+#    rel_nt_idxs = range(-20, 18)
+#    nt_adj_idxs = range(-20, -10) + range(8, 18)
     #print X_tr.shape
-    out_dir = "/mnt/lareaulab/rtunney/Regression/expts/weinberg/lasagne_nn"
-    name = "file_struc_test1"
-    my_nn = FeedforwardMLP(
-        X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", 
-        widths=[200], out_dir=out_dir, name=name)
+#    out_dir = "/mnt/lareaulab/rtunney/Regression/expts/weinberg/lasagne_nn"
+#    name = "file_struc_test1"
+#    my_nn = FeedforwardMLP(
+#        X_tr, y_tr, X_te, y_te, learning_rate=0.01, update_method="nesterov", 
+#        widths=[200], out_dir=out_dir, name=name)
 #    cod_adj_idxs = range(-2, 3)
 #    rel_nt_idxs = []
 #    nt_adj_idxs = [] 
 #    my_nn = AdjacencyMLP(X_tr, y_tr, X_te, y_te, rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs, cod_adj_idxs=cod_adj_idxs, nt_adj_idxs=nt_adj_idxs, learning_rate=0.01, update_method="nesterov", widths=[200], nonlinearity="tanh", name=name, out_dir=out_dir)
 #    my_nn = SplitMLP(X_tr, y_tr, X_te, y_te, rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs, learning_rate=0.03, update_method="sgd", cod_widths=[200], nt_widths=[100], nonlinearity="tanh", name=name, out_dir=out_dir)
-    my_nn.run_epochs(30)
+#    my_nn.run_epochs(30)
 #    print my_nn.y_te.transpose()
 #    print my_nn.y_te_hat.transpose()
