@@ -487,6 +487,7 @@ class FeedforwardMLP(RegressionMLP):
         #return test_err / test_batches
     def test_epoch(self, X_te, y_te, test_fn):
         test_err = test_fn(*[X_te, y_te])
+        test_err = float(test_err)
         return test_err
 
 class SplitMLP(RegressionMLP):    
