@@ -31,7 +31,7 @@ hist( sample$V1,
       main = NA )
 axis( 1 )#, lwd = 0, lwd.ticks = 1 )
 points(nn.scores[2:7], rep(750, length(nn.scores[2:7])), col = cols[2:7], pch = 20)
-text(nn.scores[c(3,2)],c(10000,10000),labels = c("best","worst"), col = c("purple", "red"))
+text(nn.scores[c(3,2)],c(10000,10000),labels = c("fastest","slowest"), col = c("purple", "red"))
 mtext( "B", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
 
