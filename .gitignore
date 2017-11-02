@@ -31,3 +31,5 @@
 wetlab_data/gated-facs-data-20170829.csv
 *GEO
 *filter_lareau.py
+*expts/weinberg/reproduce.py
+*citrine_sequences.txt

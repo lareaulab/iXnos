@@ -126,9 +126,9 @@ def get_cod_feat_matrix(cod_feat_seqs):
     return np.hstack([get_cod_feat_vec(cod_feat_seq) 
                       for cod_feat_seq in cod_feat_seqs]) 
 
-def get_nt_feat_matrix(cod_feat_seqs):
-    return np.hstack([get_nt_feat_vec(cod_feat_seq) 
-                      for cod_feat_seq in cod_feat_seqs]) 
+def get_nt_feat_matrix(nt_feat_seqs):
+    return np.hstack([get_nt_feat_vec(nt_feat_seq) 
+                      for nt_feat_seq in nt_feat_seqs]) 
 
 def get_pred_outputs_linreg(wts, cod_feat_matrix):
     return np.dot(cod_feat_matrix.transpose(), wts).reshape(1, -1)
@@ -165,9 +165,10 @@ def get_seqs_to_nn_outputs(aa_seq, Asite_idx, my_nn, rel_cod_idxs):
     seqs_to_outputs = {seq:out for seq, out in zip(cod_feat_seqs, pred_outputs.ravel())}
     return seqs_to_outputs
 
-def get_seqs_to_lasagne_outputs(aa_seq, Asite_idx, my_nn, rel_cod_idxs, nt_feats=False):
+def get_seqs_to_lasagne_outputs(
+        aa_seq, Asite_idx, my_nn, rel_cod_idxs, nt_feats=False):
     """
-        nt_feats: bool to include CONTIGUOUS nt features with codon features
+        nt_feats: bool to include coterminous nt features with codon features
     """
     num_aa = len(aa_seq)
     let2cod = get_letter_to_codons()
@@ -289,6 +290,15 @@ def get_seqs_to_nn_outputs_by_pos(aa_seq, nn, rel_cod_idxs):
 
 def get_seqs_to_lasagne_outputs_by_pos(
         aa_seq, nn, rel_cod_idxs, nt_feats=False):
+    """
+        Inputs: 
+            rel_cod_idxs: a list of consecutive codon indices for seq nbhood
+            nt_feats: flag for seq nb that includes redundant nt. feats
+                NOTE: seq nb in model for nts must cover same region as codons
+        Returns a list of length len(aa_seq)
+            Each entry is a dictionary mapping all synonymous sequence
+            neighborhoods around an a site to their score under nn
+    """
     seqs_to_outputs_by_pos = []
     num_aa = len(aa_seq) 
     for i in range(num_aa):
@@ -352,13 +362,12 @@ def get_optimal_codons_lasagne(
     num_aa = len(aa_seq)
     seqs_to_outputs_by_pos = get_seqs_to_lasagne_outputs_by_pos(
         aa_seq, nn, rel_cod_idxs, nt_feats=nt_feats)
-    if unlog:
-        for pos_dict in seqs_to_outputs_by_pos:
-            for seq in pos_dict:
-                pos_dict[seq] = math.exp(pos_dict[seq])
+    #if unlog:
+    #    for pos_dict in seqs_to_outputs_by_pos:
+    #        for seq in pos_dict:
+    #            pos_dict[seq] = math.exp(pos_dict[seq])
     seqs_to_vit_scores_by_pos, suff_to_opt_pref_by_pos = do_viterbi_propagate(
         num_aa, seqs_to_outputs_by_pos, rel_cod_idxs, maximum=maximum)
-    #print seqs_to_vit_scores_by_pos
     opt_total_seq, opt_vit_score = viterbi_backtrack(
         seqs_to_vit_scores_by_pos, suff_to_opt_pref_by_pos, 
         rel_cod_idxs, maximum=maximum)
@@ -379,13 +388,20 @@ def get_random_cod_seq(aa_seq):
     cod_seq = ''.join(codons)
     return cod_seq
 
-def score_cod_seq(cod_seq, my_nn, rel_cod_idxs, nt_feats=False, unlog=False):
+def score_cod_seq_full(
+        cod_seq, my_nn, rel_cod_idxs, rel_nt_idxs=False, rel_struc_idxs=False, 
+        struc_dict=False, unlog=False):
+    """
+        Scores a coding sequence by getting a predicted score at each codon
+        in the CDS, and inputs sequence outside of the CDS as zeroes
+    """
+    # Get number of codons in coding sequence
     num_cod = len(cod_seq)/3
+    # Split coding sequence into list of codons
     cod_seq_split = [cod_seq[i:i+3] for i in range(0, len(cod_seq), 3)]
-    cod_feat_seqs_split = [[cod_seq_split[i + rel_idx] 
-                            if 0 <= i + rel_idx < num_cod else "___" 
-                            for rel_idx in rel_cod_idxs]
-                           for i in range(num_cod)]
+    cod_feat_seqs_split =\
+        [[cod_seq_split[i + rel_idx] if 0 <= i + rel_idx < num_cod else "___" 
+            for rel_idx in rel_cod_idxs] for i in range(num_cod)]
     cod_feat_seqs = ["".join(cods) for cods in cod_feat_seqs_split]
     cod_feat_matrix = get_cod_feat_matrix(cod_feat_seqs)
     cod_feat_matrix = cod_feat_matrix.transpose()
@@ -399,13 +415,77 @@ def score_cod_seq(cod_seq, my_nn, rel_cod_idxs, nt_feats=False, unlog=False):
         return np.exp(outputs).sum()
     return outputs.sum()
 
+def score_cod_seq_trunc(
+        cds, my_nn, rel_cod_idxs, rel_nt_idxs=False, unlog=False):
+    """
+        Scores a coding sequence by getting a predicted score at each codon
+        in the CDS where the sequence neighborhood is contained in the CDS
+    """
+    #if bool(rel_struc_idxs) != bool(struc_dict):
+    #    print "Error: must set both or neither of rel_struc_idxs and struc_dict"
+    #    raise ValueError
+    # Get number of codons in coding sequence
+    num_cod = len(cds)/3
+    num_nt = len(cds)
+    # Get codon indices to score in CDS
+    cds_valid_idxs = range(num_cod)
+    # Filter invalid codon neighborhoods
+    def is_valid_cod_nb(cds, Asite_idx, rel_cod_idxs):
+        num_cod = len(cds)/3
+        is_valid = (0 <= Asite_idx + min(rel_cod_idxs) and\
+                    Asite_idx + max(rel_cod_idxs) < num_cod)
+        return is_valid
+    cds_valid_idxs = filter(
+        lambda x: is_valid_cod_nb(cds, x, rel_cod_idxs), cds_valid_idxs)
+    # If we use nt features, filter invalid nt neighborhoods
+    if rel_nt_idxs:
+        def is_valid_nt_nb(cds, Asite_idx, rel_nt_idxs):
+            num_nts = len(cds)
+            is_valid = (0 <= Asite_idx*3 + min(rel_nt_idxs) and\
+                        Asite_idx*3 + max(rel_nt_idxs) < num_nt)
+            return is_valid
+        cds_valid_idxs = filter(
+            lambda x: is_valid_nt_nb(cds, x, rel_nt_idxs), cds_valid_idxs)
+    # Split coding sequence into list of codons
+    cds_cod_list = [cds[i:i+3] for i in range(0, len(cds), 3)]
+    # Get sequences of codon neighborhoods at each valid codon position
+    cod_nbs = []
+    for i in cds_valid_idxs:
+        cods = [cds_cod_list[i + rel_idx] for rel_idx in rel_cod_idxs]
+        cod_nb = "".join(cods)
+        cod_nbs.append(cod_nb)
+    # Get codon feature matrix, initialize feature matrix
+    cod_feat_matrix = get_cod_feat_matrix(cod_nbs)
+    cod_feat_matrix = cod_feat_matrix.transpose()
+    feat_matrix = cod_feat_matrix
+    # If we use nt features, 
+    #   get sequences of nt neighborhoods at each valid codon position
+    if rel_nt_idxs:
+        nt_nbs = []
+        for i in cds_valid_idxs:
+            nts = [cds[i + rel_idx] for rel_idx in rel_nt_idxs]
+            nt_nb = "".join(nts)
+            nt_nbs.append(nt_nb)
+    #   Get nt feature matrix, append to feature matrix
+        nt_feat_matrix = get_nt_feat_matrix(nt_nbs)
+        nt_feat_matrix = nt_feat_matrix.transpose()
+        feat_matrix = np.hstack([cod_feat_matrix, nt_feat_matrix])
+    outputs = my_nn.pred_fn(feat_matrix)
+    if unlog:
+        return np.exp(outputs).sum()
+    return outputs.sum()
+
 def get_random_cod_seqs(aa_seq, num_samples):
     return [get_random_cod_seq(aa_seq) for i in range(num_samples)]
 
 def get_score_dist(aa_seq, my_nn, rel_cod_idxs, num_samples, nt_feats=False):
+    if nt_feats:
+        rel_nt_idxs = [cod_idx * 3 + i for cod_idx in rel_cod_idxs for i in range(3)]
+    else:
+        rel_nt_idxs = False
     cod_seqs = get_random_cod_seqs(aa_seq, num_samples)
     print "computing score dist"
-    scores = [score_cod_seq(cod_seq, my_nn, rel_cod_idxs, nt_feats=nt_feats) 
+    scores = [score_cod_seq_full(cod_seq, my_nn, rel_cod_idxs, rel_nt_idxs) 
         for cod_seq in cod_seqs]
     print "done computing score dist"
     idxs = sorted(range(len(scores)), key=lambda x: scores[x])
