@@ -41,7 +41,7 @@ cols.nocha =  rep( c("red", "purple", "blue", "cyan", "green", "orange"), each =
 pdf(out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg="white" )
 #cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
-par( mar =c(6,6.5,5,3) )
+par( mar =c(7,6.5,4,3) )
 par( oma = c(0,0.5,1,0) )
 plot(unlist(nn.scores.nocha), unlist(meds.nocha), 
      col = cols.nocha,
@@ -51,10 +51,11 @@ plot(unlist(nn.scores.nocha), unlist(meds.nocha),
      cex = 0.6,
      pch = 3,
 #     pch = 20,
-     xlab = "NN score",
+     xlab = "",
      ylab = "eCitrine / mCherry\nfluorescence ratio"
 )
 axis( 1 )
 axis( 2, at = seq(0, 0.4, by=0.1))
+title( xlab = "predicted elongation time\n(arbitrary units)", line = 4.5 )
 mtext( "C", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()

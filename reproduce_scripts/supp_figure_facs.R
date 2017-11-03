@@ -45,11 +45,12 @@ plot(unlist(nn.scores), unlist(medians),
      cex = 0.6,
      pch = 3,
      #     pch = 20,
-     xlab = "NN score",
+     xlab = "",
      ylab = "eCitrine / mCherry\nfluorescence ratio"
 )
 axis( 1 )
 axis( 2, at = seq(0, max(medians,na.rm=T), by=0.5))
+title( xlab = "predicted elongation time\n(arbitrary units)", line = 4.5 )
 mtext( "A", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
 
