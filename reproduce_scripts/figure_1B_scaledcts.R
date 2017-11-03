@@ -76,8 +76,8 @@ text( slow-0.3, mean( c(ymean, g$raw_cts[g.range[slow]]) ), labels = c("slow"), 
 axis(1, at = 0.6:11.6, labels = xticks, lwd=0, cex.axis = 0.7)
 
 # raw and scaled count axes
-axis(2, lwd=0, lwd.ticks=0.75, las=1, cex.axis = 0.5)
-axis(4, lwd=0, lwd.ticks=0.75, las=1, at = c(0, ymean, 2*ymean, 3*ymean), labels = c(0,1,2,3))
+axis(2, lwd=0.75, las=1, cex.axis = 0.5)
+axis(4, lwd=0.75, las=1, at = c(0, ymean, 2*ymean, 3*ymean), labels = c(0,1,2,3))
 title(ylab="raw count")
 mtext( "scaled count", side = 4, line = 2)
 
