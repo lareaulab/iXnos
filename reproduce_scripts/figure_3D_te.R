@@ -1,15 +1,23 @@
 args <- commandArgs(trailingOnly = TRUE)
 citrine_construct_scores_fname = args[1]
-mrna_data_fname = args[2]
-facs_data_fname = args[3]
-out_fname = args[4]
+mrna_data_fname1 = args[2]
+mrna_data_fname2 = args[3]
+mrna_data_fname3 = args[4]
+facs_data_fname = args[5]
+out_fname = args[6]
 
-## mRNA
 cit = read.delim(citrine_construct_scores_fname, header=T, row.names = 1, comment.char="#")
 
-qpcr.data = read.delim(mrna_data_fname, sep=",", header=T )
+## mRNA
+qpcr.data = read.delim(mrna_data_fname1, sep=",", header=T )
 qpcr.data = qpcr.data[which(!(qpcr.data$Strain == "MAX" & qpcr.data$Isolate == 3)),]
-# this sample's pellet was aspirated - removing from all analysis
+## this sample's pellet was aspirated - removing from all analysis
+
+qpcr.2.data = read.delim(mrna_data_fname2, sep=",", header=T )
+qpcr.2.data = subset( qpcr.2.data, strain != "Y66")
+## 666 didn't grow overnight in this experiment - drop that strain
+
+qpcr.3.data = read.delim(mrna_data_fname3, sep=",", header=T )
 
 # median cy0 for each group of three technical replicates (so each strain+isolate gets one value for cit and one for mch)
 cit.cy0 = t( tapply(qpcr.data$Cy0, list(qpcr.data$Strain, qpcr.data$Isolate, qpcr.data$amplicon2), median)[,,"eCitrine"] )
@@ -25,44 +33,73 @@ mch.amp = mch.eff ^ mch.cy0
 # citrine amplification for each strain+isolate: median efficiency for each cit primer set, median citrine cy0 for each strain+isolate
 cit.amp = sapply(colnames(cit.cy0), function(x){ cit.effs[x] ^ cit.cy0[,x]})
 
-# paired mcherry and citrine amplifications. roughly, ratio of starting citrine:mcherry amounts
-mrna.ratio = mch.amp / cit.amp
-# ADD IN A NORMALIZATION TO THE CHA MCHERRY:CITRINE RATIO
-mrna.ratio = mrna.ratio / median( mrna.ratio[,"CHA2"])
+## paired mcherry and citrine amplifications. roughly, ratio of starting citrine:mcherry amounts
+mrna.ratio = data.frame(mch.amp / cit.amp)
+## ADD IN A NORMALIZATION TO THE MIN MCHERRY:CITRINE RATIO
+mrna.ratio = mrna.ratio / median( mrna.ratio[,"MIN"])
 
-nn.scores =  sapply( colnames(mrna.ratio), function(x) { rep( cit[x,"nn.score"], 3 )}) 
+## second experiment (min, 0, 6, 9)
+cit.2.cy0 = t( tapply(qpcr.2.data$Cy0, list(qpcr.2.data$strain, qpcr.2.data$isolate, qpcr.2.data$amplicon2), median)[,,"eCitrine"] )
+mch.2.cy0 = t( tapply(qpcr.2.data$Cy0, list(qpcr.2.data$strain, qpcr.2.data$isolate, qpcr.2.data$amplicon2), median)[,,"mCherry"] )
+cit.2.effs = tapply( qpcr.2.data$eff, list(qpcr.2.data$strain,  qpcr.2.data$amplicon2), median)[,"eCitrine"]
+mch.2.eff = tapply( qpcr.2.data$eff, qpcr.2.data$amplicon2, median)["mCherry"]
+mch.2.amp = mch.2.eff ^ mch.2.cy0
+cit.2.amp = sapply(colnames(cit.2.cy0), function(x){ cit.2.effs[x] ^ cit.2.cy0[,x]})
+mrna.2.ratio = data.frame(mch.2.amp / cit.2.amp)
+mrna.2.ratio = mrna.2.ratio / median( mrna.2.ratio[,"MIN"])
+mrna.2.ratio = subset( mrna.2.ratio, select = -Y66)
+colnames(mrna.2.ratio) = c("MIN","Y000","Y999")
+## remove Y666 because it didn't grow in this experiment
 
-cols = rep( c("magenta","red","purple","cyan"), each = 3)
+## third experiment (min, 6)
+cit.3.cy0 = t( tapply(qpcr.3.data$Cy0, list(qpcr.3.data$strain, qpcr.3.data$isolate, qpcr.3.data$amplicon2), median)[,,"eCitrine"] )
+mch.3.cy0 = t( tapply(qpcr.3.data$Cy0, list(qpcr.3.data$strain, qpcr.3.data$isolate, qpcr.3.data$amplicon2), median)[,,"mCherry"] )
+cit.3.effs = tapply( qpcr.3.data$eff, list(qpcr.3.data$strain,  qpcr.3.data$amplicon2), median)[,"eCitrine"]
+mch.3.eff = tapply( qpcr.3.data$eff, qpcr.3.data$amplicon2, median)["mCherry"]
+mch.3.amp = mch.3.eff ^ mch.3.cy0
+cit.3.amp = sapply(colnames(cit.3.cy0), function(x){ cit.3.effs[x] ^ cit.3.cy0[,x]})
+mrna.3.ratio = data.frame(mch.3.amp / cit.3.amp)
+mrna.3.ratio = mrna.3.ratio / median( mrna.3.ratio[,"MIN"])
+colnames(mrna.3.ratio) = c("MIN","Y666")
+
+## combine experiments (normalized to MIN in each experiment)
+## only keep the MIN measurements from the first experiment
+mrna.ratios = cbind( mrna.ratio, subset(mrna.2.ratio, select=-MIN), subset(mrna.3.ratio, select=-MIN))
+
+nn.scores =  sapply( colnames(mrna.ratios), function(x) { rep( cit[x,"nn.score"], 3 )})
+
+collist = list( CHA2="magenta", MAX="red", MIN="purple", Y000="blue", Y333="cyan", Y666="green", Y999="orange")
+cols = rep( unlist(collist[colnames(mrna.ratios)]), each=3 )
 
 # protein
 facs.data = read.delim(facs_data_fname, sep=",", header=T )
 # median green/red ratio of all cells included in analysis 
 facs.medians = data.frame(tapply( facs.data$green / facs.data$red, list(facs.data$Isolate, facs.data$Strain), median ))
-facs.medians = subset(facs.medians, select = c(CHA2, MAX, MIN, Y333))
-facs.medians = facs.medians[c(3,5,6),]
+facs.medians = subset(facs.medians, select = colnames(mrna.ratios))
+facs.medians = facs.medians[c(3,5,6),] ## select the biological replicates that we have qPCR measurements for
 
 # one per strain+isolate
-te = facs.medians/mrna.ratio
+te = facs.medians/mrna.ratios
 
 pdf(out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg="white" )
 #cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
-par( mar =c(6,6.5,5,3) )
+par( mar =c(7,6.5,4,3) )
 par( oma = c(0,0.5,1,0) )
 par( xpd = NA )
 plot(as.numeric(nn.scores), unlist(te),
      col = cols,
-     cex = 0.6,
+     cex = 0.4,
      axes = F,
      xlim = c(150,400),
      ylim = c(0, max(te,na.rm=T)),
-     pch = 3,
-#     pch = 20,
-     xlab = "NN score",
+#     pch = 3,
+     pch = 20,
+     xlab = "",
      ylab = "translation efficiency"
 )
 axis( 1 )
 axis( 2 )
-#axis( 2, at = seq( 0, 0.8, by = 0.2 ))
+title( xlab = "predicted elongation time\n(arbitrary units)", line = 4.5 )
 mtext( "D", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()

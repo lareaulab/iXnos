@@ -17,7 +17,7 @@ cols = c("magenta", "red", "purple", "blue", "cyan", "green", "orange")
 pdf(out_fname, width=2, height=1.167, pointsize=7, useDingbats = F, bg="white" )
 #cairo_pdf(out_fname, width=2, height=1.167, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
-par( mar =c(6,2.5,3,3) )
+par( mar =c(7,2.5,3,3) )
 par( oma = c(0,0.5,1,0) )
 par( xpd = NA )
 hist( sample$V1, 
@@ -26,10 +26,11 @@ hist( sample$V1,
       border = NA,
       xlim=c(150,400), 
       axes=F, 
-      xlab = "NN score", 
+      xlab = NA,
       ylab = NA,
       main = NA )
 axis( 1 )#, lwd = 0, lwd.ticks = 1 )
+title( xlab = "predicted elongation time\n(arbitrary units)", line = 4.5 )
 points(nn.scores[2:7], rep(750, length(nn.scores[2:7])), col = cols[2:7], pch = 20)
 text(nn.scores[c(3,2)],c(10000,10000),labels = c("fastest","slowest"), col = c("purple", "red"))
 mtext( "B", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 

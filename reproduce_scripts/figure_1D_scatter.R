@@ -35,7 +35,8 @@ scalebar <- function(){
   zlim <- c( min(zvals, na.rm=T), max(zvals, na.rm=T) )
   colramp <- get('colramp', parent.frame(1))
   fields::image.plot( zlim = zlim, col = colramp(256), 
-                      legend.only = T, add = F, 
+                      legend.only = T, add = F,
+                      legend.args = list( text = "data density", side = 2, line = 1),
                       axis.args = list( lwd = 0.75))
 }
 
