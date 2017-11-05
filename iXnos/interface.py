@@ -140,10 +140,11 @@ def setup_lasagne_nn(
         te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False, 
         nonlinearity="tanh", widths=[200], input_drop_rate=0, 
         hidden_drop_rate=0, num_outputs=1, update_method="sgd", 
-        filter_max=False, filter_test=False, 
+        filter_max=False, filter_test=False,
         filter_pct=False, rel_struc_idxs=False, struc_fname=False, 
         max_struc_start_idx=None, max_struc_width=None, aa_feats=False, 
-        learning_rate=0.01, momentum=0.09, batch_size=500, raw_psct=0):
+        learning_rate=0.01, momentum=0.09, batch_size=500, raw_psct=0, 
+        lr_decay=16):
     
     out_dir = expt_dir + "/lasagne_nn"
     proc.make_out_dir(out_dir)
@@ -162,10 +163,11 @@ def make_lasagne_feedforward_nn(
         te_codons_fname, outputs_fname, rel_cod_idxs=[], rel_nt_idxs=[],
         nonlinearity="tanh", widths=[200], input_drop_rate=0, 
         hidden_drop_rate=0, num_outputs=1, update_method="sgd",
-        filter_max = False, filter_test=False, 
+        filter_max = False, filter_test=False,
         filter_pct=False, rel_struc_idxs=False, struc_fname=False, 
         max_struc_start_idx=None, max_struc_width=None, aa_feats=False,
-        learning_rate=0.01, momentum=0.9, batch_size=500,
+        learning_rate=0.01, lr_decay=16, 
+        momentum=0.9, batch_size=500,
         log_y=False, scaled_psct=0, raw_psct=False, loss_fn="L2", 
         drop_zeros=False, nonnegative=True):
 
@@ -179,7 +181,7 @@ def make_lasagne_feedforward_nn(
         filter_pct=filter_pct, rel_struc_idxs=rel_struc_idxs, 
         struc_fname=struc_fname, max_struc_start_idx=max_struc_start_idx, 
         max_struc_width=max_struc_width, aa_feats=aa_feats,
-        learning_rate=learning_rate, 
+        learning_rate=learning_rate, lr_decay=lr_decay,
         momentum=momentum, batch_size=batch_size, raw_psct=raw_psct)
     
     if log_y:
@@ -208,7 +210,8 @@ def make_lasagne_feedforward_nn(
 
     my_nn = lasagnenn.FeedforwardMLP(
         X_tr, y_tr, X_te, y_te, name=name, out_dir=out_dir,
-        learning_rate=learning_rate, update_method=update_method, widths=widths,
+        learning_rate=learning_rate, lr_decay=lr_decay,
+        update_method=update_method, widths=widths,
         nonlinearity=nonlinearity, input_drop_rate=input_drop_rate, 
         hidden_drop_rate=hidden_drop_rate, num_outputs=num_outputs, 
         momentum=momentum, batch_size=batch_size, loss_fn=loss_fn, 

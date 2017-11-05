@@ -13,6 +13,7 @@ if __name__ == "__main__":
     te_codons_fname = sys.argv[7]
     outputs_fname = sys.argv[8]
     num_epochs = int(sys.argv[9])
+    lr_decay = float(sys.argv[10])
 
     assert model_name in model_names, "model name {0} not in " \
         "list of models".format(model_name)
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     neural_net = inter.make_lasagne_feedforward_nn(
         name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname,
         te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs,
-        rel_nt_idxs=rel_nt_idxs,
+        rel_nt_idxs=rel_nt_idxs, lr_decay=lr_decay,
         nonlinearity="tanh", widths=[200], update_method="nesterov")
     neural_net.run_epochs(num_epochs)
     #skip plotting

@@ -121,10 +121,50 @@ fp_sizes = $(shell seq -s ' ' 13 36)
 25_epochs = $(shell seq -s ' ' 0 25)
 30_epochs = $(shell seq -s ' ' 0 30)
 35_epochs = $(shell seq -s ' ' 0 35)
+40_epochs = $(shell seq -s ' ' 0 40)
+45_epochs = $(shell seq -s ' ' 0 45)
+50_epochs = $(shell seq -s ' ' 0 50)
+55_epochs = $(shell seq -s ' ' 0 55)
+60_epochs = $(shell seq -s ' ' 0 60)
+65_epochs = $(shell seq -s ' ' 0 65)
+70_epochs = $(shell seq -s ' ' 0 70)
+75_epochs = $(shell seq -s ' ' 0 75)
 nn_init_data_file_names = init_data.pkl y_te.pkl y_tr.pkl
 nn_init_data_files = $(addprefix init_data/,$(nn_init_data_file_names))
 nn_epoch_file_names = te_cost_by_epoch.pkl tr_cost_by_epoch.pkl weights.pkl \
                       y_te_hat.pkl  y_tr_hat.pkl
+nn_75_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(75_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_70_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(70_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_65_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(65_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_60_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(60_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_55_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(55_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_50_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(50_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_45_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(45_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
+nn_40_epoch_files = \
+	$(nn_init_data_files) \
+	$(foreach num,$(40_epochs),\
+		$(addprefix epoch$(num)/,$(nn_epoch_file_names)))
 nn_35_epoch_files = \
 	$(nn_init_data_files) \
 	$(foreach num,$(35_epochs),\
@@ -252,20 +292,20 @@ weinberg_28_proc_sam_pattern = \
 	$(subst .txt,%txt,$(weinberg_28_tr_bounds)) \
 	$(subst .txt,%txt,$(weinberg_28_tr_data_table))
 
-weinberg_feat_nb_series_files = $(foreach feat_nb,$(feat_neighborhoods),$(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/full_$(feat_nb)_rep$(rep)/,$(nn_30_epoch_files))))
-weinberg_feat_nb_series_pattern = $(addprefix $(weinberg_nn_dir)/full_%/,$(nn_30_epoch_files))
+weinberg_feat_nb_series_files = $(foreach feat_nb,$(feat_neighborhoods),$(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/full_$(feat_nb)_rep$(rep)/,$(nn_60_epoch_files))))
+weinberg_feat_nb_series_pattern = $(addprefix $(weinberg_nn_dir)/full_%/,$(nn_60_epoch_files))
 
-weinberg_leaveout_series_files = $(foreach lo_cod,$(leaveout_cods),$(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/nocod$(lo_cod)_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_30_epoch_files))))
-weinberg_leaveout_series_pattern = $(addprefix $(weinberg_nn_dir)/nocod%/,$(nn_30_epoch_files))
+weinberg_leaveout_series_files = $(foreach lo_cod,$(leaveout_cods),$(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/nocod$(lo_cod)_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_60_epoch_files))))
+weinberg_leaveout_series_pattern = $(addprefix $(weinberg_nn_dir)/nocod%/,$(nn_60_epoch_files))
 
-weinberg_28mer_files = $(addprefix $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/,$(nn_25_epoch_files))
-weinberg_28mer_pattern = $(addprefix $(weinberg_nn_dir)/s28_%/,$(nn_25_epoch_files))
+weinberg_28_files = $(addprefix $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/,$(nn_60_epoch_files))
+weinberg_28_pattern = $(addprefix $(weinberg_nn_dir)/s28_%/,$(nn_60_epoch_files))
 
-weinberg_fp_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_30_epoch_files)))
-weinberg_fp_struc_pattern = $(addprefix $(weinberg_nn_dir)/str_%/,$(nn_30_epoch_files))
+weinberg_fp_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_55_epoch_files)))
+weinberg_fp_struc_pattern = $(addprefix $(weinberg_nn_dir)/str_%/,$(nn_55_epoch_files))
 
-weinberg_max_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/max_str_p13p42_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_35_epoch_files)))
-weinberg_max_struc_pattern = $(addprefix $(weinberg_nn_dir)/max_str_%/,$(nn_35_epoch_files))
+weinberg_max_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/max_str_p13p42_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_70_epoch_files)))
+weinberg_max_struc_pattern = $(addprefix $(weinberg_nn_dir)/max_str_%/,$(nn_70_epoch_files))
 
 weinberg_linreg_series_files = $(foreach feat_nb,$(feat_neighborhoods),$(addprefix $(weinberg_lr_dir)/lr_$(feat_nb)/,$(linreg_data_files)))
 weinberg_linreg_series_pattern = $(addprefix $(weinberg_lr_dir)/lr_%/,$(linreg_data_files)) 
@@ -281,6 +321,27 @@ weinberg_28_plot_pattern = $(addprefix $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17
 
 weinberg_struc_gene_plot_dir = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/gene_plots
 
+weinberg_feat_nb_series_num_epochs = 60
+weinberg_feat_nb_series_lr_decay = 16
+weinberg_feat_nb_series_num_reps = 10
+
+weinberg_leaveout_series_num_epochs = $(weinberg_feat_nb_series_num_epochs)
+weinberg_leaveout_series_lr_decay = $(weinberg_feat_nb_series_lr_decay)
+weinberg_leaveout_series_num_reps = $(weinberg_feat_nb_series_num_reps)
+
+weinberg_28_num_epochs = 60
+weinberg_28_lr_decay = 8
+weinberg_28_num_reps = 10
+
+weinberg_fp_struc_num_epochs = 55
+weinberg_fp_struc_lr_decay = 16
+weinberg_fp_struc_num_reps = 10
+
+# Could be 65
+weinberg_max_struc_num_epochs = 70
+weinberg_max_struc_lr_decay = 32
+weinberg_max_struc_num_reps = 10
+
 # Weinberg results files variable definitions
 
 weinberg_results_dir = $(results_dir)/weinberg
@@ -289,16 +350,16 @@ weinberg_results_feat_neighborhood_dir = \
 weinberg_results_leaveout_dir = $(weinberg_results_dir)/leaveout_series
 weinberg_results_struc_series_dir = $(weinberg_results_dir)/structure_series
 weinberg_results_struc_dir = $(weinberg_results_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0
-weinberg_results_struc_epoch_dir = $(weinberg_results_struc_dir)/epoch30
+weinberg_results_struc_epoch_dir = $(weinberg_results_struc_dir)/epoch$(weinberg_fp_struc_num_epochs)
 weinberg_results_full_dir = $(weinberg_results_dir)/full_cod_n7p5_nt_n21p17_rep0
-weinberg_results_full_epoch_dir = $(weinberg_results_full_dir)/epoch30
+weinberg_results_full_epoch_dir = $(weinberg_results_full_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
 weinberg_results_28_dir = $(weinberg_results_dir)/s28_cod_n7p5_nt_n21p17
-weinberg_results_28_epoch_dir = $(weinberg_results_28_dir)/epoch25
+weinberg_results_28_epoch_dir = $(weinberg_results_28_dir)/epoch$(weinberg_28_num_epochs)
 weinberg_results_opt_model_dir = $(weinberg_results_dir)/full_cod_n3p2_nt_n9p8_rep0
-weinberg_results_opt_model_epoch_dir = $(weinberg_results_opt_model_dir)/epoch30
+weinberg_results_opt_model_epoch_dir = $(weinberg_results_opt_model_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
 
-weinberg_full_analysis_epoch_dir = $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch30
-weinberg_28_analysis_epoch_dir = $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25
+weinberg_full_analysis_epoch_dir = $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_28_analysis_epoch_dir = $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_28_num_epochs)
 
 weinberg_full_codon_scores_results_files = \
 	$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
@@ -326,7 +387,7 @@ weinberg_struc_mses_file = \
 	$(weinberg_results_struc_series_dir)/struc_mses.txt
 
 weinberg_final_model_y_te = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/init_data/y_te.txt
-weinberg_final_model_y_te_hat = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/y_te_hat.txt \
+weinberg_final_model_y_te_hat = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.txt \
 
 weinberg_results_final_model_y_te = $(weinberg_results_struc_epoch_dir)/y_te.txt
 weinberg_results_final_model_y_te_hat = $(weinberg_results_struc_epoch_dir)/y_te_hat.txt
@@ -414,21 +475,21 @@ lareau_28_proc_sam_pattern = \
 lareau_full_model_files = \
 	$(foreach rep,$(10_reps),$(addprefix \
 	$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
-	$(nn_15_epoch_files)))
+	$(nn_35_epoch_files)))
 lareau_full_model_pattern = $(addprefix $(lareau_nn_dir)/full_%/,\
-	$(nn_15_epoch_files))
+	$(nn_35_epoch_files))
 
 lareau_leaveout_series_files = \
 	$(foreach lo_cod,$(leaveout_cods),\
 	$(foreach rep,$(10_reps), $(addprefix \
 	$(lareau_nn_dir)/nocod$(lo_cod)_cod_n7p5_nt_n21p17_rep$(rep)/,\
-	$(nn_15_epoch_files))))
+	$(nn_35_epoch_files))))
 lareau_leaveout_series_pattern = $(addprefix $(lareau_nn_dir)/nocod%/,\
-	$(nn_15_epoch_files))
+	$(nn_35_epoch_files))
 
-lareau_28mer_files = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/,\
-	$(nn_10_epoch_files))
-lareau_28mer_pattern = $(addprefix $(lareau_nn_dir)/s28_%/,$(nn_10_epoch_files))
+lareau_28_files = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/,\
+	$(nn_40_epoch_files))
+lareau_28_pattern = $(addprefix $(lareau_nn_dir)/s28_%/,$(nn_40_epoch_files))
 
 lareau_full_plot_files = $(addprefix $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
 lareau_full_plot_pattern = $(addprefix $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
@@ -436,17 +497,29 @@ lareau_full_plot_pattern = $(addprefix $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_
 lareau_28_plot_files = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
 lareau_28_plot_pattern = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
 
+lareau_feat_nb_series_num_epochs = 35
+lareau_feat_nb_series_lr_decay = 8
+lareau_feat_nb_series_num_reps = 10
+
+lareau_leaveout_series_num_epochs = $(lareau_feat_nb_series_num_epochs)
+lareau_leaveout_series_lr_decay = $(lareau_feat_nb_series_lr_decay)
+lareau_leaveout_series_num_reps = $(lareau_feat_nb_series_num_reps)
+
+lareau_28_num_epochs = 40
+lareau_28_lr_decay = 4
+lareau_28_num_reps = 10
+
 # Lareau results files variable definitions
 
 lareau_results_dir = $(results_dir)/lareau
 lareau_results_leaveout_dir = $(lareau_results_dir)/leaveout_series
 lareau_results_full_dir = $(lareau_results_dir)/full_cod_n7p5_nt_n21p17_rep0
-lareau_results_full_epoch_dir = $(lareau_results_full_dir)/epoch15
+lareau_results_full_epoch_dir = $(lareau_results_full_dir)/epoch$(lareau_feat_nb_series_num_epochs)
 lareau_results_28_dir = $(lareau_results_dir)/s28_cod_n7p5_nt_n21p17
-lareau_results_28_epoch_dir = $(lareau_results_28_dir)/epoch10
+lareau_results_28_epoch_dir = $(lareau_results_28_dir)/epoch$(lareau_28_num_epochs)
 
-lareau_full_analysis_epoch_dir = $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch15
-lareau_28_analysis_epoch_dir = $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10
+lareau_full_analysis_epoch_dir = $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(lareau_feat_nb_series_num_epochs)
+lareau_28_analysis_epoch_dir = $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(lareau_28_num_epochs)
 
 lareau_full_codon_scores_results_files = \
 	$(lareau_results_full_epoch_dir)/codon_scores.tsv \
@@ -544,20 +617,20 @@ iwasaki_28_proc_sam_pattern = \
 
 leaveout_cods = $(shell seq -s ' ' -7 5)
 
-iwasaki_full_model_files = $(foreach rep,$(10_reps),$(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_10_epoch_files)))
-iwasaki_full_model_pattern = $(addprefix $(iwasaki_nn_dir)/full_%/,$(nn_10_epoch_files))
+iwasaki_full_model_files = $(foreach rep,$(10_reps),$(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_70_epoch_files)))
+iwasaki_full_model_pattern = $(addprefix $(iwasaki_nn_dir)/full_%/,$(nn_70_epoch_files))
 
 iwasaki_leaveout_series_files = \
 	$(foreach lo_cod,$(leaveout_cods),\
 	$(foreach rep,$(10_reps), $(addprefix \
 	$(iwasaki_nn_dir)/nocod$(lo_cod)_cod_n7p5_nt_n21p17_rep$(rep)/,\
-	$(nn_10_epoch_files))))
+	$(nn_70_epoch_files))))
 
 iwasaki_leaveout_series_pattern = $(addprefix $(iwasaki_nn_dir)/nocod%/,\
-	$(nn_10_epoch_files))
+	$(nn_70_epoch_files))
 
-iwasaki_28mer_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/,$(nn_10_epoch_files))
-iwasaki_28mer_pattern = $(addprefix $(iwasaki_nn_dir)/s28_%/,$(nn_10_epoch_files))
+iwasaki_28_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/,$(nn_70_epoch_files))
+iwasaki_28_pattern = $(addprefix $(iwasaki_nn_dir)/s28_%/,$(nn_70_epoch_files))
 
 iwasaki_full_plot_files = $(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
 iwasaki_full_plot_pattern = $(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
@@ -565,17 +638,29 @@ iwasaki_full_plot_pattern = $(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p1
 iwasaki_28_plot_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
 iwasaki_28_plot_pattern = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
 
+iwasaki_feat_nb_series_num_epochs = 70
+iwasaki_feat_nb_series_lr_decay = 32
+iwasaki_feat_nb_series_num_reps = 10
+
+iwasaki_leaveout_series_num_epochs = $(iwasaki_feat_nb_series_num_epochs)
+iwasaki_leaveout_series_lr_decay = $(iwasaki_feat_nb_series_lr_decay)
+iwasaki_leaveout_series_num_reps = $(iwasaki_feat_nb_series_num_reps)
+
+iwasaki_28_num_epochs = 70
+iwasaki_28_lr_decay = 32
+iwasaki_28_num_reps = 10
+
 # Iwasaki results files variable definitions
 
 iwasaki_results_dir = $(results_dir)/iwasaki
 iwasaki_results_leaveout_dir = $(iwasaki_results_dir)/leaveout_series
 iwasaki_results_full_dir = $(iwasaki_results_dir)/full_cod_n7p5_nt_n21p17_rep0
-iwasaki_results_full_epoch_dir = $(iwasaki_results_full_dir)/epoch10
+iwasaki_results_full_epoch_dir = $(iwasaki_results_full_dir)/epoch$(iwasaki_feat_nb_series_num_epochs)
 iwasaki_results_28_dir = $(iwasaki_results_dir)/s28_cod_n7p5_nt_n21p17
-iwasaki_results_28_epoch_dir = $(iwasaki_results_28_dir)/epoch10
+iwasaki_results_28_epoch_dir = $(iwasaki_results_28_dir)/epoch$(iwasaki_28_num_epochs)
 
-iwasaki_full_analysis_epoch_dir = $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch10
-iwasaki_28_analysis_epoch_dir = $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10
+iwasaki_full_analysis_epoch_dir = $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)
+iwasaki_28_analysis_epoch_dir = $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(iwasaki_28_num_epochs)
 
 iwasaki_full_codon_scores_results_files = \
 	$(iwasaki_results_full_epoch_dir)/codon_scores.tsv \
@@ -674,21 +759,21 @@ green_28_proc_sam_pattern = \
 green_full_model_files = \
 	$(foreach rep,$(10_reps),$(addprefix \
 	$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
-	$(nn_20_epoch_files)))
+	$(nn_50_epoch_files)))
 green_full_model_pattern = $(addprefix $(green_nn_dir)/full_%/,\
-	$(nn_20_epoch_files))
+	$(nn_50_epoch_files))
 
 green_leaveout_series_files = \
 	$(foreach lo_cod,$(leaveout_cods),\
 	$(foreach rep,$(10_reps), $(addprefix \
 	$(green_nn_dir)/nocod$(lo_cod)_cod_n7p5_nt_n21p17_rep$(rep)/,\
-	$(nn_20_epoch_files))))
+	$(nn_50_epoch_files))))
 green_leaveout_series_pattern = $(addprefix $(green_nn_dir)/nocod%/,\
-	$(nn_20_epoch_files))
+	$(nn_50_epoch_files))
 
-green_28mer_files = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/,\
-	$(nn_10_epoch_files))
-green_28mer_pattern = $(addprefix $(green_nn_dir)/s28_%/,$(nn_10_epoch_files))
+green_28_files = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/,\
+	$(nn_30_epoch_files))
+green_28_pattern = $(addprefix $(green_nn_dir)/s28_%/,$(nn_30_epoch_files))
 
 green_full_plot_files = $(addprefix $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
 green_full_plot_pattern = $(addprefix $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
@@ -696,17 +781,29 @@ green_full_plot_pattern = $(addprefix $(green_nn_dir)/full_cod_n7p5_nt_n21p17_re
 green_28_plot_files = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
 green_28_plot_pattern = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
 
+green_feat_nb_series_num_epochs = 50
+green_feat_nb_series_lr_decay = 8
+green_feat_nb_series_num_reps = 10
+
+green_leaveout_series_num_epochs = $(green_feat_nb_series_num_epochs)
+green_leaveout_series_lr_decay = $(green_feat_nb_series_lr_decay)
+green_leaveout_series_num_reps = $(green_feat_nb_series_num_reps)
+
+green_28_num_epochs = 30
+green_28_lr_decay = 8
+green_28_num_reps = 10
+
 # Green results files variable definitions
 
 green_results_dir = $(results_dir)/green
 green_results_leaveout_dir = $(green_results_dir)/leaveout_series
 green_results_full_dir = $(green_results_dir)/full_cod_n7p5_nt_n21p17_rep0
-green_results_full_epoch_dir = $(green_results_full_dir)/epoch20
+green_results_full_epoch_dir = $(green_results_full_dir)/epoch$(green_feat_nb_series_num_epochs)
 green_results_28_dir = $(green_results_dir)/s28_cod_n7p5_nt_n21p17
-green_results_28_epoch_dir = $(green_results_28_dir)/epoch10
+green_results_28_epoch_dir = $(green_results_28_dir)/epoch$(green_28_num_epochs)
 
-green_full_analysis_epoch_dir = $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch20
-green_28_analysis_epoch_dir = $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10
+green_full_analysis_epoch_dir = $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(green_feat_nb_series_num_epochs)
+green_28_analysis_epoch_dir = $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(green_28_num_epochs)
 
 green_full_codon_scores_results_files = \
 	$(green_results_full_epoch_dir)/codon_scores.tsv \
@@ -854,7 +951,7 @@ weinberg_expt: \
 		$(weinberg_28_proc_sam_files) \
 		$(weinberg_feat_nb_series_files) \
 		$(weinberg_leaveout_series_files) \
-		$(weinberg_28mer_files) \
+		$(weinberg_28_files) \
 		$(weinberg_fp_struc_files) \
 		$(weinberg_max_struc_files) \
 		$(weinberg_linreg_series_files) \
@@ -953,7 +1050,9 @@ $(weinberg_feat_nb_series_pattern): \
 		$(weinberg_expt_dir) $(weinberg_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
-		$(weinberg_27_31_outputs) 30
+		$(weinberg_27_31_outputs) \
+		$(weinberg_feat_nb_series_num_epochs) \
+		$(weinberg_feat_nb_series_lr_decay)
 
 #Leaveout series pattern depends on "nocod" at beginning of model name to 
 #	determine when this rule should be applied (cf. feat nb series)
@@ -977,9 +1076,11 @@ $(weinberg_leaveout_series_pattern): \
 		$(weinberg_expt_dir) $(weinberg_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
-		$(weinberg_27_31_outputs) 30
+		$(weinberg_27_31_outputs) \
+		$(weinberg_leaveout_series_num_epochs) \
+		$(weinberg_leaveout_series_lr_decay)
 
-$(weinberg_28mer_pattern): \
+$(weinberg_28_pattern): \
 		| $(weinberg_sam_file) \
 		$(weinberg_28_proc_sam_files) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
@@ -995,7 +1096,8 @@ $(weinberg_28mer_pattern): \
 		$(weinberg_expt_dir) $(weinberg_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(weinberg_28_tr_bounds) $(weinberg_28_te_bounds) \
-		$(weinberg_28_outputs) 25
+		$(weinberg_28_outputs) $(weinberg_28_num_epochs) \
+		$(weinberg_28_lr_decay)
 
 $(weinberg_fp_struc_pattern): \
 		| $(weinberg_sam_file) \
@@ -1016,7 +1118,8 @@ $(weinberg_fp_struc_pattern): \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(yeast_30_windows_str_scores_file) \
 		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
-		$(weinberg_27_31_outputs) 30
+		$(weinberg_27_31_outputs) $(weinberg_fp_struc_num_epochs) \
+		$(weinberg_fp_struc_lr_decay)
 
 $(weinberg_max_struc_pattern): \
 		| $(weinberg_sam_file) \
@@ -1037,7 +1140,8 @@ $(weinberg_max_struc_pattern): \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(yeast_30_windows_str_scores_file) \
 		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
-		$(weinberg_27_31_outputs) 35
+		$(weinberg_27_31_outputs) $(weinberg_max_struc_num_epochs) \
+		$(weinberg_max_struc_lr_decay)
 
 $(weinberg_linreg_series_pattern): \
 		| $(weinberg_sam_file) \
@@ -1097,10 +1201,11 @@ $(weinberg_results_opt_model_epoch_dir): | $(weinberg_results_opt_model_dir)
 # rule to create it, and then make can't place the targets properly in its DAG.
 
 $(weinberg_full_codon_scores_results_files_pattern): \
-		| $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_full_epoch_dir) 
 	python $(repro_dir)/codon_scores.py \
-		$(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 30
+		$(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_feat_nb_series_num_epochs)
 	cp $(weinberg_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv
 	cp $(weinberg_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1111,10 +1216,11 @@ $(weinberg_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG.
 
 $(weinberg_28_codon_scores_results_files_pattern): \
-		| $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_s28_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17 25
+		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17 \
+		$(weinberg_s28_num_epochs)
 	cp $(weinberg_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(weinberg_results_28_epoch_dir)/codon_scores.tsv
 	cp $(weinberg_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1124,7 +1230,8 @@ $(weinberg_feat_nb_mses_file): \
 		| $(weinberg_feat_nb_series_files) \
 		$(weinberg_results_feat_neighborhood_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate_w_diffs \
-		$(weinberg_nn_dir) 30 10 \
+		$(weinberg_nn_dir) $(weinberg_feat_nb_series_num_epochs) \
+		$(weinberg_feat_nb_series_num_reps) \
 		$(weinberg_feat_nb_mses_file) full_cod_n7p5_nt_n21p17 \
 		$(addprefix full_,$(feat_neighborhoods))
 
@@ -1132,7 +1239,8 @@ $(weinberg_leaveout_mses_file): \
 		| $(weinberg_leaveout_series_files) \
 		$(weinberg_results_leaveout_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate_w_diffs \
-		$(weinberg_nn_dir) 30 10 \
+		$(weinberg_nn_dir) $(weinberg_leaveout_series_num_epochs) \
+		$(weinberg_leaveout_series_num_reps) \
 		$(weinberg_leaveout_mses_file) full_cod_n7p5_nt_n21p17 \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
@@ -1142,7 +1250,8 @@ $(weinberg_struc_mses_file): \
 		$(weinberg_max_struc_files) \
 		$(weinberg_results_struc_series_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate\
-		$(weinberg_nn_dir) 30 10 \
+		$(weinberg_nn_dir) $(weinberg_fp_struc_num_epochs) \
+		$(weinberg_fp_struc_num_reps)
 		$(weinberg_struc_mses_file) str_n17n15_cod_n7p5_nt_n21p17 \
 		max_str_p13p42_cod_n7p5_nt_n21p17 
 
@@ -1156,47 +1265,51 @@ $(weinberg_feat_nb_linreg_mses_file): \
 $(weinberg_struc_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_struc_epoch_dir) \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl 
+		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn str_n17n15_cod_n7p5_nt_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(weinberg_expt_dir) str_n17n15_cod_n7p5_nt_n21p17_rep0 30
+		$(weinberg_expt_dir) str_n17n15_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_fp_struc_num_epochs)
 	cp -r $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/plots \
 		$(weinberg_results_struc_dir)
 
 $(weinberg_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_full_epoch_dir) \
-		$(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl 
+		$(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_nt_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(weinberg_expt_dir) full_cod_n7p5_nt_n21p17_rep0 30
+		$(weinberg_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_feat_nb_series_num_epochs)
 	cp -r $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
 		$(weinberg_results_full_dir)
 
 $(weinberg_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_28_epoch_dir) \
-		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch25/te_cost_by_epoch.pkl 
+		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_s28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_n17n15_cod_n7p5_nt_n21p17"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(weinberg_expt_dir) s28_cod_n7p5_nt_n21p17 25
+		$(weinberg_expt_dir) s28_cod_n7p5_nt_n21p17 \
+		$(weinberg_28_num_epochs)
 	cp -r $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
 		$(weinberg_results_28_dir)
 
 $(weinberg_struc_gene_plot_dir): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_struc_epoch_dir)
 	echo
 	echo "Plotting str_n17n15_cod_n7p5_nt_n21p17_rep0 genes"
 	echo
 	python $(repro_dir)/plot_genes.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0 30 \
+		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_fp_struc_num_epochs) \
 		$(weinberg_expt_dir)/process/te_set_bounds.size.27.31.trunc.20.20.min_cts.200.min_cod.100.top.500.data_table.txt \
 		$(yeast_gene_symbol_file) \
 		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/gene_plots
@@ -1209,10 +1322,10 @@ $(weinberg_final_model_y_te): \
 		$(weinberg_final_model_y_te)
 
 $(weinberg_final_model_y_te_hat): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/y_te_hat.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.pkl \
 		$(repro_dir)/pkl2txt.py
 	python $(repro_dir)/pkl2txt.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/y_te_hat.pkl \
+		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.pkl \
 		$(weinberg_final_model_y_te_hat)
 
 $(weinberg_results_final_model_y_te): \
@@ -1228,11 +1341,12 @@ $(weinberg_results_final_model_y_te_hat): \
 		$(weinberg_results_struc_epoch_dir)/y_te_hat.txt
 
 $(weinberg_opt_series_file): \
-		| $(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0/init_data/init_data.pkl \
+		| $(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/y_te_hat.pkl \
 		$(repro_dir)/optimize_cds.py \
 		$(weinberg_results_opt_model_epoch_dir) 
 	python $(repro_dir)/optimize_cds.py \
-		$(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0 30 True \
+		$(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0 \
+		$(weinberg_feat_nb_series_num_epochs) True \
 		$(citrine_aa_seq) $(weinberg_opt_series_file) 
 
 weinberg_clean: 
@@ -1247,7 +1361,7 @@ lareau_expt: $(lareau_sam_file) ${lareau_plot_files} \
 		$(lareau_28_proc_sam_files) \
 		$(lareau_full_model_files) \
 		$(lareau_leaveout_series_files) \
-		$(lareau_28mer_files) \
+		$(lareau_28_files) \
 		$(lareau_full_codon_scores_results_files) \
 		$(lareau_28_codon_scores_results_files) \
 		$(lareau_leaveout_mses_file) \
@@ -1333,7 +1447,8 @@ $(lareau_full_model_pattern): \
 		$(lareau_expt_dir) $(lareau_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(lareau_27_29_tr_bounds) $(lareau_27_29_te_bounds) \
-		$(lareau_27_29_outputs) 15
+		$(lareau_27_29_outputs) $(lareau_feat_nb_series_num_epochs) \
+		$(lareau_feat_nb_series_lr_decay)
 
 $(lareau_leaveout_series_pattern): \
 		| $(lareau_sam_file) \
@@ -1352,9 +1467,10 @@ $(lareau_leaveout_series_pattern): \
 		$(lareau_expt_dir) $(lareau_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(lareau_27_29_tr_bounds) $(lareau_27_29_te_bounds) \
-		$(lareau_27_29_outputs) 15
+		$(lareau_27_29_outputs) $(lareau_leaveout_series_num_epochs) \
+		$(lareau_leaveout_series_lr_decay)
 
-$(lareau_28mer_pattern): \
+$(lareau_28_pattern): \
 		| $(lareau_sam_file) \
 		$(lareau_28_proc_sam_files) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
@@ -1370,7 +1486,8 @@ $(lareau_28mer_pattern): \
 		$(lareau_expt_dir) $(lareau_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(lareau_28_tr_bounds) $(lareau_28_te_bounds) \
-		$(lareau_28_outputs) 10
+		$(lareau_28_outputs) $(lareau_28_num_epochs) \
+		$(lareau_28_lr_decay)
 
 # Make lareau results directory and files
 $(lareau_results_dir): | $(results_dir)
@@ -1399,10 +1516,11 @@ $(lareau_results_28_epoch_dir): | $(lareau_results_28_dir)
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(lareau_full_codon_scores_results_files_pattern): \
-		| $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch15/te_cost_by_epoch.pkl \
+		| $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(lareau_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(lareau_results_full_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 15
+		$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(lareau_feat_nb_series_num_epochs)
 	cp $(lareau_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(lareau_results_full_epoch_dir)/codon_scores.tsv
 	cp $(lareau_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1413,10 +1531,11 @@ $(lareau_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(lareau_28_codon_scores_results_files_pattern): \
-		| $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl \
+		| $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(lareau_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(lareau_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17 10
+		$(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17 \
+		$(lareau_28_num_epochs)
 	cp $(lareau_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv
 	cp $(lareau_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1426,7 +1545,8 @@ $(lareau_leaveout_mses_file) : \
 		| $(lareau_leaveout_series_files) \
 		$(lareau_results_leaveout_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate_w_diffs \
-		$(lareau_nn_dir) 15 10 \
+		$(lareau_nn_dir) $(lareau_leaveout_series_num_epochs) \
+		$(lareau_leaveout_series_num_reps) \
 		$(lareau_leaveout_mses_file) full_cod_n7p5_nt_n21p17 \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
@@ -1434,24 +1554,25 @@ $(lareau_leaveout_mses_file) : \
 $(lareau_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(lareau_results_full_epoch_dir) \
-		$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch15/te_cost_by_epoch.pkl
+		$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(lareau_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(lareau_expt_dir) full_cod_n7p5_nt_n21p17_rep0 15
+		$(lareau_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(lareau_feat_nb_series_num_epochs)
 	cp -r $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
 		$(lareau_results_full_dir)
 
 $(lareau_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(lareau_results_28_epoch_dir) \
-		$(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl
+		$(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(lareau_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(lareau_expt_dir) s28_cod_n7p5_nt_n21p17 10
+		$(lareau_expt_dir) s28_cod_n7p5_nt_n21p17 $(lareau_28_num_epochs)
 	cp -r $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
 		$(lareau_results_28_dir)
 
@@ -1467,7 +1588,7 @@ iwasaki_expt: $(iwasaki_sam_file) ${iwasaki_plot_files} \
 		$(iwasaki_28_proc_sam_files) \
 		$(iwasaki_full_model_files) \
 		$(iwasaki_leaveout_series_files) \
-		$(iwasaki_28mer_files) \
+		$(iwasaki_28_files) \
 		$(iwasaki_full_codon_scores_results_files) \
 		$(iwasaki_28_codon_scores_results_files) \
 		$(iwasaki_leaveout_mses_file) \
@@ -1525,9 +1646,9 @@ $(iwasaki_27_30_proc_sam_pattern): \
 		$(human_gene_len_file) $(human_gene_seq_file)
 
 $(iwasaki_28_proc_sam_pattern): \
-                | $(iwasaki_sam_file) \
-                $(human_gene_len_file) $(human_gene_seq_file) \
-                $(iwasaki_proc_dir) $(iwasaki_expt_dir)
+		| $(iwasaki_sam_file) \
+		$(human_gene_len_file) $(human_gene_seq_file) \
+		$(iwasaki_proc_dir) $(iwasaki_expt_dir)
 	python $(repro_dir)/process_data.py process_sam_file_28mers iwasaki \
 		$(iwasaki_expt_dir) $(iwasaki_sam_file) \
 		$(human_gene_len_file) $(human_gene_seq_file)
@@ -1549,7 +1670,8 @@ $(iwasaki_full_model_pattern): \
 		$(iwasaki_expt_dir) $(iwasaki_sam_file) \
 		$(human_gene_len_file) $(human_gene_seq_file) \
 		$(iwasaki_27_30_tr_bounds) $(iwasaki_27_30_te_bounds) \
-		$(iwasaki_27_30_outputs) 10
+		$(iwasaki_27_30_outputs) $(iwasaki_feat_nb_series_num_epochs) \
+		$(iwasaki_feat_nb_series_lr_decay)
 
 $(iwasaki_leaveout_series_pattern): \
 		| $(iwasaki_sam_file) \
@@ -1568,9 +1690,11 @@ $(iwasaki_leaveout_series_pattern): \
 		$(iwasaki_expt_dir) $(iwasaki_sam_file) \
 		$(human_gene_len_file) $(human_gene_seq_file) \
 		$(iwasaki_27_30_tr_bounds) $(iwasaki_27_30_te_bounds) \
-		$(iwasaki_27_30_outputs) 10
+		$(iwasaki_27_30_outputs) \
+		$(iwasaki_leaveout_series_num_epochs) \
+		$(iwasaki_leaveout_series_lr_decay)
 
-$(iwasaki_28mer_pattern): \
+$(iwasaki_28_pattern): \
 		| $(iwasaki_sam_file) \
 		$(iwasaki_28_proc_sam_files) \
 		$(human_gene_len_file) $(human_gene_seq_file) \
@@ -1586,7 +1710,8 @@ $(iwasaki_28mer_pattern): \
 		$(iwasaki_expt_dir) $(iwasaki_sam_file) \
 		$(human_gene_len_file) $(human_gene_seq_file) \
 		$(iwasaki_28_tr_bounds) $(iwasaki_28_te_bounds) \
-		$(iwasaki_28_outputs) 10
+		$(iwasaki_28_outputs) $(iwasaki_28_num_epochs) \
+		$(iwasaki_28_lr_decay)
 
 # Make iwasaki results directory and files
 $(iwasaki_results_dir): | $(results_dir)
@@ -1615,10 +1740,11 @@ $(iwasaki_results_28_epoch_dir): | $(iwasaki_results_28_dir)
 # to create it, and then make can't place the targets properly in its DAG. 
 
 $(iwasaki_full_codon_scores_results_files_pattern): \
-		| $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch10/te_cost_by_epoch.pkl \
+		| $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(iwasaki_results_full_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 10
+		$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(iwasaki_feat_nb_series_num_epochs)
 	cp $(iwasaki_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_full_epoch_dir)/codon_scores.tsv
 	cp $(iwasaki_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1629,10 +1755,11 @@ $(iwasaki_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(iwasaki_28_codon_scores_results_files_pattern): \
-		| $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl \
+		| $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(iwasaki_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(iwasaki_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17 10
+		$(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17 \
+		$(iwasaki_28_num_epochs)
 	cp $(iwasaki_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv
 	cp $(iwasaki_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1642,7 +1769,8 @@ $(iwasaki_leaveout_mses_file) : \
 		| $(iwasaki_leaveout_series_files) \
 		$(iwasaki_results_leaveout_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate_w_diffs \
-		$(iwasaki_nn_dir) 10 10 \
+		$(iwasaki_nn_dir) $(iwasaki_leaveout_series_num_epochs) \
+		$(iwasaki_leaveout_series_num_reps) \
 		$(iwasaki_leaveout_mses_file) full_cod_n7p5_nt_n21p17 \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
@@ -1650,24 +1778,26 @@ $(iwasaki_leaveout_mses_file) : \
 $(iwasaki_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(iwasaki_results_full_epoch_dir) \
-		$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch10/te_cost_by_epoch.pkl
+		$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(iwasaki_expt_dir) full_cod_n7p5_nt_n21p17_rep0 10
+		$(iwasaki_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(iwasaki_feat_nb_series_num_epochs)
 	cp -r $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
 		$(iwasaki_results_full_dir)
 
 $(iwasaki_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(iwasaki_results_28_epoch_dir) \
-		$(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl 
+		$(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(iwasaki_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(iwasaki_expt_dir) s28_cod_n7p5_nt_n21p17 10
+		$(iwasaki_expt_dir) s28_cod_n7p5_nt_n21p17 \
+		$(iwasaki_28_num_epochs)
 	cp -r $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
 		$(iwasaki_results_28_dir)
 
@@ -1683,7 +1813,7 @@ green_expt: $(green_sam_file) ${green_plot_files} \
 		$(green_28_proc_sam_files) \
 		$(green_full_model_files) \
 		$(green_leaveout_series_files) \
-		$(green_28mer_files) \
+		$(green_28_files) \
 		$(green_full_codon_scores_results_files) \
 		$(green_28_codon_scores_results_files) \
 		$(green_leaveout_mses_file) \
@@ -1769,7 +1899,8 @@ $(green_full_model_pattern): \
 		$(green_expt_dir) $(green_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(green_27_29_tr_bounds) $(green_27_29_te_bounds) \
-		$(green_27_29_outputs) 20
+		$(green_27_29_outputs) $(green_feat_nb_series_num_epochs) \
+		$(green_feat_nb_series_lr_decay)
 
 $(green_leaveout_series_pattern): \
 		| $(green_sam_file) \
@@ -1788,9 +1919,10 @@ $(green_leaveout_series_pattern): \
 		$(green_expt_dir) $(green_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(green_27_29_tr_bounds) $(green_27_29_te_bounds) \
-		$(green_27_29_outputs) 20
+		$(green_27_29_outputs) $(green_leaveout_series_num_epochs) \
+		$(green_leaveout_series_lr_decay)
 
-$(green_28mer_pattern): \
+$(green_28_pattern): \
 		| $(green_sam_file) \
 		$(green_28_proc_sam_files) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
@@ -1806,7 +1938,8 @@ $(green_28mer_pattern): \
 		$(green_expt_dir) $(green_sam_file) \
 		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
 		$(green_28_tr_bounds) $(green_28_te_bounds) \
-		$(green_28_outputs) 10
+		$(green_28_outputs) $(green_28_num_epochs) \
+		$(green_28_lr_decay)
 
 # Make green results directory and files
 $(green_results_dir): | $(results_dir)
@@ -1835,10 +1968,11 @@ $(green_results_28_epoch_dir): | $(green_results_28_dir)
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(green_full_codon_scores_results_files_pattern): \
-		| $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch20/te_cost_by_epoch.pkl \
+		| $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(green_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(green_results_full_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 20
+		$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(green_feat_nb_series_num_epochs)
 	cp $(green_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(green_results_full_epoch_dir)/codon_scores.tsv
 	cp $(green_full_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1849,10 +1983,10 @@ $(green_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(green_28_codon_scores_results_files_pattern): \
-		| $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl \
+		| $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(green_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(green_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(green_nn_dir)/s28_cod_n7p5_nt_n21p17 10
+		$(green_nn_dir)/s28_cod_n7p5_nt_n21p17 $(green_28_num_epochs)
 	cp $(green_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv
 	cp $(green_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1862,7 +1996,8 @@ $(green_leaveout_mses_file) : \
 		| $(green_leaveout_series_files) \
 		$(green_results_leaveout_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate_w_diffs \
-		$(green_nn_dir) 20 10 \
+		$(green_nn_dir) $(green_leaveout_series_num_epochs) \
+		$(green_leaveout_series_num_reps) \
 		$(green_leaveout_mses_file) full_cod_n7p5_nt_n21p17 \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
@@ -1870,24 +2005,26 @@ $(green_leaveout_mses_file) : \
 $(green_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(green_results_full_epoch_dir) \
-		$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch20/te_cost_by_epoch.pkl
+		$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(green_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(green_expt_dir) full_cod_n7p5_nt_n21p17_rep0 20
+		$(green_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(green_feat_nb_series_num_epochs)
 	cp -r $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
 		$(green_results_full_dir)
 
 $(green_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(green_results_28_epoch_dir) \
-		$(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch10/te_cost_by_epoch.pkl
+		$(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(green_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(green_expt_dir) s28_cod_n7p5_nt_n21p17 10
+		$(green_expt_dir) s28_cod_n7p5_nt_n21p17 \
+		$(green_28_num_epochs)
 	cp -r $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
 		$(green_results_28_dir)
 
@@ -2128,7 +2265,7 @@ $(paper_data_dir): | $(results_dir)
 	mkdir $(paper_data_dir)
 
 $(paper_data_fname): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch30/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_feat_nb_mses_file) \
 		$(weinberg_leaveout_mses_file) \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
@@ -2136,7 +2273,8 @@ $(paper_data_fname): \
 		$(repro_dir)/paper_data.py \
 		$(paper_data_dir)
 	python $(repro_dir)/paper_data.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0 30 \
+		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_fp_struc_num_epochs)	\
 		$(weinberg_feat_nb_mses_file) \
 		$(weinberg_leaveout_mses_file) \
 		$(weinberg_struc_mses_file) \

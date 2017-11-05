@@ -17,6 +17,7 @@ if __name__ == "__main__":
     te_codons_fname = sys.argv[9]
     outputs_fname = sys.argv[10]
     num_epochs = int(sys.argv[11])
+    lr_decay = float(sys.argv[12])
 
     assert model_name in model_names, "model name {0} not in " \
         "list of models".format(model_name)
@@ -38,7 +39,7 @@ if __name__ == "__main__":
                 name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname,
                 te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs,
                 rel_nt_idxs=rel_nt_idxs, rel_struc_idxs=rel_struc_idxs,
-                struc_fname=struc_fname,
+                struc_fname=struc_fname, lr_decay=lr_decay,
                 nonlinearity="tanh", widths=[200], update_method="nesterov")
             failed = False
             for i in range(num_epochs + 1):
@@ -60,7 +61,8 @@ if __name__ == "__main__":
             my_nn = inter.make_lasagne_feedforward_nn(
                 name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname,
                 te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs,
-                rel_nt_idxs=rel_nt_idxs, max_struc_start_idx=max_struc_start_idx,
+                rel_nt_idxs=rel_nt_idxs, lr_decay=lr_decay,
+                max_struc_start_idx=max_struc_start_idx,
                 struc_fname=struc_fname, max_struc_width=max_struc_width,
                 nonlinearity="tanh", widths=[200], update_method="nesterov")
             failed = False

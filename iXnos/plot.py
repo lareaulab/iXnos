@@ -752,4 +752,18 @@ def make_log_outputs_freq_plot(
     plt.savefig(out_fname)
     plt.close()
 
+def plot_test_err_series(expt_nn_dir, model_names, epoch, title, out_fname):
+    for model_name in model_names:
+        pkl_fname = "{0}/{1}/epoch{2}/te_cost_by_epoch.pkl".format(
+            expt_nn_dir, model_name, epoch)
+        te_costs = pickle.load(open(pkl_fname, "r"))
+        plt.plot(range(len(te_costs)), te_costs, label=model_name)
+    ax = plt.gca()
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles, labels)
+    plt.title(title)
+    plt.xlabel("Epoch")
+    plt.ylabel("MSE")
+    plt.savefig(out_fname)
+    plt.close()
 

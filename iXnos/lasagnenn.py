@@ -357,8 +357,9 @@ class FeedforwardMLP(RegressionMLP):
             self, X_tr, y_tr, X_te, y_te, widths=[200], nonlinearity="tanh", 
             X_val=False, y_val=False, input_drop_rate=0, hidden_drop_rate=0, 
             num_outputs=1, update_method="sgd", learning_rate=0.01, 
-            loss_fn = "L2", momentum=0.9, batch_size=500, name="my_nn", 
-            out_dir="lasagne_nn", reloaded=False, nonnegative=False):
+            lr_decay=16, loss_fn = "L2", momentum=0.9, batch_size=500, 
+            name="my_nn", out_dir="lasagne_nn", reloaded=False, 
+            nonnegative=False):
        
         super(FeedforwardMLP, self).__init__(
             X_tr, y_tr, X_te, y_te, X_val, y_val, name=name, out_dir=out_dir, 
@@ -376,6 +377,8 @@ class FeedforwardMLP(RegressionMLP):
         self.input_drop_rate = input_drop_rate
         self.hidden_drop_rate = hidden_drop_rate
         self.update_method = update_method
+        self.base_learning_rate = learning_rate
+        self.lr_decay = lr_decay
         self.learning_rate = learning_rate
         self.momentum = momentum
         self.batch_size = batch_size
@@ -451,6 +454,11 @@ class FeedforwardMLP(RegressionMLP):
         self.train_fn = self.get_train_fn(
             self.input_var, self.output_var, self.tr_loss_var, self.updates_var)
        
+    def update_learning_rate(self, epoch):
+        self.learning_rate = self.base_learning_rate *\
+            (1 / (1 + float(epoch) / self.lr_decay))
+        self.change_training_vars(learning_rate=self.learning_rate)
+
     def get_train_fn(self, input_var, output_var, loss, updates):
         train_fn = theano.function([input_var, output_var], loss, 
                                    updates=updates)
@@ -489,6 +497,33 @@ class FeedforwardMLP(RegressionMLP):
         test_err = test_fn(*[X_te, y_te])
         test_err = float(test_err)
         return test_err
+
+    def run_epoch(self):
+        #Run full epoch of training, and compute test error
+        start = time.time()
+        self.update_learning_rate(self.num_epochs)
+        print "learning rate: {0}".format(self.learning_rate)
+        train_err = self.train_epoch(
+            self.X_tr, self.y_tr, self.batch_size, self.train_fn)
+        test_err = self.test_epoch(
+            self.X_te, self.y_te, self.test_fn)
+        end = time.time()
+        total = end - start
+        self.num_epochs += 1
+        #Store epoch data
+        self.y_tr_hat = self.pred_fn(self.X_tr)
+        self.y_te_hat = self.pred_fn(self.X_te)
+        self.train_err_by_epoch.append(train_err)
+        self.test_err_by_epoch.append(test_err)
+        self.weights = [param.get_value() for param in self.params]
+        self.pickle_epoch(
+            self.weights, self.train_err_by_epoch, self.test_err_by_epoch, 
+            self.y_tr_hat, self.y_te_hat, self.num_epochs)
+        # Then we print the results for this epoch:
+        print "Epoch {} took {:.3f}s".format(
+            self.num_epochs, total)
+        print "  training loss:\t\t{:.6f}".format(train_err)
+        print "  test loss:\t\t{:.6f}".format(test_err)
 
 class SplitMLP(RegressionMLP):    
     def __init__(
