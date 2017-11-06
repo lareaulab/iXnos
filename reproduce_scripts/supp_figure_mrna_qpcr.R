@@ -1,5 +1,5 @@
 args <- commandArgs(trailingOnly = TRUE)
-citrine_construct_scores_file = args[1]
+citrine_construct_scores_fname = args[1]
 mrna_data_fname1 = args[2]
 mrna_data_fname2 = args[3]
 mrna_data_fname3 = args[4]

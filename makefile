@@ -49,13 +49,17 @@ struc_files = \
 wetlab_dir_name = wetlab_data
 wetlab_dir = $(top_dir)/$(wetlab_dir_name)
 circligase_qpcr_file = $(wetlab_dir)/circligase_qpcr.csv
-mrna_data_file = $(wetlab_dir)/mrna_cy0_summary_20170906.csv
+mrna_data_file1 = $(wetlab_dir)/mrna_cy0_summary_20170906.csv
+mrna_data_file2 = $(wetlab_dir)/mrna_cy0_summary_20171019.csv
+mrna_data_file3 = $(wetlab_dir)/mrna_cy0_summary_20171030.csv
 facs_data_zip_file = $(wetlab_dir)/gated-facs-data-20170829.csv.gz
 facs_data_file = $(wetlab_dir)/gated-facs-data-20170829.csv
 
 wetlab_files = \
 	$(circligase_qpcr_file) \
-	$(mrna_data_file) \
+	$(mrna_data_file1) \
+	$(mrna_data_file2) \
+	$(mrna_data_file3) \
 	$(facs_data_zip_file) \
 	$(facs_data_file) 
 
@@ -2046,7 +2050,7 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(repro_dir)/figure_1B_scaledcts.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1B_scaledcts.R \
-		YLR044C 40 \
+		YGR192C 260 \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
 
@@ -2078,7 +2082,7 @@ $(fig_dir)/figure_1E_indiv_gene.pdf: \
 		$(yeast_gene_symbol_file) \
 		$(repro_dir)/figure_1E_indiv_gene.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1E_indiv_gene.R \
-		YLR044C \
+		YGR192C \
 		$(weinberg_27_31_te_data_table) \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(yeast_gene_symbol_file) \
@@ -2196,13 +2200,12 @@ $(fig_dir)/figure_3C_facs.pdf: \
 $(fig_dir)/figure_3D_te.pdf: \
 		| $(repro_dir)/figure_3D_te.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(mrna_data_file) \
+		$(mrna_data_file1) $(mrna_data_file2) $(mrna_data_file3) \
 		$(facs_data_file)
 	Rscript $(repro_dir)/figure_3D_te.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(mrna_data_file) \
-		$(facs_data_file) \
-		$(fig_dir)/figure_3D_te.pdf
+		$(mrna_data_file1) $(mrna_data_file2) $(mrna_data_file3) \
+		$(facs_data_file) $(fig_dir)/figure_3D_te.pdf
 
 $(fig_dir)/supp_table_codon_scores.csv: \
 		| $(repro_dir)/supp_table_codon_scores.py \
@@ -2215,10 +2218,10 @@ $(fig_dir)/supp_table_codon_scores.csv: \
 $(fig_dir)/supp_figure_mrna_qpcr.pdf: \
 		| $(repro_dir)/supp_figure_mrna_qpcr.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(mrna_data_file) 
+		$(mrna_data_file1) $(mrna_data_file2) $(mrna_data_file3) 
 	Rscript $(repro_dir)/supp_figure_mrna_qpcr.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(mrna_data_file) \
+		$(mrna_data_file1) $(mrna_data_file2) $(mrna_data_file3) \
 		$(fig_dir)/supp_figure_mrna_qpcr.pdf
 
 $(fig_dir)/supp_figure_facs.pdf: \
