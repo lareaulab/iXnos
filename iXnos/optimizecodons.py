@@ -406,7 +406,7 @@ def score_cod_seq_full(
     cod_feat_matrix = get_cod_feat_matrix(cod_feat_seqs)
     cod_feat_matrix = cod_feat_matrix.transpose()
     feat_matrix = cod_feat_matrix
-    if nt_feats:
+    if rel_nt_idxs and rel_nt_idxs != []:
         nt_feat_matrix = get_nt_feat_matrix(cod_feat_seqs)
         nt_feat_matrix = nt_feat_matrix.transpose()
         feat_matrix = np.hstack([cod_feat_matrix, nt_feat_matrix])
