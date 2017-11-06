@@ -870,7 +870,7 @@ all: install expts paper_data
 
 # NOTE: This is where I test definitions in the makefile
 test: 
-	echo $(weinberg_plot_files_pattern)
+	echo $(weinberg_28_codon_scores_results_files_pattern)
 
 # NOTE: Installation graveyard. Has been (mostly?) replaced by cloning git repo
 #install: \
@@ -1216,11 +1216,11 @@ $(weinberg_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG.
 
 $(weinberg_28_codon_scores_results_files_pattern): \
-		| $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_s28_num_epochs)/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
 		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17 \
-		$(weinberg_s28_num_epochs)
+		$(weinberg_28_num_epochs)
 	cp $(weinberg_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(weinberg_results_28_epoch_dir)/codon_scores.tsv
 	cp $(weinberg_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
@@ -1251,7 +1251,7 @@ $(weinberg_struc_mses_file): \
 		$(weinberg_results_struc_series_dir)
 	python $(repro_dir)/aggregate_mses.py aggregate\
 		$(weinberg_nn_dir) $(weinberg_fp_struc_num_epochs) \
-		$(weinberg_fp_struc_num_reps)
+		$(weinberg_fp_struc_num_reps) \
 		$(weinberg_struc_mses_file) str_n17n15_cod_n7p5_nt_n21p17 \
 		max_str_p13p42_cod_n7p5_nt_n21p17 
 
@@ -1291,7 +1291,7 @@ $(weinberg_full_plot_pattern): \
 $(weinberg_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_28_epoch_dir) \
-		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_s28_num_epochs)/te_cost_by_epoch.pkl
+		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_n17n15_cod_n7p5_nt_n21p17"
 	echo
