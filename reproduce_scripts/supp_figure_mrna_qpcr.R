@@ -74,7 +74,7 @@ pdf(out_file, width=2, height=1.67, pointsize=7, useDingbats=F, bg="white" )
 par( mex = 0.65 ) # sets margin stuff
 par( mar =c(7,6.5,4,3) )
 par( oma = c(0,0.5,1,0) )
-plot(as.numeric(nn.scores), as.numeric(mrna.ratios),
+plot(as.numeric(nn.scores), unlist(mrna.ratios),
      col = cols,
      cex = 0.4,
      axes = F,
