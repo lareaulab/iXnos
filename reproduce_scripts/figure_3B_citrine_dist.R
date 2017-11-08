@@ -25,7 +25,7 @@ par( mex = 0.65 ) # sets margin stuff
 par( mar =c(7,2.5,3,3) )
 par( oma = c(0,0.5,1,0) )
 par( xpd = NA )
-hist( sample$V1, 
+h = hist( sample$V1, 
       breaks = 30, 
       col = purple30,
       border = NA,
@@ -36,7 +36,7 @@ hist( sample$V1,
       ylab = NA,
       main = NA )
 axis( 1 )
-g = hist( natural$avg <- score * 238,
+g = hist( natural$avg_score * 238,
          plot = F,
          breaks = 30 )
 plot(g, add = T, freq = F, col = darkgrey50, border = NA)

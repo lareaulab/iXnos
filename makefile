@@ -2182,9 +2182,11 @@ $(fig_dir)/figure_2I_cl1.pdf: \
 $(fig_dir)/figure_3B_citrine_dist.pdf: \
 		| $(repro_dir)/figure_3B_citrine_dist.R \
 		$(paper_data_dir)/random_citrine_score_dist.txt \
+		$(paper_data_dir)/natural_yeast_score_dist.txt \
 		$(paper_data_dir)/citrine_construct_scores.txt 
 	Rscript $(repro_dir)/figure_3B_citrine_dist.R \
 		$(paper_data_dir)/random_citrine_score_dist.txt \
+		$(paper_data_dir)/natural_yeast_score_dist.txt \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(fig_dir)/figure_3B_citrine_dist.pdf
 
