@@ -36,7 +36,7 @@ cols = as.vector(sapply(names(medians), function(x){rep( collist[[x]], 8 )}))
 pdf(out_file, width=2, height=1.67, pointsize=7, useDingbats=F, bg="white" )
 #cairo_pdf(out_file, width=2, height=1.67, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
-par( mar =c(6,6.5,5,3) )
+par( mar =c(7,6.5,4,3) )
 par( oma = c(0,0.5,1,0) )
 plot(unlist(nn.scores), unlist(medians), 
      col = cols,
