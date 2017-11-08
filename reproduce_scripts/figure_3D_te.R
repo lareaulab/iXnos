@@ -68,9 +68,8 @@ mrna.ratios = cbind( mrna.ratio, subset(mrna.2.ratio, select=-MIN), subset(mrna.
 
 nn.scores =  sapply( colnames(mrna.ratios), function(x) { rep( cit[x,"nn.score"], 3 )})
 
-collist = list( MIN="magenta3", CHA2="purple2", Y000="royalblue2", Y333="green2", Y666="yellow2", Y999="orange2", MAX="red2")
+collist = list( MIN="magenta3", CHA2="purple2", Y000="royalblue2", Y333="green3", Y666="gold1", Y999="darkorange2", MAX="red2")
 cols = rep( unlist(collist[colnames(mrna.ratios)]), each=3 )
-#collist = list( CHA2="magenta", MAX="red", MIN="purple", Y000="blue", Y333="cyan", Y666="green", Y999="orange")
 
 # protein
 facs.data = read.delim(facs_data_fname, sep=",", header=T )

@@ -13,10 +13,9 @@ cit = read.delim( citrine_construct_scores, header=T, row.names = 1,
 names = c("MIN", "CHA2", "Y000", "Y333", "Y666", "Y999", "MAX")
 nn.scores = cit[names,]
 
-cols = c("magenta3", "purple2", "royalblue2", "green2", "yellow2", "orange2", "red2")
+cols = c("magenta3", "purple2", "royalblue2", "green3", "gold1", "darkorange2", "red2")
 darkgrey50 <- rgb(t(col2rgb("darkgrey")[,1]), max = 255, alpha = 128)
 purple30 <- rgb(t(col2rgb("purple")[,1]), max = 255, alpha = 76)
-#cols = c("magenta", "red", "purple", "blue", "cyan", "green", "orange")
 
 # not including CHA2
 pdf(out_fname, width=2, height=1.167, pointsize=7, useDingbats = F, bg="white" )

@@ -31,7 +31,7 @@ lapply(bad, function(x) {
 
 nn.scores = as.data.frame( sapply( names(medians), function(x) { rep( cit[x,"nn.score"], 8 )}) )
 
-collist = list( MIN="magenta3", CHA2="purple2", Y000="royalblue2", Y333="green2", Y666="yellow2", Y999="orange2", MAX="red2")
+collist = list( MIN="magenta3", CHA2="purple2", Y000="royalblue2", Y333="green3", Y666="gold1", Y999="darkorange2", MAX="red2")
 
 meds.nocha = subset(medians, select = -c(CHA2))
 vars.nocha = subset(vars, select = -c(CHA2))
