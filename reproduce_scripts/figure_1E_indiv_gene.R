@@ -32,9 +32,6 @@ ymax = max( g$scaled_cts, g$yhat, na.rm = T )
 xmax = max( g$cod_idx, na.rm = T )
 raw.ymax = max( g$raw_cts, na.rm = T )
 
-message("ymax is ", ymax)
-message("xmax is ", xmax)
-
 ymean = sum( g$raw_cts, na.rm = T ) / (xmax - 20) # check these numbers...
 
 pdf( out_fname, height=1.67, width=4, pointsize=7, useDingbats = F, bg = "white" )
