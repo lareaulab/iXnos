@@ -31,12 +31,12 @@ lapply(bad, function(x) {
 
 nn.scores = as.data.frame( sapply( names(medians), function(x) { rep( cit[x,"nn.score"], 8 )}) )
 
-cols = rep( c("magenta", "red", "purple", "blue", "cyan", "green", "orange"), each = 8)
+collist = list( MIN="magenta3", CHA2="purple2", Y000="royalblue2", Y333="green2", Y666="yellow2", Y999="orange2", MAX="red2")
 
 meds.nocha = subset(medians, select = -c(CHA2))
 vars.nocha = subset(vars, select = -c(CHA2))
 nn.scores.nocha = subset( nn.scores, select = -c(CHA2))
-cols.nocha =  rep( c("red", "purple", "blue", "cyan", "green", "orange"), each = 8)
+cols.nocha = as.vector(sapply(names(meds.nocha), function(x){rep( collist[[x]], 8 )}))
 
 pdf(out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg="white" )
 #cairo_pdf(out_fname, width=2, height=1.67, pointsize=7 )

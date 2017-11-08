@@ -66,7 +66,7 @@ mrna.ratios = cbind( mrna.ratio, subset(mrna.2.ratio, select=-MIN), subset(mrna.
 
 nn.scores =  sapply( colnames(mrna.ratios), function(x) { rep( cit[x,"nn.score"], 3 )})
 
-collist = list( CHA2="magenta", MAX="red", MIN="purple", Y000="blue", Y333="cyan", Y666="green", Y999="orange")
+collist = list( MIN="magenta3", CHA2="purple2", Y000="royalblue2", Y333="green2", Y666="yellow2", Y999="orange2", MAX="red2")
 cols = rep( unlist(collist[colnames(mrna.ratios)]), each=3 )
 
 pdf(out_file, width=2, height=1.67, pointsize=7, useDingbats=F, bg="white" )
