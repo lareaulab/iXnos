@@ -2,12 +2,12 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 random_citrine_scores <- args[1]
-natural_scores <- args[2]
+endogenous_scores <- args[2]
 citrine_construct_scores <- args[3]
 out_fname <- args[4]
 
 sample = read.delim(random_citrine_scores,header=F)
-natural = read.delim(natural_scores, header=T)
+endogenous = read.delim(endogenous_scores, header=T)
 cit = read.delim( citrine_construct_scores, header=T, row.names = 1, 
 		  comment.char="#")
 names = c("MIN", "CHA2", "Y000", "Y333", "Y666", "Y999", "MAX")
@@ -35,13 +35,13 @@ h = hist( sample$V1,
       ylab = NA,
       main = NA )
 axis( 1 )
-g = hist( natural$avg_score * 238,
+g = hist( endogenous$avg_score * 238,
          plot = F,
          breaks = 30 )
 plot(g, add = T, freq = F, col = darkgrey50, border = NA)
 points(nn.scores[c(1,3:7)], rep(0.0025, length(nn.scores[c(1,3:7)])), col = cols[c(1,3:7)], pch = 20)
 title( xlab = "predicted elongation time\n(arbitrary units)", line = 4.5 )
-legend( "topright", legend = c("random eCitrine", "natural yeast genes"), fill = c(purple30,darkgrey50),
+legend( "topright", legend = c("random eCitrine", "endogenous yeast genes"), fill = c(purple30,darkgrey50),
        border = NA, bty = "n", cex = 0.6, inset = c(0, -0.2) )
 text(nn.scores[c(1,7)],c(max(h$density)/3, max(h$density)/3),labels = c("fastest","slowest"), col = c("magenta3", "red2"), cex = 0.7)
 mtext( "B", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
