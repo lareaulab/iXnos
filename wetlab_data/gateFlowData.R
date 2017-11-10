@@ -172,6 +172,7 @@ gateFlowData <- function(
         ),
         (bar %>%
            dplyr::count(.id, area) %>%
+           dplyr::group_by(.id) %>%
            dplyr::filter(n==max(n)))$area
       )
     )
