@@ -8,9 +8,9 @@ lr_mses_fname = args[2] #linreg_mses.txt
 str_mses_fname = args[3] #struc_mses.txt
 out_fname = args[4]
 
-full = read.delim(nn_mses_fname, header = T, skip=1)
-lr = read.delim(lr_mses_fname, header = T)
-struc = read.delim(str_mses_fname, header = T)
+full = read.delim(nn_mses_fname, header = T, comment = "#", row.names = 1)
+lr = read.delim(lr_mses_fname, header = T, row.names = 1)
+struc = read.delim(str_mses_fname, header = T, row.names = 1)
 
 series_names = c("NN: codons", "NN: codons + nt", "LR: codons", "LR: codons + nt")
 nn_cod = full$mean_MSE[c(1,3,5,7)]
@@ -18,18 +18,16 @@ nn_cod_nt = full$mean_MSE[c(2,4,6,8)]
 linreg_cod = lr$test_MSE[c(1,3,5,7)]
 linreg_cod_nt = lr$test_MSE[c(2,4,6,8)]
 
-nn_cod_e = full$std_err_mean[c(1,3,5,7)]
-nn_cod_nt_e = full$std_err_mean[c(2,4,6,8)]
-
 mses = data.frame( nn_cod, nn_cod_nt, linreg_cod, linreg_cod_nt)
 mses = rbind(mses, c(NA, NA, struc$mean_MSE[1:2])) # hack for structure
+
+# put all the MSEs in the right order to hack a stripchart
+full2 = data.frame(t(full[,1:10]))
+all = cbind( full2[,1:2], NA, NA, full2[,3:4], NA, NA, full2[,5:6], NA, NA, full2[,7:8], NA, NA, NA, NA, t(struc[1:10]))
 
 label = c("A site", "-3:+2", "-5:+4", "-7:+5", "")
 row.names(mses) = label
 names(mses) = series_names
-
-errs = data.frame( nn_cod_e, nn_cod_nt_e, NA, NA)
-errs = rbind( errs, c(NA, NA, struc$std_err_mean[1:2]))
 
 colors = c("mediumpurple1", "purple", "cornflowerblue", "darkslateblue")
 struc.colors = c("firebrick1", "firebrick")
@@ -54,10 +52,14 @@ centers = barplot( t(mses),
                    cex.names = 0.7,
                    ylab = "MSE",
                    xlab = NA
-#                   xlab = "neighborhood (codons)"
 )
 axis( 2, at = c(0,0.5,1), lwd = 0.75 )
 mtext( "C", font = 2, line = -3, side = 3, outer = T, adj = 0 )
+
+points( rep(as.numeric(centers), each = 10), as.matrix(all), 
+        pch = 16,
+        col = rgb(0.2,0.2,0.2,0.1),
+        cex = .4)
 
 # structure hacks
 axis( 1, at = mean(centers[3:4,5]), labels = c("structure"), lwd=0, cex.axis=0.7)
@@ -70,6 +72,5 @@ legend( x = "topright",
 
 abline( h = min(mses, na.rm=T), lty = 3, lwd = 0.5, xpd=F )
 
-#segments( x0 = centers, y0 = as.vector(t(mses))-as.vector(t(errs)), x1 = centers, y1 = as.vector(t(mses))+as.vector(t(errs)))
 dev.off()
 
