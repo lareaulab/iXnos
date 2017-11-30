@@ -6,52 +6,51 @@ args <- commandArgs(trailingOnly = TRUE)
 mses_fname = args[1]
 out_fname = args[2]
 
-dt = read.delim(mses_fname, header = T, skip = 1)
+dt = read.delim(mses_fname, header = T, comment = "#")
 
 leaveout.mean = apply(dt[1:13,2:11], 1, mean)
 full.mean = apply(dt[14,2:11], 1, mean)
 
-leaveout.se = apply(dt[1:13,2:11], 1, sd) / sqrt(10)
-full.se = apply(dt[14,2:11], 1, sd) / sqrt(10)
+data = data.frame( cbind( t(dt[14,2:11]), NA, t(dt[1:13,2:11]) ))
 
-diff = leaveout.mean - full.mean
-diff.se = sqrt( leaveout.se^2 + full.se^2 )
+label1 = c("full", NA, -7, NA, -5, NA, -3, NA,  "P", NA,  1,  NA, 3,  NA, 5)
+label2 = c(NA,     NA, NA, -6, NA, -4, NA, "E", NA,  "A", NA, 2,  NA, 4,  NA)
 
-label1 = c(-7,NA,-5,NA,-3,NA,"P",NA,1,NA,3,NA,5)
-label2 = c(NA,-6,NA,-4,NA,"E",NA,"A",NA,2,NA,4,NA)
-
-ymin = min( diff - 2 * diff.se )
-ymax = max( diff + 2 * diff.se )
+ymin = floor( min(data, na.rm=T) * 20 ) / 20
+ymax = ceiling( max(data, na.rm=T) * 20 ) / 20
 
 pdf( out_fname, width=2, height=1.67, pointsize = 7, useDingbats = F, bg = "white" )
-#cairo_pdf( out_fname, width=2, height=1.67, pointsize = 7)
+#cairo_pdf( out_fname, width=2, height=1.67, pointsize = 7 )
 par( mex = 0.65 )
-par( mar = c(6,5.5,5,3) )
+par( mar = c(6,5.5,4,3) )
 par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
-centers = barplot( diff,
-                   ylim = c( ymin, max(ymax, round(ymax,1)) ),
-                   col = "mediumpurple3",
-                   border = "mediumpurple3",
-                   space = 0.3,
-                   axes = F,
-                   axisnames = F,
-                   ylab = "MSE increase",
-                   xlab="codon position"
+
+plot( NA, 
+      xlim = c( 1, 15 ),
+      ylim = c( ymin, ymax ),
+      axes = F,
+      xlab = "codon position",
+      ylab = "MSE"
 )
-axis( 2, at = seq( round( ymin, 1 ), round( ymax, 1 ), by = 0.1 ), lwd = 0.75 )
-axis( 1, at = centers, padj = -1,
-      labels =label1,
-      tick=F, cex.axis = 0.7)
-axis( 1, at = centers, padj = -1,
-      labels = label2,
-      tick=F, cex.axis = 0.7)
-segments( centers, diff - diff.se, 
-          centers, diff + diff.se )
-arrows( centers, diff - diff.se, 
-        centers, diff + diff.se,
-        angle = 90, code = 3, 
-        length = 0.02 )
+
+rect( c(2.6:14.6), rep(full.mean,13), c(3.4:15.4), leaveout.mean, 
+      col = "mediumpurple3", border = NA )
+
+stripchart( data, 
+            vertical = T, 
+            pch = 16,
+            col = rgb(0.2,0.2,0.2,.3),
+            cex = .4,
+            add = T
+            )
+
+axis( 2, lwd = 0.75 )
+axis( 1, at = 1:15, padj = -1, labels = label1, tick = F, cex.axis = 0.7)
+axis( 1, at = 1:15, padj = -1, labels = label2, tick = F, cex.axis = 0.7)
+
+abline( h = full.mean, lty = 3, lwd = 0.5 )
+
 mtext( "E", font = 2, line = -3, side = 3, outer = T, adj = 0 )
 dev.off()
 
