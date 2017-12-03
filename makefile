@@ -2284,6 +2284,9 @@ $(paper_data_fname): \
 		$(weinberg_leaveout_mses_file) \
 		$(weinberg_struc_mses_file) \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
+		$(green_results_full_epoch_dir)/codon_scores.tsv \
+		$(weinberg_results_28_epoch_dir)/codon_scores.tsv \
+		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
 		$(paper_data_fname)

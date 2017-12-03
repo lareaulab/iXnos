@@ -10,9 +10,12 @@ if __name__ == "__main__":
     leaveout_mses_fname = sys.argv[4]
     struc_mses_fname = sys.argv[5]
     weinberg_cod_scores_fname = sys.argv[6] #.tsv file, not .pkl
-    lareau_cod_scores_fname = sys.argv[7] #.tsv file, not .pkl
-    iwasaki_cod_scores_fname = sys.argv[8] #.tsv file, not .pkl
-    out_fname = sys.argv[9]
+    green_cod_scores_fname = sys.argv[7] #.tsv file, not .pkl
+    weinberg_28_cod_scores_fname = sys.argv[8] #.tsv file, not .pkl
+    green_28_cod_scores_fname = sys.argv[9] #.tsv file, not .pkl
+    lareau_cod_scores_fname = sys.argv[10] #.tsv file, not .pkl
+    iwasaki_cod_scores_fname = sys.argv[11] #.tsv file, not .pkl
+    out_fname = sys.argv[12]
 
     # Open out_file for writing results
     out_file = open(out_fname, "w")
@@ -109,6 +112,10 @@ if __name__ == "__main__":
     
     ### Codon scores analysis
     weinberg_cod_scores = np.loadtxt(weinberg_cod_scores_fname)
+    green_cod_scores = np.loadtxt(green_cod_scores_fname)
+    weinberg_28_cod_scores = np.loadtxt(weinberg_28_cod_scores_fname)
+    green_28_cod_scores = np.loadtxt(green_28_cod_scores_fname)
+    print lareau_cod_scores_fname
     lareau_cod_scores = np.loadtxt(lareau_cod_scores_fname)
     iwasaki_cod_scores = np.loadtxt(iwasaki_cod_scores_fname)
 
@@ -130,13 +137,51 @@ if __name__ == "__main__":
     num_cods = lareau_cod_scores.shape[1]
     lareau_iwasaki_corrs_by_cod = []
     for i in range(num_cods):
-        spear_r, spear_p = spearmanr(lareau_cod_scores[:,i].ravel(), iwasaki_cod_scores[:,i].ravel())
+        keep_idxs = np.logical_not(np.isnan(lareau_cod_scores[:,i]))
+        lareau_scores_i = lareau_cod_scores[:,i][keep_idxs].ravel()
+        iwasaki_scores_i = iwasaki_cod_scores[:,i][keep_idxs].ravel()
+        #print lareau_scores_i
+        #print iwasaki_scores_i
+        #print lareau_scores_i.size
+        #print iwasaki_scores_i.size
+        spear_r, spear_p = spearmanr(lareau_scores_i, iwasaki_scores_i)
         lareau_iwasaki_corrs_by_cod.append(spear_r)
     
-    out_file.write("Lareau/Iwasaki codon score correlations by codon position\n")
+    out_file.write("Lareau/Iwasaki s28_cod_n7p5_nt_n21p17 codon score correlations by codon position\n")
     out_file.write("codon_idx\tspear_r\n")
     for i, cod_idx in enumerate(cod_idxs):
-        out_file.write("{0}\t{1}\n".format(cod_idx, lareau_iwasaki_corrs_by_cod[i]))
-   
+        out_file.write(
+            "{0}\t{1}\n".format(cod_idx, lareau_iwasaki_corrs_by_cod[i]))
+    out_file.write("\n")
+
+    weinberg_green_28_corrs_by_cod = []
+    for i in range(num_cods):
+        keep_idxs = np.logical_not(np.isnan(weinberg_28_cod_scores[:,i]))
+        weinberg_scores_i = weinberg_cod_scores[:,i][keep_idxs].ravel()
+        green_scores_i = green_28_cod_scores[:,i][keep_idxs].ravel()
+        spear_r, spear_p = spearmanr(weinberg_scores_i, green_scores_i)
+        weinberg_green_28_corrs_by_cod.append(spear_r)
+    
+    out_file.write("Weinberg/Green s28_cod_n7p5_nt_n21p17 codon score correlations by codon position\n")
+    out_file.write("codon_idx\tspear_r\n")
+    for i, cod_idx in enumerate(cod_idxs):
+        out_file.write(
+            "{0}\t{1}\n".format(cod_idx, weinberg_green_28_corrs_by_cod[i]))
+    out_file.write("\n")
+
+    weinberg_green_corrs_by_cod = []
+    for i in range(num_cods):
+        keep_idxs = np.logical_not(np.isnan(weinberg_cod_scores[:,i]))
+        weinberg_scores_i = weinberg_cod_scores[:,i][keep_idxs].ravel()
+        green_scores_i = green_cod_scores[:,i][keep_idxs].ravel()
+        spear_r, spear_p = spearmanr(weinberg_scores_i, green_scores_i)
+        weinberg_green_corrs_by_cod.append(spear_r)
+    
+    out_file.write("Weinberg/Green full_cod_n7p5_nt_n21p17 codon score correlations by codon position\n")
+    out_file.write("codon_idx\tspear_r\n")
+    for i, cod_idx in enumerate(cod_idxs):
+        out_file.write(
+            "{0}\t{1}\n".format(cod_idx, weinberg_green_corrs_by_cod[i]))
+
     out_file.close()
 
