@@ -97,7 +97,9 @@ def get_cod_feat_seqs(aa_feat_seq, let2cod):
         return cod_feat_seqs
 
 def get_cod_feat_vec(cod_feat_seq):
-    if len(cod_feat_seq) % 3 != 0: print "Error: codon sequence {0} length is not multiple of 3".format(cod_feat_seq) 
+    if len(cod_feat_seq) % 3 != 0: 
+        print "Error: codon sequence {0} length is not multiple of 3".format(
+            cod_feat_seq) 
     num_cods = len(cod_feat_seq) / 3
     cod_list = [cod_feat_seq[i*3:(i+1)*3] for i in range(num_cods)]
     num_features = 64*len(cod_list)
@@ -110,7 +112,9 @@ def get_cod_feat_vec(cod_feat_seq):
     return np.array(features).reshape(-1,1)
     
 def get_nt_feat_vec(cod_feat_seq):
-    if len(cod_feat_seq) % 3 != 0: print "Error: codon sequence {0} length is not multiple of 3".format(cod_feat_seq) 
+    if len(cod_feat_seq) % 3 != 0: 
+        print "Error: codon sequence {0} length is not multiple of 3".format(
+            cod_feat_seq) 
     num_cods = len(cod_feat_seq) / 3
     nt_list = list(cod_feat_seq)
     num_features = 4*len(nt_list)
@@ -142,7 +146,8 @@ def get_seqs_to_linreg_outputs(aa_seq, Asite_idx, wts, rel_cod_idxs):
     cod_feat_seqs = get_cod_feat_seqs(aa_feats, let2cod)
     cod_feat_matrix = get_cod_feat_matrix(cod_feat_seqs)
     pred_outputs = get_pred_outputs_linreg(wts, cod_feat_matrix)
-    seqs_to_outputs = {seq:out for seq, out in zip(cod_feat_seqs, pred_outputs.ravel())}
+    seqs_to_outputs = {seq:out for seq, out in 
+        zip(cod_feat_seqs, pred_outputs.ravel())}
     return seqs_to_outputs
 
 def get_seqs_to_nn_outputs(aa_seq, Asite_idx, my_nn, rel_cod_idxs):
@@ -162,7 +167,8 @@ def get_seqs_to_nn_outputs(aa_seq, Asite_idx, my_nn, rel_cod_idxs):
     cod_feat_seqs = get_cod_feat_seqs(aa_feats, let2cod)
     cod_feat_matrix = get_cod_feat_matrix(cod_feat_seqs)
     pred_outputs = my_nn.forward(cod_feat_matrix, wts)
-    seqs_to_outputs = {seq:out for seq, out in zip(cod_feat_seqs, pred_outputs.ravel())}
+    seqs_to_outputs = {seq:out for seq, out in 
+        zip(cod_feat_seqs, pred_outputs.ravel())}
     return seqs_to_outputs
 
 def get_seqs_to_lasagne_outputs(
@@ -233,7 +239,9 @@ def get_seqs_to_vit_scores(seqs_to_outputs, prev_seqs_to_vit_scores, prev_suff_t
         seqs_to_vit_scores[seq] = vit_score
     return seqs_to_vit_scores
 
-def viterbi_backtrack(seqs_to_vit_scores_by_pos, suff_to_opt_pref_by_pos, rel_cod_idxs, maximum=True):
+def viterbi_backtrack(
+        seqs_to_vit_scores_by_pos, suff_to_opt_pref_by_pos, rel_cod_idxs, 
+        maximum=True):
     num_aa = len(seqs_to_vit_scores_by_pos)
     if maximum == True:
         opt_end_seq = max(seqs_to_vit_scores_by_pos[-1].keys(), 
@@ -245,15 +253,8 @@ def viterbi_backtrack(seqs_to_vit_scores_by_pos, suff_to_opt_pref_by_pos, rel_co
     opt_total_seq = opt_end_seq
     curr_idx = len(seqs_to_vit_scores_by_pos) - 1
     curr_opt_seq = opt_end_seq
-    #print curr_idx
     while curr_idx > 0:
-        #print curr_idx
         prev_opt_suff = curr_opt_seq
-        #if curr_idx + max(rel_cod_idxs) < num_aa:
-            #print "curr_idx: {0}".format(curr_idx)
-            #print "max rel idx: {0}".format(max(rel_cod_idxs))
-            #print "num_aa {0}".format(num_aa)
-            #print "slicing off last 3 nt from prev_opt_suff"
         prev_opt_suff = prev_opt_suff[:-3]
         if curr_idx + min(rel_cod_idxs) > 0:
             try:

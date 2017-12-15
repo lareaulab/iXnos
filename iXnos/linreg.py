@@ -14,7 +14,10 @@ def train(X_tr, y_tr):
 def predict(X, wts):
     return np.dot(X.transpose(), wts).reshape((1, -1))
 
-def make_linreg_data_file(linreg_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False):
+def make_linreg_data_file(
+        linreg_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, 
+        te_codons_fname, outputs_fname, rel_cod_idxs=False, 
+        rel_nt_idxs=False):
     f = open("{0}/linreg_data.txt".format(linreg_dir), "w")
     f.write("Transcripts_fasta_file: {0}".format(gene_seq_fname) + "\n")
     f.write("Transcripts_length_file: {0}".format(gene_len_fname) + "\n")
@@ -22,9 +25,13 @@ def make_linreg_data_file(linreg_dir, gene_seq_fname, gene_len_fname, tr_codons_
     f.write("Test_codon_bounds: {0}".format(te_codons_fname) + "\n")
     f.write("Outputs: {0}".format(outputs_fname) + "\n")
     if rel_cod_idxs:
-        f.write("Relative_codon_indices: {0}".format("\t".join([str(elt) for elt in rel_cod_idxs])) + "\n")
+        f.write(
+            "Relative_codon_indices: " +\
+            "\t".join([str(elt) for elt in rel_cod_idxs])) + "\n")
     if rel_nt_idxs:
-        f.write("Relative_nt_indices: {0}".format("\t".join([str(elt) for elt in rel_nt_idxs])) + "\n")
+        f.write(
+            "Relative_nt_indices: " +\
+            "\t".join([str(elt) for elt in rel_nt_idxs])) + "\n")
     f.close()
 
 def make_linreg_parent_dir(expt_dir):
@@ -37,11 +44,17 @@ def make_linreg_dir(expt_dir, name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
-def linreg_init(expt_dir, name, gene_seq_fname, gene_len_fname, tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False):
+def linreg_init(
+        expt_dir, name, gene_seq_fname, gene_len_fname, tr_codons_fname, 
+        te_codons_fname, outputs_fname, rel_cod_idxs=False, 
+        rel_nt_idxs=False):
     make_linreg_parent_dir(expt_dir)
     make_linreg_dir(expt_dir, name)
     linreg_dir = "{0}/linreg/{1}".format(expt_dir, name)
-    make_linreg_data_file(linreg_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs, rel_nt_idxs=rel_nt_idxs)
+    make_linreg_data_file(
+        linreg_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, 
+        te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs, 
+        rel_nt_idxs=rel_nt_idxs)
 
 def train_and_predict(X_tr, X_te, y_tr, y_te):
     wts = train(X_tr, y_tr)
