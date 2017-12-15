@@ -11,11 +11,11 @@ if [ ! -f $GENOME_DIR/scer.transcripts.13cds10.idx.fa ]; then
 	rsem-prepare-reference $GENOME_DIR/scer.transcripts.13cds10.fa $GENOME_DIR/scer.transcripts.13cds10
 fi
 		
-cat $LAREAU_PROC_DIR/LLMG004_S31_L007_R1_001.fastq $LAREAU_PROC_DIR/LLMG005_S1_L001_R1_001.fastq | $LAREAU_PROC_DIR/trim_linker_bc.pl AGCTA > $LAREAU_PROC_DIR/LLMG004_005.trimmed.fastq
+cat $LAREAU_PROC_DIR/SRR6260802.fastq $LAREAU_PROC_DIR/SRR6260803.fastq | $LAREAU_PROC_DIR/trim_linker_bc.pl AGCTA > $LAREAU_PROC_DIR/SRR6260802_SRR6260803.trimmed.fastq
 
 bowtie -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.not_rrna.fastq \
 	$GENOME_DIR/ScerRRNA \
-	$LAREAU_PROC_DIR/LLMG004_005.trimmed.fastq > $LAREAU_PROC_DIR/lareau.rrna.sam 2> $LAREAU_PROC_DIR/lareau.rrna.bowtiestats
+	$LAREAU_PROC_DIR/SRR6260802_SRR6260803.trimmed.fastq > $LAREAU_PROC_DIR/lareau.rrna.sam 2> $LAREAU_PROC_DIR/lareau.rrna.bowtiestats
 
 bowtie -v 2 -p 36 -S --un $LAREAU_PROC_DIR/lareau.not_ncrna.fastq \
        $GENOME_DIR/rna_coding \
