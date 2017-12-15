@@ -8,8 +8,6 @@ import os
 import imp
 import glob
 
-#shift_dict = {27:{0:15, 1:14, 2:False}, 28:{0:15, 1:False, 2:False}, 29:{0:15, 1:False, 2:False}}
-
 alpha="ACGT"
 codons = [x+y+z for x in alpha for y in alpha for z in alpha]
 cod2id = {codon:idx for idx, codon in enumerate(codons)}
@@ -1082,8 +1080,8 @@ def process_data(
 def load_lasagne_data(
         gene_len_fname, gene_seq_fname, tr_codons_fname, te_codons_fname, 
         outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False, 
-        rel_struc_idxs=False, struc_fname=False, aa_feats=False,
-        max_struc_start_idx=None, max_struc_width=None, 
+        rel_struc_idxs=False, struc_fname=False, max_struc_start_idx=None,
+        max_struc_width=None, aa_feats=False,
         filter_max = False, filter_test=False, filter_pct=False):
     if filter_max and filter_pct:
         print "Error! Must pick one filter [max, pct] for codon data"

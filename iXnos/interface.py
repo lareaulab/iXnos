@@ -196,10 +196,52 @@ def process_sam_file(
         cod_trunc_5p, cod_trunc_3p, min_fp_size, max_fp_size, num_tr_genes, 
         num_te_genes, min_cts_per_gene, min_cod_w_data, raw_psct=0, 
         paralog_groups_fname=False, overwrite=False, folds=False):
-    #Load CDS dict, len dict
+    """
+    Processes an RP sam file for an experiment.
+    Makes in expt_dir/process:
+        cts_by_codon file   (sum sam map wts per codon)
+        outputs file        (scaled cts_by_codon, each gene mean centered at 1)
+        te_bounds file      (first and last codon idxs per test set gene)
+        te_data_table file  (data table for test set codons)
+        tr_bounds file      (first and last codon idxs per training set gene)
+        tr_data_table file  (data table for training set codons)
+
+    Args: 
+        expt_dir (str) - name of experiment directory
+        sam_fname (str) - name of input sam file
+        gene_seq_fname (str) - name of transcriptome fasta file
+        gene_len_fname (str) - name of gene lengths file
+        shift_dict (dict): 
+            {fp_size (int): 
+                {frame (int): shift (int, or False) for frame in range(2)}
+                for fp_size in range(min_fp_size, max_fp_size + 1) }
+        cod_trunc_5p (int): number of codons to exclude at start of each CDS
+        cod_trunc_3p (int): number of codons to exclude at end of each CDS
+        min_fp_size (int): minimum size footprint to accept in sam file
+        max_fp_size (int): maximum size footprint to accept in sam file
+        num_tr_genes (int): number of genes to sort into training set
+        num_te_genes (int): number of genes to sort into test set
+        min_cts_per_gene (int): 
+            cutoff for total cts on gene to include gene in tr/te sets
+        min_cod_w_data (int):
+            cutoff for codons with data to include gene in tr/te sets
+        raw_psct (float): psct to add to raw cts_by_codon values
+        paralog_groups_fname (str):
+            file containing one group of mutually paralogous genes on each line
+            results in filtering out all but one paralog (NOTE which one?)
+        overwrite (bool): flag to overwrite processed files, default False
+        folds (bool): 
+            might implement this later to divide genes into folds
+            rather than explicit training/test sets
+
+    Returns: 
+        void, makes files listed above
+    """
+    # Load CDS dict, len dict
     len_dict = proc.get_len_dict(gene_len_fname)
     cds_dict = proc.get_cds_dict(gene_seq_fname, len_dict)
-    #Process and store cts by codon
+
+    # Process and write cts by codon file
     cts_by_codon = proc.get_cts_by_codon(
         sam_fname, cds_dict, len_dict, shift_dict, min_fp_size, max_fp_size)
     cts_by_codon_fname = expt_dir + \
@@ -210,7 +252,8 @@ def process_sam_file(
         proc.write_cts_by_codon(cts_by_codon_fname, cts_by_codon)
     else: 
         print "file " + cts_by_codon_fname + " already exists"
-    #Process and store outputs
+
+    #Process and write outputs file
     outputs = proc.get_outputs(
         cts_by_codon, cod_trunc_5p, cod_trunc_3p, raw_psct=raw_psct)
     outputs_fname = expt_dir + \
@@ -223,6 +266,7 @@ def process_sam_file(
         proc.write_outputs(outputs_fname, outputs)
     else: 
         print "file " + outputs_fname + " already exists"
+
     #Make training and test set codon files
     tr_set_fname = expt_dir + "/process/tr_set_bounds.size." + \
         "{0}.{1}.trunc.{2}.{3}.min_cts.{4}.min_cod.{5}.top.{6}.txt".format(
@@ -240,40 +284,73 @@ def process_sam_file(
         min_cts_per_gene, min_cod_w_data, 
         paralog_groups_fname=paralog_groups_fname, overwrite=overwrite)
 
-def make_log_outputs(expt_dir, outputs_fname, prior_ct):
+def make_log_outputs(expt_dir, outputs_fname, scaled_psct):
+    """
+    Makes log transformed outputs file with a scaled pseudocount
+
+    Args: 
+        expt_dir (str) - name of experiment directory
+        outputs_fname (str) - name of original outputs file
+        scaled_psct (float) - scaled pseudocount to add before log transform
+
+    Returns: 
+        void, just makes log transformed outputs file w. scaled psct.
+    """
+    # load outputs
     outputs = proc.load_outputs(outputs_fname)
-    log_outputs = proc.log_transform_outputs(outputs, prior_ct)
-    log_out_fname = expt_dir + "/process/log_outputs.scaled_psct_{0}.txt".format(prior_ct)
+    # add scaled pseudocount, log transform outputs
+    log_outputs = proc.log_transform_outputs(outputs, scaled_psct)
+    # write log transformed pseudocounts
+    log_out_fname = expt_dir +\
+        "/process/log_outputs.scaled_psct_{0}.txt".format(scaled_psct)
     proc.write_outputs(log_outputs, log_out_fname)
 
 def make_bin_outputs(expt_dir, outputs_fname, cutoff):
+    """
+    Makes binary transformed outputs file
+        output = 1 if output >= cutoff else 0
+
+    Args: 
+        expt_dir (str) - name of experiment directory
+        outputs_fname (str) - name of original outputs file
+        cutoff (float) - scaled counts cutoff to transform to 1, else 0
+
+    Returns: 
+        void, just makes binary transformed outputs file w. scaled cts cutoff
+    """
     outputs = proc.load_outputs(outputs_fname)
     bin_outputs = proc.bin_transform_outputs(outputs, cutoff)
     bin_out_fname = expt_dir + "/process/bin_outputs.cutoff_{0}.txt".format(cutoff)
     proc.write_outputs(bin_outputs, bin_out_fname)
 
-def setup_lasagne_nn(
-        name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, 
-        te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False, 
-        nonlinearity="tanh", widths=[200], input_drop_rate=0, 
-        hidden_drop_rate=0, num_outputs=1, update_method="sgd", 
-        filter_max=False, filter_test=False,
-        filter_pct=False, rel_struc_idxs=False, struc_fname=False, 
-        max_struc_start_idx=None, max_struc_width=None, aa_feats=False, 
-        learning_rate=0.01, momentum=0.09, batch_size=500, raw_psct=0, 
-        lr_decay=16):
-    
-    out_dir = expt_dir + "/lasagne_nn"
-    proc.make_out_dir(out_dir)
-    proc.make_init_data_dir(out_dir, name)
-    X_tr, y_tr, X_te, y_te = proc.load_lasagne_data(
-        gene_len_fname, gene_seq_fname, tr_codons_fname, te_codons_fname,
-        outputs_fname, rel_cod_idxs=rel_cod_idxs,
-        rel_nt_idxs=rel_nt_idxs, rel_struc_idxs=rel_struc_idxs, 
-        struc_fname=struc_fname, max_struc_start_idx=max_struc_start_idx, 
-        max_struc_width=max_struc_width, aa_feats=aa_feats, 
-        filter_max=filter_max, filter_pct=filter_pct, filter_test=filter_test)
-    return X_tr, y_tr, X_te, y_te
+def setup_lasagne_nn(name, expt_dir):
+        #name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname, 
+        #te_codons_fname, outputs_fname, rel_cod_idxs=False, rel_nt_idxs=False, 
+        #nonlinearity="tanh", widths=[200], input_drop_rate=0, 
+        #hidden_drop_rate=0, num_outputs=1, update_method="sgd", 
+        #filter_max=False, filter_test=False,
+        #filter_pct=False, rel_struc_idxs=False, struc_fname=False, 
+        #max_struc_start_idx=None, max_struc_width=None, aa_feats=False, 
+        #learning_rate=0.01, momentum=0.09, batch_size=500, raw_psct=0, 
+        #lr_decay=16):
+    """
+    Makes initial directories for a neural network model
+
+    Args:
+        name (str) - name of neural network model
+        expt_dir (str) - name of experiment directory
+
+    Returns: 
+        void, just makes directories for neural network model
+    """
+    # Get names of initial directories
+    expt_nn_dir = expt_dir + "/lasagne_nn"
+    nn_dir = expt_nn_dir + "/" + name
+    init_data_dir = nn_dir + "/init_data"
+    # Make initial directories
+    proc.make_out_dir(expt_nn_dir)
+    proc.make_out_dir(nn_dir)
+    proc.make_out_dir(init_data_dir)
      
 def make_lasagne_feedforward_nn(
         name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname,
@@ -287,20 +364,47 @@ def make_lasagne_feedforward_nn(
         momentum=0.9, batch_size=500,
         log_y=False, scaled_psct=0, raw_psct=False, loss_fn="L2", 
         drop_zeros=False, nonnegative=True):
+    """
+    Sets up neural network model directory, 
+        initializes neural network model, 
+        saves initial parameters, 
+        and returns neural network model
 
-    X_tr, y_tr, X_te, y_te = setup_lasagne_nn(
-        name, expt_dir, gene_seq_fname, gene_len_fname, tr_codons_fname,
-        te_codons_fname, outputs_fname, rel_cod_idxs=rel_cod_idxs, 
-        rel_nt_idxs=rel_nt_idxs, nonlinearity=nonlinearity, widths=widths, 
-        input_drop_rate=input_drop_rate, hidden_drop_rate=hidden_drop_rate, 
-        num_outputs=num_outputs, update_method=update_method,
-        filter_max=filter_max, filter_test=filter_test,
-        filter_pct=filter_pct, rel_struc_idxs=rel_struc_idxs, 
-        struc_fname=struc_fname, max_struc_start_idx=max_struc_start_idx, 
-        max_struc_width=max_struc_width, aa_feats=aa_feats,
-        learning_rate=learning_rate, lr_decay=lr_decay,
-        momentum=momentum, batch_size=batch_size, raw_psct=raw_psct)
+    Args:
+        name (str) - name of neural network model
+        expt_dir (str) - name of experiment directory
+        gene_seq_fname (str) - name of transcriptome fasta file
+        gene_len_fname (str) - name of gene lengths file
+        tr_codons_fname (str) - name of training set codons file
+        te_codons_fname (str) - name of test set codons file
+        outputs_fname (str) - name of outputs file
+        rel_cod_idxs (list of ints) - indices of codon features in model
+        rel_nt_idxs (list of ints) - indices of nucleotide features in model
+        nonlinearity (str) - name of nonlinearity fn [tanh|rectify|linear]
+        widths (list of ints) - # of units in each hidden layer, in order
+        input_drop_rate (float) - dropout rate for inputs
+        hidden_drop_rate (float) - dropout rate for hidden unit
+        num_outputs (int) - number of units in output layer
+        update_method (str) - name of update method [sgd|momentum|nesterov]
+        NOTE: more arg descriptions here
+
+    Returns: 
+        my_nn (lasagnenn.FeedforwardMLP) - neural network object
+    """
+    # Initialize neural network directories
+    setup_lasagne_nn(name, expt_dir)
     
+    # Load neural network data matrices
+    X_tr, y_tr, X_te, y_te = proc.load_lasagne_data(
+        gene_len_fname, gene_seq_fname, tr_codons_fname, te_codons_fname,
+        outputs_fname, rel_cod_idxs=rel_cod_idxs,
+        rel_nt_idxs=rel_nt_idxs, rel_struc_idxs=rel_struc_idxs, 
+        struc_fname=struc_fname, max_struc_start_idx=max_struc_start_idx, 
+        max_struc_width=max_struc_width, aa_feats=aa_feats, 
+        filter_max=filter_max, filter_pct=filter_pct, filter_test=filter_test)
+
+    # NOTE: Should I remove this?
+    # Handle log transformation of y values
     if log_y:
         #Must have either a scaled psct to add, or a raw psct that has already
         #been put in the counts_by_codon when making the outputs file
@@ -318,6 +422,7 @@ def make_lasagne_feedforward_nn(
             y_tr = y_tr[positive]
             X_tr = X_tr[positive]
 
+    # Save initial parameters
     out_dir = expt_dir + "/lasagne_nn"
     _, _, _, params = inspect.getargvalues(inspect.currentframe())
     del params["X_tr"]
@@ -325,6 +430,7 @@ def make_lasagne_feedforward_nn(
     proc.pickle_obj(params, 
         out_dir + "/{0}/init_data/init_data.pkl".format(name))
 
+    # Make neural network object
     my_nn = lasagnenn.FeedforwardMLP(
         X_tr, y_tr, X_te, y_te, name=name, out_dir=out_dir,
         learning_rate=learning_rate, lr_decay=lr_decay,
@@ -334,6 +440,7 @@ def make_lasagne_feedforward_nn(
         momentum=momentum, batch_size=batch_size, loss_fn=loss_fn, 
         nonnegative=nonnegative)
 
+    # Return neural network object
     return my_nn
 
 def load_lasagne_feedforward_nn(nn_dir, epoch):
