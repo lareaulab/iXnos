@@ -747,6 +747,17 @@ def enforce_dir_doesnt_exist(dir_name):
         raise NameError
 
 def make_expt_dirs(parent_dir, name):
+    """
+    In parent_dir, makes dir for expt 'name' with subdirs plots, process, 
+    lasagne_nn, and linreg 
+
+    Args: 
+        parent_dir (str): parent directory to make subdir for expt 'name'
+        name (str): name of experiment
+
+    Returns: 
+        void, just makes dirs
+    """
     enforce_dir_exists(parent_dir)
     expt_dir = parent_dir + "/" + name
     enforce_dir_doesnt_exist(expt_dir)

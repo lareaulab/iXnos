@@ -12,59 +12,180 @@ from shutil import copyfile
 import math
 #print "...finished importing libraries"
 
-def fp_size_analysis(sam_fname, gene_len_fname, plot_fname, min_size=13, max_size=36, verbose=False):
-    #NOTE: Set verbose=True if you want to see min and max fp size in sam_fname
-    #Make cts by size plot
-    len_dict = proc.get_len_dict(gene_len_fname)
-    cts_by_size_and_frame = proc.get_cts_by_size_and_frame(sam_fname, len_dict, verbose=verbose)
-    cts_by_size_and_frame = proc.fill_cts_by_size_and_frame(cts_by_size_and_frame, min_size, max_size)
-    plot.make_cts_by_size_plot(cts_by_size_and_frame, "Counts by FP Size",
-                               plot_fname, sizes=range(min_size, max_size + 1))
-    return cts_by_size_and_frame
+def fp_size_analysis(
+        cts_by_size_and_frame, expt_dir, min_size=13, max_size=36):
+        #sam_fname, gene_len_fname, plot_fname, min_size=13, max_size=36, 
+        #verbose=False):
+    """
+    Makes cts_by_size plot in expt_dir/plots
 
-def fp_frame_by_size_analysis(cts_by_size_and_frame, expt_dir, min_size=13, max_size=36):
+    Args:
+        cts_by_size_and_frame (dict):
+            {fp_size (int): 
+                [cts_frame_0 (int), cts_frame_1 (int), cts_frame_2 (int)]
+                for fp_size in range(min_fp_size, max_fp_size in sam file)}
+        expt_dir (str) - name of experiment directory
+        min_size (int) - minimum footprint size to plot
+        max_size (int) - maximum footprint size to plot
+
+    Returns: 
+        void, just makes cts by size plot
+    """
+    # cts_by_size plot file name
+    size_plot_fname = expt_dir + "/plots/cts_by_size.pdf"
+    # make cts_by_size plot
+    plot.make_cts_by_size_plot(
+        cts_by_size_and_frame, "Counts by FP Size",
+        plot_fname, sizes=range(min_size, max_size + 1))
+
+def fp_frame_by_size_analysis(
+        cts_by_size_and_frame, expt_dir, min_size=13, max_size=36):
+    """
+    Makes cts_by_size_and_frame plots in expt_dir/plots
+
+    Args:
+        cts_by_size_and_frame (dict):
+            {fp_size (int): 
+                [cts_frame_0 (int), cts_frame_1 (int), cts_frame_2 (int)]
+                for fp_size in range(min_fp_size, max_fp_size in sam file)}
+        expt_dir (str) - name of experiment directory
+        min_size (int) - minimum footprint size to plot
+        max_size (int) - maximum footprint size to plot
+
+    Returns: 
+        void, just makes cts by size and frame plots
+    """
+    # for each footprint size
     for size in range(min_size, max_size+1):
+        # cts by size and frame plot file name
         plot_fname = expt_dir + "/plots/size_{0}_by_frame.pdf".format(size)
-        plot.make_frame_by_size_plot(size, cts_by_size_and_frame[size],
-             "Size {0} by Frame".format(size), plot_fname, cts=True)
+        # make cts by size and frame plot
+        plot.make_frame_by_size_plot(
+            size, cts_by_size_and_frame[size],
+            "Size {0} by Frame".format(size), plot_fname, cts=True)
+
+def do_frame_and_size_analysis(
+        expt_dir, sam_fname, gene_len_fname, min_size=13, max_size=36, 
+        verbose=False):
+    """
+    Makes cts_by_size and cts_by_size_and_frame plots in expt_dir/plots
+
+    Args:
+        expt_dir (str) - name of experiment directory
+        sam_fname (str) - name of input sam file
+        gene_len_fname (str) - name of gene lengths file
+        plot_fname (str) - output directory for plotting
+        min_size (int) - minimum footprint size to plot
+        max_size (int) - maximum footprint size to plot
+        verbose (bool) - flag to print max/min fp size in sam file
+
+    Returns: 
+        void, just makes cts by size and cts by size and frame plots
+    """
+    #NOTE: Set verbose=True if you want to see min and max fp size in sam_fname
+    # Get plot directory for experiment
+    plot_dir = expt_dir + "/plots"
+    # load cts_by_size_and_frame dictionary
+    len_dict = proc.get_len_dict(gene_len_fname)
+    cts_by_size_and_frame = proc.get_cts_by_size_and_frame(
+        sam_fname, len_dict, verbose=verbose)
+    cts_by_size_and_frame = proc.fill_cts_by_size_and_frame(
+        cts_by_size_and_frame, min_size, max_size)
+    #Make cts by size plot
+    fp_size_analysis(
+        cts_by_size_and_frame, expt_dir, min_size=min_size, max_size=max_size)
+    #Make cts by size and frame plots
+    fp_frame_by_size_analysis(
+        cts_by_size_and_frame, expt_dir, min_size=min_size, max_size=max_size)
 
 def make_expt_dirs(parent_dir, name):
+    """
+    In parent_dir, makes dir for expt 'name' with subdirs plots, process, 
+    lasagne_nn, and linreg 
+
+    Args: 
+        parent_dir (str): parent directory to make subdir for expt 'name'
+        name (str): name of experiment
+
+    Returns: 
+        void, just makes dirs
+    """
     proc.make_expt_dirs(parent_dir, name)
 
-def do_frame_and_size_analysis(expt_dir, sam_fname, gene_len_fname, min_size=13, max_size=36, verbose=False):
-    plot_dir = expt_dir + "/plots"
-    size_plot_fname = plot_dir + "/cts_by_size.pdf"
-    cts_by_size_and_frame = fp_size_analysis(sam_fname, gene_len_fname, size_plot_fname, min_size=min_size, max_size=max_size, verbose=verbose)
-    fp_frame_by_size_analysis(cts_by_size_and_frame, expt_dir, min_size=min_size, max_size=max_size)
-
 def get_fname_nodir(fname):
+    """
+    Removes directory prefix (i.e. anything before and including '/') from a 
+    file name
+
+    Args: 
+        fname (str): string, name of a file
+
+    Returns: 
+        fname_nodir: fname with any leading directories stripped
+    """
     last_slash_idx = fname.rfind("/")
     fname_nodir = fname[last_slash_idx + 1:]
     return fname_nodir
 
-def edit_sam_file(expt_dir, sam_fname, filter_unmapped=False, sam_add_simple_map_wts=False, RSEM_add_map_wts=False, sample_frac=False):
+def edit_sam_file(
+        expt_dir, sam_fname, filter_unmapped=False, 
+        sam_add_simple_map_wts=False, RSEM_add_map_wts=False, 
+        sample_frac=False):
+    """
+    Does edit operations on sam file of mapped ribosome footprints
+
+    Args:
+        expt_dir (str) - name of experiment directory
+        sam_fname (str) - name of input sam file
+            NOTE: sam_fname must end with '.sam'
+        filter_unmapped (bool): 
+            filter out unmapped reads from sam file
+        sam_add_simple_map_wts (bool): 
+            add field at end of sam file with uniform mapping weights for 
+            multimapped reads
+        RSEM_add_map_wts (bool):
+            add field at end of sam file with rsem mapping weight
+            NOTE: REQUIRES sam_fname TO BE RSEM OUTPUT
+        sample_frac (float): 
+            subsample reads from sam file with probability sam_frac
+            NOTE: Includes all mappings for a read, or none
+            NOTE: Assumes multimappings for a read are consecutive in sam file
+
+    Returns: 
+       sam_fname (str): name of edited sam file with infixes before '.sam'
+    """
+
     #NOTE sam_fname should end with .sam extension
     if sam_add_simple_map_wts and RSEM_add_map_wts:
         print "Error: Cannot add both simple_map_wts and RSEM_map_wts"
         raise ValueError
+    # Get name of sam file with no directory
     sam_fname_nodir = get_fname_nodir(sam_fname)
+    # Filter unmapped reads from sam file
     if filter_unmapped: 
-        out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] + ".mapped.sam"
+        out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] +\
+            ".mapped.sam"
         proc.sam_filter_unmapped(sam_fname, out_fname)
         sam_fname = out_fname
         sam_fname_nodir = get_fname_nodir(sam_fname)
+    # add field at end of sam file with uniform mapping weights for 
+    # multimapped reads
     if sam_add_simple_map_wts:
-        out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] + ".simple_wts.sam"
+        out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] +\
+            ".simple_wts.sam"
         proc.sam_add_simple_map_wts(sam_fname, out_fname)
         sam_fname = out_fname
         sam_fname_nodir = get_fname_nodir(sam_fname)
+    # add field at end of sam file with RSEM mapping weight
     if RSEM_add_map_wts: 
         out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] + ".wts.sam"
         proc.RSEM_add_weights(sam_fname, out_fname)
         sam_fname = out_fname
         sam_fname_nodir = get_fname_nodir(sam_fname)
+    # subsample reads from sam file with probability sam_frac
     if sample_frac:
-        out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] + "{0}pct.sam".format(sample_frac * 100)
+        out_fname = expt_dir + "/process/" + sam_fname_nodir[:-4] +\
+            "{0}pct.sam".format(sample_frac * 100)
         proc.sam_subsample(sam_fname, out_fname, sample_frac)
         sam_fname = out_fname
         sam_fname_nodir = get_fname_nodir(sam_fname)
@@ -111,10 +232,6 @@ def process_sam_file(
         "{0}.{1}.trunc.{2}.{3}.min_cts.{4}.min_cod.{5}.top.{6}.txt".format(
             min_fp_size, max_fp_size, cod_trunc_5p, cod_trunc_3p, 
             min_cts_per_gene, min_cod_w_data, num_tr_genes + num_te_genes)
-    #codon_set_fname_pattern = expt_dir + "/process/{0}." +\
-    #    "size.{0}.{1}.trunc.{2}.{3}.min_cts.{4}.min_cod.{5}.top.{6}.txt".format(
-    #        min_fp_size, max_fp_size, cod_trunc_5p, cod_trunc_3p, 
-    #        min_cts_per_gene, min_cod_w_data, num_tr_genes + num_te_genes)
     print "making file " + tr_set_fname
     print "making file " + te_set_fname
     proc.make_codon_set_files(
