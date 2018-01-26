@@ -27,11 +27,11 @@ def make_linreg_data_file(
     if rel_cod_idxs:
         f.write(
             "Relative_codon_indices: " +\
-            "\t".join([str(elt) for elt in rel_cod_idxs])) + "\n")
+            "\t".join([str(elt) for elt in rel_cod_idxs]) + "\n")
     if rel_nt_idxs:
         f.write(
             "Relative_nt_indices: " +\
-            "\t".join([str(elt) for elt in rel_nt_idxs])) + "\n")
+            "\t".join([str(elt) for elt in rel_nt_idxs]) + "\n")
     f.close()
 
 def make_linreg_parent_dir(expt_dir):
