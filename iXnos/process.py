@@ -601,8 +601,25 @@ def check_codon_set(codon_set, rel_cod_idxs, rel_nt_idxs, cds_dict):
             return False
     return True
 
-def get_fp_density(cts_vector):
-    return float(sum(cts_vector))/len(cts_vector)
+def get_fp_density(cts_vector, cod_trunc_5p=0, cod_trunc_3p=0):
+    """
+    Get density of footprints over a transcript region
+
+    Args:
+        cts_vector (list of int/floats): Vector of footprint cts by codon
+        cod_trunc_5p (int): No. codons to truncate at start of cts_vector
+        cod_trunc_3p (int): No. codons to truncate at end of cts_vector
+
+    Returns: 
+        fp_density (float): Average fp/codon over truncated region
+    """
+    if len(cts_vector) <= cod_trunc_5p + cod_trunc_3p:
+        print "Bad error! Truncation regions are longer than gene!"
+        raise ValueError
+    num_cods = len(cts_vector) - cod_trunc_5p - cod_trunc_3p
+    start_idx = cod_trunc_5p
+    end_idx = len(cts_vector) - cod_trunc_3p
+    return float(sum(cts_vector[start_idx:end_idx]))/num_cods
 
 def sort_genes_by_density(
         genes, cts_by_codon, cod_trunc_5p, cod_trunc_3p, descend=True):
