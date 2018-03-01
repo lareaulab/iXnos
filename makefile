@@ -1,4 +1,3 @@
-
 ### Top level installation variable definitions
 
 parent_dir = $(shell pwd)
@@ -75,6 +74,7 @@ repro_files = \
 	$(repro_dir)/codon_scores.py \
 	$(repro_dir)/aggregate_mses.py \
 	$(repro_dir)/aggregate_linreg_mses.py \
+	$(repro_dir)/gene_corrs_by_density.py \
 	$(repro_dir)/plot_nn.py \
 	$(repro_dir)/plot_genes.py \
 	$(repro_dir)/paper_data.py \
@@ -82,14 +82,17 @@ repro_files = \
 	$(repro_dir)/pkl2txt.py \
 	$(repro_dir)/figure_1B_scaledcts.R \
 	$(repro_dir)/figure_1C_mse.R \
+	$(repro_dir)/figure_1C_corrs.R \
 	$(repro_dir)/figure_1D_scatter.R \
 	$(repro_dir)/figure_1E_indiv_gene.R \
 	$(repro_dir)/figure_1F_binned_error.R \
 	$(repro_dir)/figure_2A_codonmse.R \
+	$(repro_dir)/figure_2A_codoncorrs.R \
 	$(repro_dir)/figure_2B_heatmap.R \
 	$(repro_dir)/figure_2C_tai.R \
 	$(repro_dir)/figure_2D_wobble.R \
 	$(repro_dir)/figure_2E_lareaucodonmse.R \
+	$(repro_dir)/figure_2E_lareaucodoncorrs.R \
 	$(repro_dir)/figure_2F_5prime.R \
 	$(repro_dir)/figure_2G_asite.R \
 	$(repro_dir)/figure_2H_cl2.R \
@@ -102,6 +105,8 @@ repro_files = \
 	$(repro_dir)/supp_figure_mrna_qpcr.R \
 	$(repro_dir)/supp_figure_greenmse.R \
 	$(repro_dir)/supp_figure_iwasakimse.R \
+	$(repro_dir)/supp_figure_greencorrs.R \
+	$(repro_dir)/supp_figure_iwasakicorrs.R \
 	$(repro_dir)/supp_figure_cl1v2.R
 
 expts_dir_name = expts
@@ -302,28 +307,28 @@ weinberg_feat_nb_series_pattern = $(addprefix $(weinberg_nn_dir)/full_%/,$(nn_60
 weinberg_leaveout_series_files = $(foreach lo_cod,$(leaveout_cods),$(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/nocod$(lo_cod)_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_60_epoch_files))))
 weinberg_leaveout_series_pattern = $(addprefix $(weinberg_nn_dir)/nocod%/,$(nn_60_epoch_files))
 
-weinberg_28_files = $(addprefix $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/,$(nn_60_epoch_files))
+weinberg_28_files = $(addprefix $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/,$(nn_60_epoch_files))
 weinberg_28_pattern = $(addprefix $(weinberg_nn_dir)/s28_%/,$(nn_60_epoch_files))
 
-weinberg_fp_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_55_epoch_files)))
+weinberg_fp_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep$(rep)/,$(nn_55_epoch_files)))
 weinberg_fp_struc_pattern = $(addprefix $(weinberg_nn_dir)/str_%/,$(nn_55_epoch_files))
 
-weinberg_max_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/max_str_p13p42_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_70_epoch_files)))
+weinberg_max_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/max_str_p13p42_cod_n5p4_nt_n15p14_rep$(rep)/,$(nn_70_epoch_files)))
 weinberg_max_struc_pattern = $(addprefix $(weinberg_nn_dir)/max_str_%/,$(nn_70_epoch_files))
 
 weinberg_linreg_series_files = $(foreach feat_nb,$(feat_neighborhoods),$(addprefix $(weinberg_lr_dir)/lr_$(feat_nb)/,$(linreg_data_files)))
 weinberg_linreg_series_pattern = $(addprefix $(weinberg_lr_dir)/lr_%/,$(linreg_data_files)) 
 
-weinberg_struc_plot_files = $(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
-weinberg_struc_plot_pattern = $(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
+weinberg_struc_plot_files = $(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/plots/,$(nn_plot_files))
+weinberg_struc_plot_pattern = $(addprefix $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/plot%/,$(nn_plot_files))
 
-weinberg_full_plot_files = $(addprefix $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
-weinberg_full_plot_pattern = $(addprefix $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
+weinberg_full_plot_files = $(addprefix $(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots/,$(nn_plot_files))
+weinberg_full_plot_pattern = $(addprefix $(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plot%/,$(nn_plot_files))
 
-weinberg_28_plot_files = $(addprefix $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
-weinberg_28_plot_pattern = $(addprefix $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
+weinberg_28_plot_files = $(addprefix $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/plots/,$(nn_plot_files))
+weinberg_28_plot_pattern = $(addprefix $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/plot%/,$(nn_plot_files))
 
-weinberg_struc_gene_plot_dir = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/gene_plots
+weinberg_struc_gene_plot_dir = $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/gene_plots
 
 weinberg_feat_nb_series_num_epochs = 60
 weinberg_feat_nb_series_lr_decay = 16
@@ -353,17 +358,17 @@ weinberg_results_feat_neighborhood_dir = \
 	$(weinberg_results_dir)/feat_neighborhood_series
 weinberg_results_leaveout_dir = $(weinberg_results_dir)/leaveout_series
 weinberg_results_struc_series_dir = $(weinberg_results_dir)/structure_series
-weinberg_results_struc_dir = $(weinberg_results_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0
+weinberg_results_struc_dir = $(weinberg_results_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0
 weinberg_results_struc_epoch_dir = $(weinberg_results_struc_dir)/epoch$(weinberg_fp_struc_num_epochs)
-weinberg_results_full_dir = $(weinberg_results_dir)/full_cod_n7p5_nt_n21p17_rep0
+weinberg_results_full_dir = $(weinberg_results_dir)/full_cod_n5p4_nt_n15p14_rep0
 weinberg_results_full_epoch_dir = $(weinberg_results_full_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
-weinberg_results_28_dir = $(weinberg_results_dir)/s28_cod_n7p5_nt_n21p17
+weinberg_results_28_dir = $(weinberg_results_dir)/s28_cod_n5p4_nt_n15p14
 weinberg_results_28_epoch_dir = $(weinberg_results_28_dir)/epoch$(weinberg_28_num_epochs)
 weinberg_results_opt_model_dir = $(weinberg_results_dir)/full_cod_n3p2_nt_n9p8_rep0
 weinberg_results_opt_model_epoch_dir = $(weinberg_results_opt_model_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
 
-weinberg_full_analysis_epoch_dir = $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_feat_nb_series_num_epochs)
-weinberg_28_analysis_epoch_dir = $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_28_num_epochs)
+weinberg_full_analysis_epoch_dir = $(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_28_analysis_epoch_dir = $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(weinberg_28_num_epochs)
 
 weinberg_full_codon_scores_results_files = \
 	$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
@@ -390,8 +395,20 @@ weinberg_leaveout_mses_file = \
 weinberg_struc_mses_file = \
 	$(weinberg_results_struc_series_dir)/struc_mses.txt
 
-weinberg_final_model_y_te = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/init_data/y_te.txt
-weinberg_final_model_y_te_hat = $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.txt \
+weinberg_feat_nb_corrs_file = \
+	$(weinberg_results_feat_neighborhood_dir)/feat_neighborhood_corrs.txt
+weinberg_feat_nb_linreg_corrs_file = \
+	$(weinberg_results_feat_neighborhood_dir)/linreg_corrs.txt
+weinberg_leaveout_corrs_file = \
+	$(weinberg_results_leaveout_dir)/leaveout_corrs.txt
+weinberg_struc_corrs_file = \
+	$(weinberg_results_struc_series_dir)/struc_corrs.txt
+
+weinberg_struc_corrs_by_gene_density_file = \
+	$(weinberg_results_struc_epoch_dir)/corrs_by_gene_density.txt
+
+weinberg_final_model_y_te = $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/init_data/y_te.txt
+weinberg_final_model_y_te_hat = $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.txt \
 
 weinberg_results_final_model_y_te = $(weinberg_results_struc_epoch_dir)/y_te.txt
 weinberg_results_final_model_y_te_hat = $(weinberg_results_struc_epoch_dir)/y_te_hat.txt
@@ -478,9 +495,16 @@ lareau_28_proc_sam_pattern = \
 
 lareau_full_model_files = \
 	$(foreach rep,$(10_reps),$(addprefix \
-	$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
+	$(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep$(rep)/,\
 	$(nn_35_epoch_files)))
 lareau_full_model_pattern = $(addprefix $(lareau_nn_dir)/full_%/,\
+	$(nn_35_epoch_files))
+
+lareau_exp_model_files = \
+	$(foreach rep,$(10_reps),$(addprefix \
+	$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
+	$(nn_35_epoch_files)))
+lareau_exp_model_pattern = $(addprefix $(lareau_nn_dir)/full_%/,\
 	$(nn_35_epoch_files))
 
 lareau_leaveout_series_files = \
@@ -491,15 +515,15 @@ lareau_leaveout_series_files = \
 lareau_leaveout_series_pattern = $(addprefix $(lareau_nn_dir)/nocod%/,\
 	$(nn_35_epoch_files))
 
-lareau_28_files = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/,\
+lareau_28_files = $(addprefix $(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/,\
 	$(nn_40_epoch_files))
 lareau_28_pattern = $(addprefix $(lareau_nn_dir)/s28_%/,$(nn_40_epoch_files))
 
-lareau_full_plot_files = $(addprefix $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
-lareau_full_plot_pattern = $(addprefix $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
+lareau_full_plot_files = $(addprefix $(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots/,$(nn_plot_files))
+lareau_full_plot_pattern = $(addprefix $(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plot%/,$(nn_plot_files))
 
-lareau_28_plot_files = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
-lareau_28_plot_pattern = $(addprefix $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
+lareau_28_plot_files = $(addprefix $(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/plots/,$(nn_plot_files))
+lareau_28_plot_pattern = $(addprefix $(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/plot%/,$(nn_plot_files))
 
 lareau_feat_nb_series_num_epochs = 35
 lareau_feat_nb_series_lr_decay = 8
@@ -516,14 +540,16 @@ lareau_28_num_reps = 10
 # Lareau results files variable definitions
 
 lareau_results_dir = $(results_dir)/lareau
+lareau_results_feat_neighborhood_dir = \
+	$(lareau_results_dir)/feat_neighborhood_series
 lareau_results_leaveout_dir = $(lareau_results_dir)/leaveout_series
-lareau_results_full_dir = $(lareau_results_dir)/full_cod_n7p5_nt_n21p17_rep0
+lareau_results_full_dir = $(lareau_results_dir)/full_cod_n5p4_nt_n15p14_rep0
 lareau_results_full_epoch_dir = $(lareau_results_full_dir)/epoch$(lareau_feat_nb_series_num_epochs)
-lareau_results_28_dir = $(lareau_results_dir)/s28_cod_n7p5_nt_n21p17
+lareau_results_28_dir = $(lareau_results_dir)/s28_cod_n5p4_nt_n15p14
 lareau_results_28_epoch_dir = $(lareau_results_28_dir)/epoch$(lareau_28_num_epochs)
 
-lareau_full_analysis_epoch_dir = $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(lareau_feat_nb_series_num_epochs)
-lareau_28_analysis_epoch_dir = $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(lareau_28_num_epochs)
+lareau_full_analysis_epoch_dir = $(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(lareau_feat_nb_series_num_epochs)
+lareau_28_analysis_epoch_dir = $(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(lareau_28_num_epochs)
 
 lareau_full_codon_scores_results_files = \
 	$(lareau_results_full_epoch_dir)/codon_scores.tsv \
@@ -541,8 +567,12 @@ lareau_28_codon_scores_results_files_pattern = \
         $(lareau_results_28_epoch_dir)/codon_scores%tsv \
         $(lareau_results_28_epoch_dir)/codon_scores_colormap%pdf
 
+lareau_feat_nb_corrs_file = \
+	$(lareau_results_feat_neighborhood_dir)/feat_neighborhood_corrs.txt
 lareau_leaveout_mses_file = \
 	$(lareau_results_leaveout_dir)/leaveout_mses.txt
+lareau_leaveout_corrs_file = \
+	$(lareau_results_leaveout_dir)/leaveout_corrs.txt
 
 ### Iwasaki variable definitions
 
@@ -621,8 +651,19 @@ iwasaki_28_proc_sam_pattern = \
 
 leaveout_cods = $(shell seq -s ' ' -7 5)
 
-iwasaki_full_model_files = $(foreach rep,$(10_reps),$(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,$(nn_70_epoch_files)))
-iwasaki_full_model_pattern = $(addprefix $(iwasaki_nn_dir)/full_%/,$(nn_70_epoch_files))
+iwasaki_full_model_files = \
+	$(foreach rep,$(10_reps),$(addprefix \
+	$(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep$(rep)/,\
+	$(nn_70_epoch_files)))
+iwasaki_full_model_pattern = \
+	$(addprefix $(iwasaki_nn_dir)/full_%/,$(nn_70_epoch_files))
+
+iwasaki_exp_model_files = \
+	$(foreach rep,$(10_reps),$(addprefix \
+	$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
+	$(nn_70_epoch_files)))
+iwasaki_exp_model_pattern = \
+	$(addprefix $(iwasaki_nn_dir)/full_%/,$(nn_70_epoch_files))
 
 iwasaki_leaveout_series_files = \
 	$(foreach lo_cod,$(leaveout_cods),\
@@ -633,14 +674,14 @@ iwasaki_leaveout_series_files = \
 iwasaki_leaveout_series_pattern = $(addprefix $(iwasaki_nn_dir)/nocod%/,\
 	$(nn_70_epoch_files))
 
-iwasaki_28_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/,$(nn_70_epoch_files))
+iwasaki_28_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/,$(nn_70_epoch_files))
 iwasaki_28_pattern = $(addprefix $(iwasaki_nn_dir)/s28_%/,$(nn_70_epoch_files))
 
-iwasaki_full_plot_files = $(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
-iwasaki_full_plot_pattern = $(addprefix $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
+iwasaki_full_plot_files = $(addprefix $(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots/,$(nn_plot_files))
+iwasaki_full_plot_pattern = $(addprefix $(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plot%/,$(nn_plot_files))
 
-iwasaki_28_plot_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
-iwasaki_28_plot_pattern = $(addprefix $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
+iwasaki_28_plot_files = $(addprefix $(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/plots/,$(nn_plot_files))
+iwasaki_28_plot_pattern = $(addprefix $(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/plot%/,$(nn_plot_files))
 
 iwasaki_feat_nb_series_num_epochs = 70
 iwasaki_feat_nb_series_lr_decay = 32
@@ -657,14 +698,16 @@ iwasaki_28_num_reps = 10
 # Iwasaki results files variable definitions
 
 iwasaki_results_dir = $(results_dir)/iwasaki
+iwasaki_results_feat_neighborhood_dir = \
+	$(iwasaki_results_dir)/feat_neighborhood_series
 iwasaki_results_leaveout_dir = $(iwasaki_results_dir)/leaveout_series
-iwasaki_results_full_dir = $(iwasaki_results_dir)/full_cod_n7p5_nt_n21p17_rep0
+iwasaki_results_full_dir = $(iwasaki_results_dir)/full_cod_n5p4_nt_n15p14_rep0
 iwasaki_results_full_epoch_dir = $(iwasaki_results_full_dir)/epoch$(iwasaki_feat_nb_series_num_epochs)
-iwasaki_results_28_dir = $(iwasaki_results_dir)/s28_cod_n7p5_nt_n21p17
+iwasaki_results_28_dir = $(iwasaki_results_dir)/s28_cod_n5p4_nt_n15p14
 iwasaki_results_28_epoch_dir = $(iwasaki_results_28_dir)/epoch$(iwasaki_28_num_epochs)
 
-iwasaki_full_analysis_epoch_dir = $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)
-iwasaki_28_analysis_epoch_dir = $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(iwasaki_28_num_epochs)
+iwasaki_full_analysis_epoch_dir = $(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)
+iwasaki_28_analysis_epoch_dir = $(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(iwasaki_28_num_epochs)
 
 iwasaki_full_codon_scores_results_files = \
 	$(iwasaki_results_full_epoch_dir)/codon_scores.tsv \
@@ -682,8 +725,12 @@ iwasaki_28_codon_scores_results_files_pattern = \
         $(iwasaki_results_28_epoch_dir)/codon_scores%tsv \
         $(iwasaki_results_28_epoch_dir)/codon_scores_colormap%pdf
 
+iwasaki_feat_nb_corrs_file = \
+	$(iwasaki_results_feat_neighborhood_dir)/feat_neighborhood_corrs.txt
 iwasaki_leaveout_mses_file = \
 	$(iwasaki_results_leaveout_dir)/leaveout_mses.txt
+iwasaki_leaveout_corrs_file = \
+	$(iwasaki_results_leaveout_dir)/leaveout_corrs.txt
 
 ### Green variable definitions
 
@@ -762,9 +809,16 @@ green_28_proc_sam_pattern = \
 
 green_full_model_files = \
 	$(foreach rep,$(10_reps),$(addprefix \
-	$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
+	$(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep$(rep)/,\
 	$(nn_50_epoch_files)))
 green_full_model_pattern = $(addprefix $(green_nn_dir)/full_%/,\
+	$(nn_50_epoch_files))
+
+green_exp_model_files = \
+	$(foreach rep,$(10_reps),$(addprefix \
+	$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep$(rep)/,\
+	$(nn_50_epoch_files)))
+green_exp_model_pattern = $(addprefix $(green_nn_dir)/full_%/,\
 	$(nn_50_epoch_files))
 
 green_leaveout_series_files = \
@@ -775,15 +829,15 @@ green_leaveout_series_files = \
 green_leaveout_series_pattern = $(addprefix $(green_nn_dir)/nocod%/,\
 	$(nn_50_epoch_files))
 
-green_28_files = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/,\
+green_28_files = $(addprefix $(green_nn_dir)/s28_cod_n5p4_nt_n15p14/,\
 	$(nn_30_epoch_files))
 green_28_pattern = $(addprefix $(green_nn_dir)/s28_%/,$(nn_30_epoch_files))
 
-green_full_plot_files = $(addprefix $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots/,$(nn_plot_files))
-green_full_plot_pattern = $(addprefix $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plot%/,$(nn_plot_files))
+green_full_plot_files = $(addprefix $(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots/,$(nn_plot_files))
+green_full_plot_pattern = $(addprefix $(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plot%/,$(nn_plot_files))
 
-green_28_plot_files = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/plots/,$(nn_plot_files))
-green_28_plot_pattern = $(addprefix $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/plot%/,$(nn_plot_files))
+green_28_plot_files = $(addprefix $(green_nn_dir)/s28_cod_n5p4_nt_n15p14/plots/,$(nn_plot_files))
+green_28_plot_pattern = $(addprefix $(green_nn_dir)/s28_cod_n5p4_nt_n15p14/plot%/,$(nn_plot_files))
 
 green_feat_nb_series_num_epochs = 50
 green_feat_nb_series_lr_decay = 8
@@ -800,14 +854,16 @@ green_28_num_reps = 10
 # Green results files variable definitions
 
 green_results_dir = $(results_dir)/green
+green_results_feat_neighborhood_dir = \
+	$(green_results_dir)/feat_neighborhood_series
 green_results_leaveout_dir = $(green_results_dir)/leaveout_series
-green_results_full_dir = $(green_results_dir)/full_cod_n7p5_nt_n21p17_rep0
+green_results_full_dir = $(green_results_dir)/full_cod_n5p4_nt_n15p14_rep0
 green_results_full_epoch_dir = $(green_results_full_dir)/epoch$(green_feat_nb_series_num_epochs)
-green_results_28_dir = $(green_results_dir)/s28_cod_n7p5_nt_n21p17
+green_results_28_dir = $(green_results_dir)/s28_cod_n5p4_nt_n15p14
 green_results_28_epoch_dir = $(green_results_28_dir)/epoch$(green_28_num_epochs)
 
-green_full_analysis_epoch_dir = $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(green_feat_nb_series_num_epochs)
-green_28_analysis_epoch_dir = $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(green_28_num_epochs)
+green_full_analysis_epoch_dir = $(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(green_feat_nb_series_num_epochs)
+green_28_analysis_epoch_dir = $(green_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(green_28_num_epochs)
 
 green_full_codon_scores_results_files = \
 	$(green_results_full_epoch_dir)/codon_scores.tsv \
@@ -825,22 +881,29 @@ green_28_codon_scores_results_files_pattern = \
         $(green_results_28_epoch_dir)/codon_scores%tsv \
         $(green_results_28_epoch_dir)/codon_scores_colormap%pdf
 
+green_feat_nb_corrs_file = \
+	$(green_results_feat_neighborhood_dir)/feat_neighborhood_corrs.txt
 green_leaveout_mses_file = \
 	$(green_results_leaveout_dir)/leaveout_mses.txt
+green_leaveout_corrs_file = \
+	$(green_results_leaveout_dir)/leaveout_corrs.txt
 
 ### figure variable defintions
 
 fig_files = \
 	$(fig_dir)/figure_1B_scaledcts.pdf \
+	$(fig_dir)/figure_1C_corrs.pdf \
 	$(fig_dir)/figure_1C_mse.pdf \
 	$(fig_dir)/figure_1D_scatter.pdf \
 	$(fig_dir)/figure_1E_indiv_gene.pdf \
 	$(fig_dir)/figure_1F_binned_error.pdf \
 	$(fig_dir)/figure_2A_codonmse.pdf \
+	$(fig_dir)/figure_2A_codoncorrs.pdf \
 	$(fig_dir)/figure_2B_heatmap.pdf \
 	$(fig_dir)/figure_2C_tai.pdf \
 	$(fig_dir)/figure_2D_wobble.pdf \
 	$(fig_dir)/figure_2E_lareaucodonmse.pdf \
+	$(fig_dir)/figure_2E_lareaucodoncorrs.pdf \
 	$(fig_dir)/figure_2F_5prime.pdf \
 	$(fig_dir)/figure_2G_asite.pdf \
 	$(fig_dir)/figure_2H_cl2.pdf \
@@ -853,7 +916,10 @@ fig_files = \
 	$(fig_dir)/supp_figure_facs.pdf \
 	$(fig_dir)/supp_figure_greenmse.pdf \
 	$(fig_dir)/supp_figure_iwasakimse.pdf \
+	$(fig_dir)/supp_figure_greencorrs.pdf \
+	$(fig_dir)/supp_figure_iwasakicorrs.pdf \
 	$(fig_dir)/supp_figure_cl1v2.pdf
+#   Needs debugging - talk w. Liana
 
 ### paper data files
 
@@ -965,6 +1031,11 @@ weinberg_expt: \
 		$(weinberg_leaveout_mses_file) \
 		$(weinberg_feat_nb_linreg_mses_file) \
 		$(weinberg_struc_mses_file) \
+		$(weinberg_feat_nb_corrs_file) \
+		$(weinberg_leaveout_corrs_file) \
+		$(weinberg_feat_nb_linreg_corrs_file) \
+		$(weinberg_struc_corrs_file) \
+		$(weinberg_struc_corrs_by_gene_density_file) \
 		$(weinberg_struc_plot_files) \
 		$(weinberg_full_plot_files) \
 		$(weinberg_28_plot_files) \
@@ -1205,10 +1276,10 @@ $(weinberg_results_opt_model_epoch_dir): | $(weinberg_results_opt_model_dir)
 # rule to create it, and then make can't place the targets properly in its DAG.
 
 $(weinberg_full_codon_scores_results_files_pattern): \
-		| $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_full_epoch_dir) 
 	python $(repro_dir)/codon_scores.py \
-		$(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0 \
 		$(weinberg_feat_nb_series_num_epochs)
 	cp $(weinberg_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv
@@ -1220,10 +1291,10 @@ $(weinberg_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG.
 
 $(weinberg_28_codon_scores_results_files_pattern): \
-		| $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_28_num_epochs)/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(weinberg_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17 \
+		$(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14 \
 		$(weinberg_28_num_epochs)
 	cp $(weinberg_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(weinberg_results_28_epoch_dir)/codon_scores.tsv
@@ -1236,7 +1307,16 @@ $(weinberg_feat_nb_mses_file): \
 	python $(repro_dir)/aggregate_mses.py aggregate_w_diffs \
 		$(weinberg_nn_dir) $(weinberg_feat_nb_series_num_epochs) \
 		$(weinberg_feat_nb_series_num_reps) \
-		$(weinberg_feat_nb_mses_file) full_cod_n7p5_nt_n21p17 \
+		$(weinberg_feat_nb_mses_file) full_cod_n5p4_nt_n15p14 \
+		$(addprefix full_,$(feat_neighborhoods))
+
+$(weinberg_feat_nb_corrs_file): \
+		| $(weinberg_feat_nb_series_files) \
+		$(weinberg_results_feat_neighborhood_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(weinberg_nn_dir) $(weinberg_feat_nb_series_num_epochs) \
+		$(weinberg_feat_nb_series_num_reps) \
+		$(weinberg_feat_nb_corrs_file) \
 		$(addprefix full_,$(feat_neighborhoods))
 
 $(weinberg_leaveout_mses_file): \
@@ -1249,6 +1329,16 @@ $(weinberg_leaveout_mses_file): \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
 
+$(weinberg_leaveout_corrs_file): \
+		| $(weinberg_leaveout_series_files) \
+		$(weinberg_results_leaveout_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(weinberg_nn_dir) $(weinberg_leaveout_series_num_epochs) \
+		$(weinberg_leaveout_series_num_reps) \
+		$(weinberg_leaveout_corrs_file) \
+		$(addsuffix _cod_n7p5_nt_n21p17, \
+			$(addprefix nocod,$(leaveout_cods)))
+
 $(weinberg_struc_mses_file): \
 		| $(weinberg_fp_struc_files) \
 		$(weinberg_max_struc_files) \
@@ -1256,8 +1346,30 @@ $(weinberg_struc_mses_file): \
 	python $(repro_dir)/aggregate_mses.py aggregate\
 		$(weinberg_nn_dir) $(weinberg_fp_struc_num_epochs) \
 		$(weinberg_fp_struc_num_reps) \
-		$(weinberg_struc_mses_file) str_n17n15_cod_n7p5_nt_n21p17 \
-		max_str_p13p42_cod_n7p5_nt_n21p17 
+		$(weinberg_struc_mses_file) str_n17n15_cod_n5p4_nt_n15p14 \
+		max_str_p13p42_cod_n5p4_nt_n15p14 
+
+$(weinberg_struc_corrs_file): \
+		| $(weinberg_fp_struc_files) \
+		$(weinberg_max_struc_files) \
+		$(weinberg_results_struc_series_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(weinberg_nn_dir) $(weinberg_fp_struc_num_epochs) \
+		$(weinberg_fp_struc_num_reps) \
+		$(weinberg_struc_corrs_file) str_n17n15_cod_n5p4_nt_n15p14 \
+		max_str_p13p42_cod_n5p4_nt_n15p14 
+
+$(weinberg_struc_corrs_by_gene_density_file): \
+		| $(repro_dir)/gene_corrs_by_density.py \
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl
+	python $(repro_dir)/gene_corrs_by_density.py \
+		str_n17n15_cod_n5p4_nt_n15p14 0 \
+		$(weinberg_fp_struc_num_epochs) $(weinberg_nn_dir) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(weinberg_27_31_cts_by_codon) $(weinberg_27_31_outputs) \
+		$(yeast_30_windows_str_scores_file) \
+		$(weinberg_27_31_tr_bounds) $(yeast_paralogs_file) \
+		$(weinberg_struc_corrs_by_gene_density_file)
 
 $(weinberg_feat_nb_linreg_mses_file): \
 		| $(weinberg_linreg_series_files) \
@@ -1266,70 +1378,78 @@ $(weinberg_feat_nb_linreg_mses_file): \
 		$(weinberg_feat_nb_linreg_mses_file) \
 		$(addprefix lr_,$(feat_neighborhoods))
 
+$(weinberg_feat_nb_linreg_corrs_file): \
+		| $(weinberg_linreg_series_files) \
+		$(weinberg_results_leaveout_dir)
+	python $(repro_dir)/aggregate_linreg_corrs.py pearson \
+		$(weinberg_lr_dir) \
+		$(weinberg_feat_nb_linreg_corrs_file) \
+		$(addprefix lr_,$(feat_neighborhoods))
+
 $(weinberg_struc_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_struc_epoch_dir) \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl
 	echo
-	echo "Plotting nn str_n17n15_cod_n7p5_nt_n21p17_rep0"
+	echo "Plotting nn str_n17n15_cod_n5p4_nt_n15p14_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(weinberg_expt_dir) str_n17n15_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_expt_dir) str_n17n15_cod_n5p4_nt_n15p14_rep0 \
 		$(weinberg_fp_struc_num_epochs)
-	cp -r $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/plots \
+	cp -r $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/plots \
 		$(weinberg_results_struc_dir)
 
 $(weinberg_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_full_epoch_dir) \
-		$(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
+		$(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
-	echo "Plotting nn full_cod_n7p5_nt_n21p17_rep0"
+	echo "Plotting nn full_cod_n5p4_nt_n15p14_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(weinberg_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_expt_dir) full_cod_n5p4_nt_n15p14_rep0 \
 		$(weinberg_feat_nb_series_num_epochs)
-	cp -r $(weinberg_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
+	cp -r $(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots \
 		$(weinberg_results_full_dir)
 
 $(weinberg_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(weinberg_results_28_epoch_dir) \
-		$(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(weinberg_28_num_epochs)/te_cost_by_epoch.pkl
+		$(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(weinberg_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
-	echo "Plotting nn s28_n17n15_cod_n7p5_nt_n21p17"
+	echo "Plotting nn s28_n17n15_cod_n5p4_nt_n15p14"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(weinberg_expt_dir) s28_cod_n7p5_nt_n21p17 \
+		$(weinberg_expt_dir) s28_cod_n5p4_nt_n15p14 \
 		$(weinberg_28_num_epochs)
-	cp -r $(weinberg_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
+	cp -r $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/plots \
 		$(weinberg_results_28_dir)
 
 $(weinberg_struc_gene_plot_dir): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_results_struc_epoch_dir)
 	echo
-	echo "Plotting str_n17n15_cod_n7p5_nt_n21p17_rep0 genes"
+	echo "Plotting str_n17n15_cod_n5p4_nt_n15p14_rep0 genes"
 	echo
 	python $(repro_dir)/plot_genes.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0 \
 		$(weinberg_fp_struc_num_epochs) \
 		$(weinberg_expt_dir)/process/te_set_bounds.size.27.31.trunc.20.20.min_cts.200.min_cod.100.top.500.data_table.txt \
 		$(yeast_gene_symbol_file) \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/gene_plots
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/gene_plots
 
 $(weinberg_final_model_y_te): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/init_data/y_te.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/init_data/y_te.pkl \
 		$(repro_dir)/pkl2txt.py
 	python $(repro_dir)/pkl2txt.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/init_data/y_te.pkl \
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/init_data/y_te.pkl \
 		$(weinberg_final_model_y_te)
 
 $(weinberg_final_model_y_te_hat): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.pkl \
 		$(repro_dir)/pkl2txt.py
 	python $(repro_dir)/pkl2txt.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.pkl \
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/y_te_hat.pkl \
 		$(weinberg_final_model_y_te_hat)
 
 $(weinberg_results_final_model_y_te): \
@@ -1364,11 +1484,14 @@ lareau_expt: $(lareau_sam_file) ${lareau_plot_files} \
 		$(lareau_27_29_proc_sam_files) \
 		$(lareau_28_proc_sam_files) \
 		$(lareau_full_model_files) \
+		$(lareau_exp_model_files) \
 		$(lareau_leaveout_series_files) \
 		$(lareau_28_files) \
 		$(lareau_full_codon_scores_results_files) \
 		$(lareau_28_codon_scores_results_files) \
+		$(lareau_feat_nb_corrs_file) \
 		$(lareau_leaveout_mses_file) \
+		$(lareau_leaveout_corrs_file) \
 		$(lareau_full_plot_files) \
 		$(lareau_28_plot_files) \
 		| $(lareau_expt_dir) $(lareau_subdirs)
@@ -1459,6 +1582,26 @@ $(lareau_full_model_pattern): \
 		$(lareau_27_29_outputs) $(lareau_feat_nb_series_num_epochs) \
 		$(lareau_feat_nb_series_lr_decay)
 
+$(lareau_exp_model_pattern): \
+		| $(lareau_sam_file) \
+		$(lareau_27_29_proc_sam_files) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(lareau_27_29_tr_bounds) $(lareau_27_29_te_bounds) \
+		$(lareau_27_29_outputs) $(lareau_nn_dir) \
+		$(lareau_expt_dir)
+	$(eval model_name=$(firstword $(subst _rep, ,$*)))
+	$(eval model_rep=$(lastword $(subst _rep, ,$*)))
+	echo
+	echo ...Making model $(model_name) rep $(model_rep)
+	echo
+	python $(repro_dir)/feat_neighborhood_nn_series.py \
+		$(model_name) $(model_rep) \
+		$(lareau_expt_dir) $(lareau_sam_file) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(lareau_27_29_tr_bounds) $(lareau_27_29_te_bounds) \
+		$(lareau_27_29_outputs) $(lareau_feat_nb_series_num_epochs) \
+		$(lareau_feat_nb_series_lr_decay)
+
 $(lareau_leaveout_series_pattern): \
 		| $(lareau_sam_file) \
 		$(lareau_27_29_proc_sam_files) \
@@ -1525,10 +1668,10 @@ $(lareau_results_28_epoch_dir): | $(lareau_results_28_dir)
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(lareau_full_codon_scores_results_files_pattern): \
-		| $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(lareau_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
+		| $(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(lareau_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(lareau_results_full_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0 \
 		$(lareau_feat_nb_series_num_epochs)
 	cp $(lareau_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(lareau_results_full_epoch_dir)/codon_scores.tsv
@@ -1540,15 +1683,25 @@ $(lareau_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(lareau_28_codon_scores_results_files_pattern): \
-		| $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(lareau_28_num_epochs)/te_cost_by_epoch.pkl \
+		| $(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(lareau_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(lareau_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17 \
+		$(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14 \
 		$(lareau_28_num_epochs)
 	cp $(lareau_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv
 	cp $(lareau_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(lareau_results_28_epoch_dir)/codon_scores_colormap.pdf
+
+$(lareau_feat_nb_corrs_file): \
+		| $(lareau_full_model_files) \
+		$(lareau_exp_model_files) \
+		$(lareau_results_feat_neighborhood_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(lareau_nn_dir) $(lareau_feat_nb_series_num_epochs) \
+		$(lareau_feat_nb_series_num_reps) \
+		$(lareau_feat_nb_corrs_file) \
+		$(addprefix full_,cod_n5p4_nt_n15p14 cod_n7p5_nt_n21p17)
 
 $(lareau_leaveout_mses_file) : \
 		| $(lareau_leaveout_series_files) \
@@ -1560,29 +1713,39 @@ $(lareau_leaveout_mses_file) : \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
 
+$(lareau_leaveout_corrs_file) : \
+		| $(lareau_leaveout_series_files) \
+		$(lareau_results_leaveout_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(lareau_nn_dir) $(lareau_leaveout_series_num_epochs) \
+		$(lareau_leaveout_series_num_reps) \
+		$(lareau_leaveout_corrs_file) \
+		$(addsuffix _cod_n7p5_nt_n21p17, \
+			$(addprefix nocod,$(leaveout_cods)))
+
 $(lareau_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(lareau_results_full_epoch_dir) \
-		$(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(lareau_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
+		$(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(lareau_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(lareau_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(lareau_expt_dir) full_cod_n5p4_nt_n15p14_rep0 \
 		$(lareau_feat_nb_series_num_epochs)
-	cp -r $(lareau_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
+	cp -r $(lareau_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots \
 		$(lareau_results_full_dir)
 
 $(lareau_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(lareau_results_28_epoch_dir) \
-		$(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(lareau_28_num_epochs)/te_cost_by_epoch.pkl
+		$(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(lareau_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(lareau_expt_dir) s28_cod_n7p5_nt_n21p17 $(lareau_28_num_epochs)
-	cp -r $(lareau_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
+		$(lareau_expt_dir) s28_cod_n5p4_nt_n15p14 $(lareau_28_num_epochs)
+	cp -r $(lareau_nn_dir)/s28_cod_n5p4_nt_n15p14/plots \
 		$(lareau_results_28_dir)
 
 lareau_clean: 
@@ -1596,11 +1759,14 @@ iwasaki_expt: $(iwasaki_sam_file) ${iwasaki_plot_files} \
 		$(iwasaki_27_30_proc_sam_files) \
 		$(iwasaki_28_proc_sam_files) \
 		$(iwasaki_full_model_files) \
+		$(iwasaki_exp_model_files) \
 		$(iwasaki_leaveout_series_files) \
 		$(iwasaki_28_files) \
 		$(iwasaki_full_codon_scores_results_files) \
 		$(iwasaki_28_codon_scores_results_files) \
+		$(iwasaki_feat_nb_corrs_file) \
 		$(iwasaki_leaveout_mses_file) \
+		$(iwasaki_leaveout_corrs_file) \
 		$(iwasaki_full_plot_files) \
 		$(iwasaki_28_plot_files) \
 		| $(iwasaki_expt_dir) $(iwasaki_subdirs)
@@ -1663,6 +1829,26 @@ $(iwasaki_28_proc_sam_pattern): \
 		$(human_gene_len_file) $(human_gene_seq_file)
 
 $(iwasaki_full_model_pattern): \
+		| $(iwasaki_sam_file) \
+		$(iwasaki_27_30_proc_sam_files) \
+		$(human_gene_len_file) $(human_gene_seq_file) \
+		$(iwasaki_27_30_tr_bounds) $(iwasaki_27_30_te_bounds) \
+		$(iwasaki_27_30_outputs) $(iwasaki_nn_dir) \
+		$(iwasaki_expt_dir)
+	$(eval model_name=$(firstword $(subst _rep, ,$*)))
+	$(eval model_rep=$(lastword $(subst _rep, ,$*)))
+	echo
+	echo ...Making model $(model_name) rep $(model_rep)
+	echo
+	python $(repro_dir)/feat_neighborhood_nn_series.py \
+		$(model_name) $(model_rep) \
+		$(iwasaki_expt_dir) $(iwasaki_sam_file) \
+		$(human_gene_len_file) $(human_gene_seq_file) \
+		$(iwasaki_27_30_tr_bounds) $(iwasaki_27_30_te_bounds) \
+		$(iwasaki_27_30_outputs) $(iwasaki_feat_nb_series_num_epochs) \
+		$(iwasaki_feat_nb_series_lr_decay)
+
+$(iwasaki_exp_model_pattern): \
 		| $(iwasaki_sam_file) \
 		$(iwasaki_27_30_proc_sam_files) \
 		$(human_gene_len_file) $(human_gene_seq_file) \
@@ -1749,10 +1935,10 @@ $(iwasaki_results_28_epoch_dir): | $(iwasaki_results_28_dir)
 # to create it, and then make can't place the targets properly in its DAG. 
 
 $(iwasaki_full_codon_scores_results_files_pattern): \
-		| $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
+		| $(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(iwasaki_results_full_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0 \
 		$(iwasaki_feat_nb_series_num_epochs)
 	cp $(iwasaki_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_full_epoch_dir)/codon_scores.tsv
@@ -1764,15 +1950,25 @@ $(iwasaki_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(iwasaki_28_codon_scores_results_files_pattern): \
-		| $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(iwasaki_28_num_epochs)/te_cost_by_epoch.pkl \
+		| $(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(iwasaki_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(iwasaki_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17 \
+		$(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14 \
 		$(iwasaki_28_num_epochs)
 	cp $(iwasaki_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv
 	cp $(iwasaki_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(iwasaki_results_28_epoch_dir)/codon_scores_colormap.pdf
+
+$(iwasaki_feat_nb_corrs_file): \
+		| $(iwasaki_full_model_files) \
+		$(iwasaki_exp_model_files) \
+		$(iwasaki_results_feat_neighborhood_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(iwasaki_nn_dir) $(iwasaki_feat_nb_series_num_epochs) \
+		$(iwasaki_feat_nb_series_num_reps) \
+		$(iwasaki_feat_nb_corrs_file) \
+		$(addprefix full_,cod_n5p4_nt_n15p14 cod_n7p5_nt_n21p17)
 
 $(iwasaki_leaveout_mses_file) : \
 		| $(iwasaki_leaveout_series_files) \
@@ -1784,30 +1980,40 @@ $(iwasaki_leaveout_mses_file) : \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
 
+$(iwasaki_leaveout_corrs_file) : \
+		| $(iwasaki_leaveout_series_files) \
+		$(iwasaki_results_leaveout_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(iwasaki_nn_dir) $(iwasaki_leaveout_series_num_epochs) \
+		$(iwasaki_leaveout_series_num_reps) \
+		$(iwasaki_leaveout_corrs_file) \
+		$(addsuffix _cod_n7p5_nt_n21p17, \
+			$(addprefix nocod,$(leaveout_cods)))
+
 $(iwasaki_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(iwasaki_results_full_epoch_dir) \
-		$(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
+		$(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(iwasaki_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(iwasaki_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(iwasaki_expt_dir) full_cod_n5p4_nt_n15p14_rep0 \
 		$(iwasaki_feat_nb_series_num_epochs)
-	cp -r $(iwasaki_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
+	cp -r $(iwasaki_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots \
 		$(iwasaki_results_full_dir)
 
 $(iwasaki_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(iwasaki_results_28_epoch_dir) \
-		$(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(iwasaki_28_num_epochs)/te_cost_by_epoch.pkl
+		$(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(iwasaki_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(iwasaki_expt_dir) s28_cod_n7p5_nt_n21p17 \
+		$(iwasaki_expt_dir) s28_cod_n5p4_nt_n15p14 \
 		$(iwasaki_28_num_epochs)
-	cp -r $(iwasaki_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
+	cp -r $(iwasaki_nn_dir)/s28_cod_n5p4_nt_n15p14/plots \
 		$(iwasaki_results_28_dir)
 
 iwasaki_clean: 
@@ -1821,11 +2027,14 @@ green_expt: $(green_sam_file) ${green_plot_files} \
 		$(green_27_29_proc_sam_files) \
 		$(green_28_proc_sam_files) \
 		$(green_full_model_files) \
+		$(green_exp_model_files) \
 		$(green_leaveout_series_files) \
 		$(green_28_files) \
 		$(green_full_codon_scores_results_files) \
 		$(green_28_codon_scores_results_files) \
+		$(green_feat_nb_corrs_file) \
 		$(green_leaveout_mses_file) \
+		$(green_leaveout_corrs_file) \
 		$(green_full_plot_files) \
 		$(green_28_plot_files) \
 		| $(green_expt_dir) $(green_subdirs)
@@ -1911,6 +2120,26 @@ $(green_full_model_pattern): \
 		$(green_27_29_outputs) $(green_feat_nb_series_num_epochs) \
 		$(green_feat_nb_series_lr_decay)
 
+$(green_exp_model_pattern): \
+		| $(green_sam_file) \
+		$(green_27_29_proc_sam_files) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(green_27_29_tr_bounds) $(green_27_29_te_bounds) \
+		$(green_27_29_outputs) $(green_nn_dir) \
+		$(green_expt_dir)
+	$(eval model_name=$(firstword $(subst _rep, ,$*)))
+	$(eval model_rep=$(lastword $(subst _rep, ,$*)))
+	echo
+	echo ...Making model $(model_name) rep $(model_rep)
+	echo
+	python $(repro_dir)/feat_neighborhood_nn_series.py \
+		$(model_name) $(model_rep) \
+		$(green_expt_dir) $(green_sam_file) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(green_27_29_tr_bounds) $(green_27_29_te_bounds) \
+		$(green_27_29_outputs) $(green_feat_nb_series_num_epochs) \
+		$(green_feat_nb_series_lr_decay)
+
 $(green_leaveout_series_pattern): \
 		| $(green_sam_file) \
 		$(green_27_29_proc_sam_files) \
@@ -1977,10 +2206,10 @@ $(green_results_28_epoch_dir): | $(green_results_28_dir)
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(green_full_codon_scores_results_files_pattern): \
-		| $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(green_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
+		| $(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(green_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl \
 		$(green_results_full_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0 \
+		$(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0 \
 		$(green_feat_nb_series_num_epochs)
 	cp $(green_full_analysis_epoch_dir)/codon_scores.tsv \
 		$(green_results_full_epoch_dir)/codon_scores.tsv
@@ -1992,14 +2221,24 @@ $(green_full_codon_scores_results_files_pattern): \
 # rule to create it, and then make can't place the targets properly in its DAG. 
 
 $(green_28_codon_scores_results_files_pattern): \
-		| $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(green_28_num_epochs)/te_cost_by_epoch.pkl \
+		| $(green_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(green_28_num_epochs)/te_cost_by_epoch.pkl \
 		$(green_results_28_epoch_dir)
 	python $(repro_dir)/codon_scores.py \
-		$(green_nn_dir)/s28_cod_n7p5_nt_n21p17 $(green_28_num_epochs)
+		$(green_nn_dir)/s28_cod_n5p4_nt_n15p14 $(green_28_num_epochs)
 	cp $(green_28_analysis_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv
 	cp $(green_28_analysis_epoch_dir)/codon_scores_colormap.pdf \
 		$(green_results_28_epoch_dir)/codon_scores_colormap.pdf
+
+$(green_feat_nb_corrs_file): \
+		| $(green_full_model_files) \
+		$(green_exp_model_files) \
+		$(green_results_feat_neighborhood_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(green_nn_dir) $(green_feat_nb_series_num_epochs) \
+		$(green_feat_nb_series_num_reps) \
+		$(green_feat_nb_corrs_file) \
+		$(addprefix full_,cod_n5p4_nt_n15p14 cod_n7p5_nt_n21p17)
 
 $(green_leaveout_mses_file) : \
 		| $(green_leaveout_series_files) \
@@ -2011,30 +2250,40 @@ $(green_leaveout_mses_file) : \
 		$(addsuffix _cod_n7p5_nt_n21p17, \
 			$(addprefix nocod,$(leaveout_cods)))
 
+$(green_leaveout_corrs_file) : \
+		| $(green_leaveout_series_files) \
+		$(green_results_leaveout_dir)
+	python $(repro_dir)/aggregate_corrs.py pearson \
+		$(green_nn_dir) $(green_leaveout_series_num_epochs) \
+		$(green_leaveout_series_num_reps) \
+		$(green_leaveout_corrs_file) \
+		$(addsuffix _cod_n7p5_nt_n21p17, \
+			$(addprefix nocod,$(leaveout_cods)))
+
 $(green_full_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(green_results_full_epoch_dir) \
-		$(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/epoch$(green_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
+		$(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(green_feat_nb_series_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn full_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(green_expt_dir) full_cod_n7p5_nt_n21p17_rep0 \
+		$(green_expt_dir) full_cod_n5p4_nt_n15p14_rep0 \
 		$(green_feat_nb_series_num_epochs)
-	cp -r $(green_nn_dir)/full_cod_n7p5_nt_n21p17_rep0/plots \
+	cp -r $(green_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/plots \
 		$(green_results_full_dir)
 
 $(green_28_plot_pattern): \
 		| $(repro_dir)/plot_nn.py \
 		$(green_results_28_epoch_dir) \
-		$(green_nn_dir)/s28_cod_n7p5_nt_n21p17/epoch$(green_28_num_epochs)/te_cost_by_epoch.pkl
+		$(green_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(green_28_num_epochs)/te_cost_by_epoch.pkl
 	echo
 	echo "Plotting nn s28_cod_n7p5_n21p17_rep0"
 	echo
 	python $(repro_dir)/plot_nn.py \
-		$(green_expt_dir) s28_cod_n7p5_nt_n21p17 \
+		$(green_expt_dir) s28_cod_n5p4_nt_n15p14 \
 		$(green_28_num_epochs)
-	cp -r $(green_nn_dir)/s28_cod_n7p5_nt_n21p17/plots \
+	cp -r $(green_nn_dir)/s28_cod_n5p4_nt_n15p14/plots \
 		$(green_results_28_dir)
 
 green_clean: 
@@ -2055,7 +2304,7 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(repro_dir)/figure_1B_scaledcts.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1B_scaledcts.R \
-		YOL086C 166 \
+		YGR192C 166 \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
 
@@ -2069,6 +2318,17 @@ $(fig_dir)/figure_1C_mse.pdf: \
 		$(weinberg_feat_nb_linreg_mses_file) \
 		$(weinberg_struc_mses_file) \
 		$(fig_dir)/figure_1C_mse.pdf
+
+$(fig_dir)/figure_1C_corrs.pdf: \
+		| $(weinberg_feat_nb_corrs_file) \
+		$(weinberg_feat_nb_linreg_corrs_file) \
+		$(weinberg_struc_corrs_file) \
+		$(repro_dir)/figure_1C_corrs.R $(fig_dir)
+	Rscript $(repro_dir)/figure_1C_corrs.R \
+		$(weinberg_feat_nb_corrs_file) \
+		$(weinberg_feat_nb_linreg_corrs_file) \
+		$(weinberg_struc_corrs_file) \
+		$(fig_dir)/figure_1C_corrs.pdf
 
 #NOTE: Think about where to put the y_te/y_te_hat files
 $(fig_dir)/figure_1D_scatter.pdf: \
@@ -2087,7 +2347,7 @@ $(fig_dir)/figure_1E_indiv_gene.pdf: \
 		$(yeast_gene_symbol_file) \
 		$(repro_dir)/figure_1E_indiv_gene.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1E_indiv_gene.R \
-		YOL086C \
+		YGR192C \
 		$(weinberg_27_31_te_data_table) \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(yeast_gene_symbol_file) \
@@ -2107,6 +2367,15 @@ $(fig_dir)/figure_2A_codonmse.pdf: \
 		$(repro_dir)/figure_2A_codonmse.R $(fig_dir)
 	Rscript $(repro_dir)/figure_2A_codonmse.R $(weinberg_leaveout_mses_file) \
 		$(fig_dir)/figure_2A_codonmse.pdf
+
+$(fig_dir)/figure_2A_codoncorrs.pdf: \
+		| $(weinberg_leaveout_corrs_file) \
+		$(weinberg_feat_nb_corrs_file) \
+		$(repro_dir)/figure_2A_codoncorrs.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2A_codoncorrs.R \
+		$(weinberg_leaveout_corrs_file) \
+		$(weinberg_feat_nb_corrs_file) \
+		$(fig_dir)/figure_2A_codoncorrs.pdf
 
 $(fig_dir)/figure_2B_heatmap.pdf: \
 		| $(weinberg_results_full_epoch_dir)/codon_scores.tsv \
@@ -2141,6 +2410,15 @@ $(fig_dir)/figure_2E_lareaucodonmse.pdf: \
 		$(repro_dir)/figure_2E_lareaucodonmse.R $(fig_dir)
 	Rscript $(repro_dir)/figure_2E_lareaucodonmse.R $(lareau_leaveout_mses_file) \
 		$(fig_dir)/figure_2E_lareaucodonmse.pdf
+
+$(fig_dir)/figure_2E_lareaucodoncorrs.pdf: \
+		| $(lareau_leaveout_corrs_file) \
+		$(lareau_feat_nb_corrs_file) \
+		$(repro_dir)/figure_2E_lareaucodoncorrs.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2E_lareaucodoncorrs.R \
+		$(lareau_leaveout_corrs_file) \
+		$(lareau_feat_nb_corrs_file) \
+		$(fig_dir)/figure_2E_lareaucodoncorrs.pdf
 
 #Check that liana wants this for 28mer models
 $(fig_dir)/figure_2F_5prime.pdf: \
@@ -2254,6 +2532,24 @@ $(fig_dir)/supp_figure_iwasakimse.pdf: \
 		$(iwasaki_leaveout_mses_file) \
 		$(fig_dir)/supp_figure_iwasakimse.pdf
 
+$(fig_dir)/supp_figure_greencorrs.pdf: \
+		| $(green_leaveout_corrs_file) \
+		$(green_feat_nb_corrs_file) \
+		$(repro_dir)/supp_figure_greencorrs.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_greencorrs.R \
+		$(green_leaveout_corrs_file) \
+		$(green_feat_nb_corrs_file) \
+		$(fig_dir)/supp_figure_greencorrs.pdf
+
+$(fig_dir)/supp_figure_iwasakicorrs.pdf: \
+		| $(iwasaki_leaveout_corrs_file) \
+		$(iwasaki_feat_nb_corrs_file) \
+		$(repro_dir)/supp_figure_iwasakicorrs.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_iwasakicorrs.R \
+		$(iwasaki_leaveout_corrs_file) \
+		$(iwasaki_feat_nb_corrs_file) \
+		$(fig_dir)/supp_figure_iwasakicorrs.pdf
+
 $(fig_dir)/supp_figure_cl1v2.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
@@ -2275,19 +2571,26 @@ $(paper_data_dir): | $(results_dir)
 	mkdir $(paper_data_dir)
 
 $(paper_data_fname): \
-		| $(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl \
+		| $(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_fp_struc_num_epochs)/te_cost_by_epoch.pkl \
 		$(weinberg_feat_nb_mses_file) \
+		$(weinberg_feat_nb_corrs_file) \
 		$(weinberg_leaveout_mses_file) \
+		$(weinberg_leaveout_corrs_file) \
+		$(weinberg_struc_mses_file) \
+		$(weinberg_struc_corrs_file) \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
 		$(repro_dir)/paper_data.py \
 		$(paper_data_dir)
 	python $(repro_dir)/paper_data.py \
-		$(weinberg_nn_dir)/str_n17n15_cod_n7p5_nt_n21p17_rep0 \
+		$(weinberg_nn_dir)/str_n17n15_cod_n5p4_nt_n15p14_rep0 \
 		$(weinberg_fp_struc_num_epochs)	\
 		$(weinberg_feat_nb_mses_file) \
+		$(weinberg_feat_nb_corrs_file) \
 		$(weinberg_leaveout_mses_file) \
+		$(weinberg_leaveout_corrs_file) \
 		$(weinberg_struc_mses_file) \
+		$(weinberg_struc_corrs_file) \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(green_results_full_epoch_dir)/codon_scores.tsv \
 		$(weinberg_results_28_epoch_dir)/codon_scores.tsv \

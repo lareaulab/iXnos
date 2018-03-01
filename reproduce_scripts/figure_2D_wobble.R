@@ -4,15 +4,18 @@
 # codon: anticodon source: compiled from Johansson et al, MCB, 2008
 
 args <- commandArgs(trailingOnly = TRUE)
-cod_scores_fname = args[1] # weinberg_rep3_L1W200_ff_n7p5_n21p17_rep0_feat_imps.tsv or equiv.
+cod_scores_fname = args[1] # codon_scores.csv
 codon_fname = args[2] # yeast_codon_anticodon.csv
 out_fname = args[3]
+
+codonrange1 = -5
+codonrange2 = 4
 
 bp = read.delim(codon_fname, sep=",", header=T)
 # to make the codon_anticodon file, we chose the direct-paired anticodon if there were two anticodon options, or the standard wobble pair in the case of CCC.
 
 codons = sort( apply( expand.grid( c("A","C","G","U"), c("A","C","G","U"), c("A","C","G","U")), 1, paste, collapse = "" ))
-pos = -7:5
+pos = codonrange1:codonrange2
 
 wb = read.delim( cod_scores_fname,
                  header = F, stringsAsFactors = F,
@@ -64,6 +67,8 @@ n = length(levels(bp$pair))
 
 #write.table(data.frame( pval = P.pvals, corrected = P.pvals * n), file = "pval.txt")
 
+ymin = floor( min( bp$P.site.score, na.rm = T ) * 10) / 10
+ymax = ceiling( max( bp$P.site.score, na.rm = T ) * 10) / 10
 pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 #cairo_pdf( out_fname, width=2, height=1.67, pointsize=7)
 par( mex = 0.65 ) 
@@ -74,14 +79,16 @@ stripchart( P.site.score ~ factor(pair, levels = levels(pair)[myorder]),
             data = bp,
             method = "jitter", 
             jitter = 0.15, 
-            vertical = T, 
+            vertical = T,
+            ylim = c(ymin, ymax),
             pch = 20, cex = 0.5,
             frame.plot = F,
             axes = F,
             ylab = "P site weight",
             col = s.cols[levels(bp$pair)[myorder]])
-# axis( 2, at = seq(0, 1.2, by = 0.6), lwd = 0.75)
-axis( 2, seq( round(min(bp$P.site.score)/2,1)*2, round(max(bp$P.site.score/2),1)*2, by = 0.4 ), lwd = 0.75)
+#axis( 2, seq( round(min(bp$P.site.score)/2,1)*2, round(max(bp$P.site.score/2),1)*2, by = 0.4 ), lwd = 0.75)
+##axis( 2, lwd = 0.75, at = seq( ymin, ymax, by = 0.4 ) )
+axis( 2 )
 axis( 1, at = 1:n, labels = levels(bp$pair)[myorder], lwd = 0, cex.axis = 0.7)
 axis( 1, pos = min(bp$P.site.score,na.rm=T) - (max(bp$P.site.score,na.rm=T) - min(bp$P.site.score,na.rm=T))/4,
       lwd = 0,

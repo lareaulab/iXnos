@@ -3,12 +3,15 @@
 # data: Lareau / Graham yeast, Iwasaki human
 
 args <- commandArgs(trailingOnly = TRUE)
-lareau_cod_scores_fname = args[1]
-iwasaki_cod_scores_fname = args[2]
+lareau_cod_scores_fname = args[1] # 28mer codon scores
+iwasaki_cod_scores_fname = args[2] # 28mer codon scores
 out_fname = args[3]
 
+codonrange1 = -5
+codonrange2 = 4
+
 codons = sort( apply( expand.grid( c("A","C","G","T"), c("A","C","G","T"), c("A","C","G","T")), 1, paste, collapse = "" ))
-pos = -7:5
+pos = codonrange1:codonrange2
 
 iwasaki = read.delim(iwasaki_cod_scores_fname, header=F, stringsAsFactors = F, colClasses = "numeric", row.names = codons, col.names = pos, na.strings="nan")
 lareau = read.delim(lareau_cod_scores_fname, header=F, stringsAsFactors = F, colClasses = "numeric", row.names = codons, col.names = pos, na.strings="nan")

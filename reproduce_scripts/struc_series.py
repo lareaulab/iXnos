@@ -4,7 +4,8 @@ import numpy as np
 import sys
 
 if __name__ == "__main__":
-    model_names = ["n17n15_cod_n7p5_nt_n21p17", "p13p42_cod_n7p5_nt_n21p17",]
+    # NOTE: If changing these, change idx parameters below
+    model_names = ["n17n15_cod_n5p4_nt_n15p14", "p13p42_cod_n5p4_nt_n15p14",]
     model_name = sys.argv[1]
     model_rep = sys.argv[2]
     expt_dir = sys.argv[3]
@@ -22,15 +23,15 @@ if __name__ == "__main__":
     assert model_name in model_names, "model name {0} not in " \
         "list of models".format(model_name)
 
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-21, 18)
+    rel_cod_idxs = range(-5, 5)
+    rel_nt_idxs = range(-15, 15)
     learning_rate = 0.005
 
     print model_name
     print rel_cod_idxs
     print rel_nt_idxs
 
-    if model_name == "n17n15_cod_n7p5_nt_n21p17":
+    if model_name == "n17n15_cod_n5p4_nt_n15p14":
         rel_struc_idxs = range(-17, -14)
         name = "str_" + model_name + "_rep{0}".format(model_rep)
         success = False
@@ -51,7 +52,7 @@ if __name__ == "__main__":
             if not failed:
                 success = True
     
-    if model_name == "p13p42_cod_n7p5_nt_n21p17":
+    if model_name == "p13p42_cod_n5p4_nt_n15p14":
         max_struc_start_idx = 13
         max_struc_width = 30
         name = "max_str_" + model_name + "_rep{0}".format(model_rep)

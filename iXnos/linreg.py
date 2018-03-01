@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 import os
 import pickle
+from scipy.stats import pearsonr, spearmanr
 
 def train(X_tr, y_tr):
     XXt = np.dot(X_tr, X_tr.transpose())
@@ -73,17 +74,43 @@ def get_linreg_MSE(linreg_dir, test=True, train=False):
     return ((y.ravel() - y_hat.ravel())**2).mean()
 
 def aggregate_linreg_MSEs(
-        expt_linreg_dir, series_names, out_fname):
+        expt_linreg_dir, model_names, out_fname):
     # Open out file, write header
     f = open(out_fname, "w")
-    header = "series\ttrain_MSE\ttest_MSE\n"
+    header = "model\ttrain_MSE\ttest_MSE\n"
     f.write(header)
     # Populate out file
-    for series_name in series_names:
-        linreg_dir = expt_linreg_dir + "/" + series_name
+    for model_name in model_names:
+        linreg_dir = expt_linreg_dir + "/" + model_name
         train_mse = get_linreg_MSE(linreg_dir, train=True, test=False)
         test_mse = get_linreg_MSE(linreg_dir, train=False, test=True)
-        line = "{0}\t{1}\t{2}\n".format(series_name, train_mse, test_mse)
+        line = "{0}\t{1}\t{2}\n".format(model_name, train_mse, test_mse)
         f.write(line)
     f.close()
 
+def get_linreg_corr(linreg_dir, method="pearson"):
+    assert method in ["pearson", "spearman"],\
+        "method must be in [pearson, spearman]"
+    y = pickle.load(open(linreg_dir + "/y_te.pkl", "r"))
+    y_hat = pickle.load(open(linreg_dir + "/y_te_hat.pkl", "r"))
+    if method == "pearson":
+        corr = pearsonr(y.flatten(), y_hat.flatten())[0]
+    elif method == "spearman":
+        corr = spearmanr(y.flatten(), y_hat.flatten())[0]
+    return corr
+
+def aggregate_linreg_corrs(
+        expt_linreg_dir, model_names, out_fname, method="pearson"):
+    assert method in ["pearson", "spearman"],\
+        "method must be in [pearson, spearman]"
+    # Open out file, write header
+    f = open(out_fname, "w")
+    header = "model\ttest_corr\n"
+    f.write(header)
+    # Populate out file
+    for model_name in model_names:
+        linreg_dir = expt_linreg_dir + "/" + model_name
+        test_corr = get_linreg_corr(linreg_dir, method=method)
+        line = "{0}\t{1}\n".format(model_name, test_corr)
+        f.write(line)
+    f.close() 

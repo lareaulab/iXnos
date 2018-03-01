@@ -613,7 +613,7 @@ def get_fp_density(cts_vector, cod_trunc_5p=0, cod_trunc_3p=0):
     Returns: 
         fp_density (float): Average fp/codon over truncated region
     """
-    if len(cts_vector) <= cod_trunc_5p + cod_trunc_3p:
+    if len(cts_vector) <= cod_trunc_5p + cod_trunc_3p: 
         print "Bad error! Truncation regions are longer than gene!"
         raise ValueError
     num_cods = len(cts_vector) - cod_trunc_5p - cod_trunc_3p
