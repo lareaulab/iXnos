@@ -2,7 +2,8 @@ import iXnos.interface as inter
 import sys
 
 if __name__ == "__main__":
-    model_names = ["s28_cod_n7p5_nt_n21p17"]
+    #NOTE: Remember to change rel_cod_idxs and rel_nt_idxs if you change this!
+    model_names = ["s28_cod_n5p4_nt_n15p14"]
 
     model_name = sys.argv[1]
     expt_dir = sys.argv[2]
@@ -18,8 +19,8 @@ if __name__ == "__main__":
     assert model_name in model_names, "model name {0} not in " \
         "list of models".format(model_name)
 
-    rel_cod_idxs = range(-7, 6)
-    rel_nt_idxs = range(-21, 18)
+    rel_cod_idxs = range(-5, 5)
+    rel_nt_idxs = range(-15, 15)
 
     print model_name
     print rel_cod_idxs

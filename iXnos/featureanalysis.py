@@ -3,7 +3,7 @@ import math
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import pearsonr
+from scipy.stats import pearsonr, spearmanr
 import pickle
 
 alpha="ACGT"
@@ -176,7 +176,8 @@ def plot_cod_inst_feat_imp_scatters(fi_mat1, fi_mat2, xlabel, ylabel, rel_cod_id
         plt.close()
 
 def plot_2d_fi_colormap(fi_mat, rel_cod_idxs, title, out_fname):
-    #This has been edited but not tested
+    # Make a 2d heatmap for feature importance scores
+    # This has been edited but not tested
     alpha = "AGCT"
     alpha_idxs = [0, 2, 1, 3]
     yticks = np.array(range(0, 52, 4) + [50, 53, 57]) 
@@ -202,7 +203,102 @@ def plot_2d_fi_colormap(fi_mat, rel_cod_idxs, title, out_fname):
     plt.savefig(out_fname)
     plt.close()
     
-
+def plot_weight_matrix_heatmaps(
+        weights, rel_cod_idxs, title_prefix, outfile_prefix, 
+        rel_nt_idxs=[], rel_struc_idxs=[], cmap_name="coolwarm"):
+    # This has been edited but not tested
+    # Make a set of 2d heatmaps to visualize NN weight matrices
+    num_cods = len(rel_cod_idxs)
+    num_cod_feats = num_cods * 64
+    num_nts = len(rel_nt_idxs)
+    num_nt_feats = num_nts * 4
+    num_struc_feats = len(rel_struc_idxs)
+    # Store parameters for first layer plots
+    alpha = "ACGT"
+    yticks = np.array(range(0, 52, 4) + [50, 54, 57]) 
+    yticklabels = [x + y for x in alpha for y in alpha]
+    nonstop_idxs = range(64)
+    nonstop_idxs.remove(48)
+    nonstop_idxs.remove(50)
+    nonstop_idxs.remove(56)
+    # Inputs -> HL1 weight matrix and b vector
+    W0 = weights[0]
+    b0 = weights[1]
+    b0 = b0.reshape(b0.size, 1)
+    layer_size1 = W0.shape[1]
+    # Make heatmap for bias vector
+    bias_out_fname = outfile_prefix + ".bias.pdf"
+    fig = plt.imshow(b0, interpolation="nearest", cmap=plt.get_cmap(cmap_name))
+    ax = fig.get_axes()
+    #ax.set_xticks(range(len(rel_struc_idxs)))
+    ax.set_yticks(np.arange(b0.size))
+    ax.set_yticklabels(np.arange(b0.size))
+    #ax.set_yticks([])
+    #ax.set_yticklabels([])
+    plt.ylabel("Hidden Unit")
+    plt.colorbar()
+    plt.title(title_prefix + " bias weights")
+    plt.savefig(bias_out_fname)
+    plt.close()
+    # Make heatmap for each hidden unit
+    for unit_idx in xrange(layer_size1):
+        cod_mat = W0[:num_cod_feats,unit_idx].reshape(num_cods, 64).transpose()
+        start_row = num_cod_feats
+        if num_nt_feats > 0:
+            end_row = start_row + num_nt_feats
+            nt_mat = W0[start_row:end_row,unit_idx].reshape(num_nts,4).transpose()
+            start_row = end_row
+        if num_struc_feats > 0:
+            end_row = start_row + num_struc_feats
+            struc_mat = W0[start_row:end_row,unit_idx].transpose().reshape(num_struc_feats, 1)
+        # Make codon heatmap
+        cod_mat = cod_mat[nonstop_idxs]
+        cod_out_fname = outfile_prefix + ".cod.HU{0}.pdf".format(unit_idx)
+        fig = plt.imshow(cod_mat, interpolation="nearest", cmap=plt.get_cmap(cmap_name))
+        ax = fig.get_axes()
+        ax.set_xticks(range(0, len(rel_cod_idxs), 3))
+        ax.set_xticklabels(rel_cod_idxs[::3])
+        ax.set_yticks(yticks)
+        ax.set_yticklabels(yticklabels)
+        plt.xlabel("Position")
+        plt.ylabel("Codon")
+        plt.colorbar()
+        plt.title(title_prefix + " codon feats, HU{0}".format(unit_idx))
+        plt.savefig(cod_out_fname)
+        plt.close()
+        # Make nt heatmap
+        if num_nt_feats > 0:
+            nt_out_fname = outfile_prefix +\
+                ".nt.HU{0}.pdf".format(unit_idx)
+            fig = plt.imshow(nt_mat, interpolation="nearest", cmap=plt.get_cmap(cmap_name))
+            ax = fig.get_axes()
+            ax.set_xticks(range(0, len(rel_nt_idxs), 3))
+            ax.set_xticklabels(rel_nt_idxs[::3])
+            ax.set_yticks(np.arange(4))
+            ax.set_yticklabels(['A', 'C', 'G', 'T'])
+            plt.xlabel("Position")
+            plt.ylabel("Nucleotide")
+            plt.colorbar()
+            plt.title(title_prefix + " nt feats, HU{0}".format(unit_idx))
+            plt.savefig(nt_out_fname)
+            plt.close()
+        # Make struc heatmap
+        if num_struc_feats > 0:
+            struc_out_fname = outfile_prefix +\
+                ".struc.HU{0}.pdf".format(unit_idx)
+            fig = plt.imshow(struc_mat, interpolation="nearest", cmap=plt.get_cmap(cmap_name))
+            ax = fig.get_axes()
+            ax.set_yticks(range(len(rel_struc_idxs)))
+            ax.set_yticklabels(rel_struc_idxs)
+            #ax.set_yticks([])
+            #ax.set_yticklabels([])
+            plt.ylabel("Position")
+            plt.colorbar()
+            plt.title(title_prefix +\
+                " struc feats, HU{0}".format(unit_idx))
+            plt.savefig(struc_out_fname)
+            plt.close()
+    
 def get_test_err(epoch_dir):
     test_errs_by_epoch = pickle.load(open(
         epoch_dir + "/te_cost_by_epoch.pkl", "r"))
@@ -215,6 +311,18 @@ def get_series_test_errs(epoch_dirs):
         test_err = get_test_err(epoch_dir)
         test_errs.append(test_err)
     return test_errs
+
+def get_test_corrs(nn_dir, epoch, method="pearson"):
+    if method not in ["pearson", "spearman"]:
+        print "Error! Correlation method must be 'pearson' or 'spearman'"
+    y_te_fname = nn_dir + "/init_data/y_te.pkl"
+    y_te_hat_fname = nn_dir + "/epoch{0}/y_te_hat.pkl".format(epoch)
+    y_te = pickle.load(open(y_te_fname, "r"))
+    y_te_hat = pickle.load(open(y_te_hat_fname, "r"))
+    if method == "pearson":
+        return pearsonr(y_te, y_te_hat)[0]
+    elif method == "spearman":
+        return spearmanr(y_te, y_te_hat)[0]
 
 def save_nocod_series_test_MSE_diffs(ref_epoch_dir, epoch_dirs, leaveout_idxs, out_fname):
     if len(epoch_dirs) != len(leaveout_idxs):
@@ -239,14 +347,17 @@ def save_rep_series_MSEs(nn_parent_dir, series_names, epochs, num_reps, out_fnam
         num_reps: number of reps for each name_model (1 int, same for all modls)
         out_fname: file to write to
     """
+    # If only one epoch entered, use that as the epoch for all series
     if type(epochs) == int:
         epochs = [epochs for i in range(len(series_names))]
+    # Open out file, write header
     outfile = open(out_fname, "w")
     outfile_colstring = "rep_series"
     for rep in range(num_reps):
         outfile_colstring += "\trep_{0}_MSE".format(rep)
     outfile_colstring += "\tmean_MSE\tstd_err_mean"
     outfile.write(outfile_colstring + "\n")
+    # For each series
     for idx, name in enumerate(series_names):
         epoch_dirs = [nn_parent_dir + "/{0}_rep{1}/epoch{2}".format(
                       name, rep, epochs[idx]) 
@@ -259,6 +370,43 @@ def save_rep_series_MSEs(nn_parent_dir, series_names, epochs, num_reps, out_fnam
             line += "\t{0}".format(round(test_errs[rep], round_digits))
         line += "\t{0}".format(round(mean_err, round_digits))
         line += "\t{0}".format(round(std_err, round_digits))  
+        outfile.write(line + "\n")
+    outfile.close()
+
+
+def save_rep_series_corrs(
+        nn_parent_dir, series_names, epochs, num_reps, out_fname, 
+        round_digits=8, method="pearson"):
+    """
+    Inputs: 
+        nn_parent_dir (str): Directory above nn directories
+        series_names (list of strs): base nn series names (with _rep# 
+            appended, reps must be zero indexed and consecutive)
+        epochs: list of epochs to pull data from for each nn model name
+        num_reps (int): number of reps for each nn model name (1 int, same
+            for all models)
+        out_fname (str): output file name
+    """
+    if method not in ["pearson", "spearman"]:
+        print "Error! Correlation method must be 'pearson' or 'spearman'"
+    # If only one epoch entered, use that as the epoch for all series
+    if type(epochs) == int:
+        epochs = [epochs for i in range(len(series_names))]
+    # Open out file, write header
+    outfile = open(out_fname, "w")
+    outfile_colstring = "rep_series"
+    for rep in range(num_reps):
+        outfile_colstring += "\trep_{0}_corr".format(rep)
+    outfile.write(outfile_colstring + "\n")
+    # For each series
+    for idx, series_name in enumerate(series_names):
+        epoch = epochs[idx]
+        line = series_name
+        for rep in range(num_reps):
+            nn_dir = nn_parent_dir + "/{0}_rep{1}".format(series_name, rep)
+            corr = get_test_corrs(
+                nn_dir, epoch, method=method)
+            line += "\t{0}".format(round(corr, round_digits))
         outfile.write(line + "\n")
     outfile.close()
 

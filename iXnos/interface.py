@@ -36,7 +36,7 @@ def fp_size_analysis(
     # make cts_by_size plot
     plot.make_cts_by_size_plot(
         cts_by_size_and_frame, "Counts by FP Size",
-        plot_fname, sizes=range(min_size, max_size + 1))
+        size_plot_fname, sizes=range(min_size, max_size + 1))
 
 def fp_frame_by_size_analysis(
         cts_by_size_and_frame, expt_dir, min_size=13, max_size=36):
