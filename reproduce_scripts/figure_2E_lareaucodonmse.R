@@ -16,8 +16,9 @@ data = data.frame( cbind( t(dt[14,2:11]), NA, t(dt[1:13,2:11]) ))
 label1 = c("full", NA, -7, NA, -5, NA, -3, NA,  "P", NA,  1,  NA, 3,  NA, 5)
 label2 = c(NA,     NA, NA, -6, NA, -4, NA, "E", NA,  "A", NA, 2,  NA, 4,  NA)
 
-ymin = floor( min(data, na.rm=T) * 20 ) / 20
-ymax = ceiling( max(data, na.rm=T) * 20 ) / 20
+#ymin = floor( min(data, na.rm=T) * 10 ) / 10
+ymin = min(data, na.rm=T)
+ymax = ceiling( max(data, na.rm=T) * 10 ) / 10
 
 pdf( out_fname, width=2, height=1.67, pointsize = 7, useDingbats = F, bg = "white" )
 #cairo_pdf( out_fname, width=2, height=1.67, pointsize = 7 )
@@ -45,7 +46,7 @@ stripchart( data,
             add = T
             )
 
-axis( 2, lwd = 0.75 )
+axis( 2, at = rev(seq(ymax, ymin, by = -0.1)), lwd = 0.75 )
 axis( 1, at = 1:15, padj = -1, labels = label1, tick = F, cex.axis = 0.7)
 axis( 1, at = 1:15, padj = -1, labels = label2, tick = F, cex.axis = 0.7)
 

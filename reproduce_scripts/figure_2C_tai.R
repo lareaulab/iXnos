@@ -12,14 +12,16 @@ prop = read.delim(yeast_codon_props_fname, header=T, stringsAsFactors = F)
 
 wb = read.delim(cod_scores_fname, header=F, stringsAsFactors = F)
 
+codonrange1 = -5
+codonrange2 = 4
+label1 = c(-5,NA,-3,NA,"P",NA,1,NA,3,NA)
+label2 = c(NA,-4,NA,"E",NA,"A",NA,2,NA,4)
+
 codons = sort( apply( expand.grid( c("A","C","G","T"), c("A","C","G","T"), c("A","C","G","T")), 1, paste, collapse = "" ))
-pos = -7:5
+pos = codonrange1:codonrange2
 
 row.names(wb) = codons
 colnames(wb) = pos
-
-label1 = c(-7,NA,-5,NA,-3,NA,"P",NA,1,NA,3,NA,5)
-label2 = c(NA,-6,NA,-4,NA,"E",NA,"A",NA,2,NA,4,NA)
 
 tai.cor = -cor( wb, prop$tAI, use = "pairwise.complete.obs", method = "spearman" )[,1]
 tai.pval = apply(wb, 2, function(x){ cor.test(x, prop$tAI, use="pairwise.complete.obs", method="spearman")$p.value})

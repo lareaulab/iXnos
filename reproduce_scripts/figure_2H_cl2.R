@@ -8,10 +8,13 @@ green_scores_fname = args[2] # 28mers only!
 qpcr_fname = args[3] #qdat_summary_both.csv
 out_fname = args[4]
 
+codonrange1 = -5
+codonrange2 = 4
+
 oligos = list( "1" = "ATA", "2" = "TCC", "3" = "CCA", "7" = "CGT", "8" = "GAC", "9" = "GGG")
 
 codons = sort( apply( expand.grid( c("A","C","G","T"), c("A","C","G","T"), c("A","C","G","T")), 1, paste, collapse = "" ))
-pos = -7:5
+pos = codonrange1:codonrange2
 
 cl2 = read.delim( lareau_scores_fname, header=F, stringsAsFactors = F, colClasses = "numeric", row.names = codons, col.names = pos, na.strings="nan")
 cl1 = read.delim( green_scores_fname, header=F, stringsAsFactors = F, colClasses = "numeric", row.names = codons, col.names = pos, na.strings="nan")
