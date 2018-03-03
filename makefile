@@ -81,32 +81,33 @@ repro_files = \
 	$(repro_dir)/optimize_cds.py \
 	$(repro_dir)/pkl2txt.py \
 	$(repro_dir)/figure_1B_scaledcts.R \
-	$(repro_dir)/figure_1C_mse.R \
+#	$(repro_dir)/figure_1C_mse.R
 	$(repro_dir)/figure_1C_corrs.R \
 	$(repro_dir)/figure_1D_scatter.R \
+	$(repro_dir)/figure_1D_scatter_inset.R \
 	$(repro_dir)/figure_1E_indiv_gene.R \
 	$(repro_dir)/figure_1F_binned_error.R \
-	$(repro_dir)/figure_2A_codonmse.R \
+#	$(repro_dir)/figure_2A_codonmse.R
 	$(repro_dir)/figure_2A_codoncorrs.R \
 	$(repro_dir)/figure_2B_heatmap.R \
 	$(repro_dir)/figure_2C_tai.R \
-	$(repro_dir)/figure_2D_wobble.R \
-	$(repro_dir)/figure_2E_lareaucodonmse.R \
-	$(repro_dir)/figure_2E_lareaucodoncorrs.R \
-	$(repro_dir)/figure_2F_5prime.R \
-	$(repro_dir)/figure_2G_asite.R \
-	$(repro_dir)/figure_2H_cl2.R \
-	$(repro_dir)/figure_2I_cl1.R \
+	$(repro_dir)/figure_2C_wobble.R \
+#	$(repro_dir)/figure_2E_lareaucodonmse.R
+	$(repro_dir)/figure_2D_lareaucodoncorrs.R \
+	$(repro_dir)/figure_2E_5prime.R \
+	$(repro_dir)/figure_2F_asite.R \
+	$(repro_dir)/figure_2G_cl2.R \
 	$(repro_dir)/figure_3B_citrine_dist.R \
 	$(repro_dir)/figure_3C_facs.R \
 	$(repro_dir)/figure_3D_te.R \
 	$(repro_dir)/supp_table_codon_scores.py \
 	$(repro_dir)/supp_figure_facs.R \
 	$(repro_dir)/supp_figure_mrna_qpcr.R \
-	$(repro_dir)/supp_figure_greenmse.R \
-	$(repro_dir)/supp_figure_iwasakimse.R \
+#	$(repro_dir)/supp_figure_greenmse.R
+#	$(repro_dir)/supp_figure_iwasakimse.R
 	$(repro_dir)/supp_figure_greencorrs.R \
 	$(repro_dir)/supp_figure_iwasakicorrs.R \
+	$(repro_dir)/supp_figure_cl1.R \
 	$(repro_dir)/supp_figure_cl1v2.R
 
 expts_dir_name = expts
@@ -893,31 +894,32 @@ green_leaveout_corrs_file = \
 fig_files = \
 	$(fig_dir)/figure_1B_scaledcts.pdf \
 	$(fig_dir)/figure_1C_corrs.pdf \
-	$(fig_dir)/figure_1C_mse.pdf \
+#	$(fig_dir)/figure_1C_mse.pdf
 	$(fig_dir)/figure_1D_scatter.pdf \
+	$(fig_dir)/figure_1D_scatter_inset.pdf \
 	$(fig_dir)/figure_1E_indiv_gene.pdf \
 	$(fig_dir)/figure_1F_binned_error.pdf \
-	$(fig_dir)/figure_2A_codonmse.pdf \
+#	$(fig_dir)/figure_2A_codonmse.pdf
 	$(fig_dir)/figure_2A_codoncorrs.pdf \
 	$(fig_dir)/figure_2B_heatmap.pdf \
 	$(fig_dir)/figure_2C_tai.pdf \
-	$(fig_dir)/figure_2D_wobble.pdf \
-	$(fig_dir)/figure_2E_lareaucodonmse.pdf \
-	$(fig_dir)/figure_2E_lareaucodoncorrs.pdf \
-	$(fig_dir)/figure_2F_5prime.pdf \
-	$(fig_dir)/figure_2G_asite.pdf \
-	$(fig_dir)/figure_2H_cl2.pdf \
-	$(fig_dir)/figure_2I_cl1.pdf \
+	$(fig_dir)/figure_2C_wobble.pdf \
+#	$(fig_dir)/figure_2E_lareaucodonmse.pdf
+	$(fig_dir)/figure_2D_lareaucodoncorrs.pdf \
+	$(fig_dir)/figure_2E_5prime.pdf \
+	$(fig_dir)/figure_2F_asite.pdf \
+	$(fig_dir)/figure_2G_cl2.pdf \
 	$(fig_dir)/figure_3B_citrine_dist.pdf \
 	$(fig_dir)/figure_3C_facs.pdf \
 	$(fig_dir)/figure_3D_te.pdf \
 	$(fig_dir)/supp_table_codon_scores.csv \
 	$(fig_dir)/supp_figure_mrna_qpcr.pdf \
 	$(fig_dir)/supp_figure_facs.pdf \
-	$(fig_dir)/supp_figure_greenmse.pdf \
-	$(fig_dir)/supp_figure_iwasakimse.pdf \
+#	$(fig_dir)/supp_figure_greenmse.pdf
+#	$(fig_dir)/supp_figure_iwasakimse.pdf
 	$(fig_dir)/supp_figure_greencorrs.pdf \
 	$(fig_dir)/supp_figure_iwasakicorrs.pdf \
+	$(fig_dir)/supp_figure_cl1.pdf \
 	$(fig_dir)/supp_figure_cl1v2.pdf
 #   Needs debugging - talk w. Liana
 
@@ -2308,16 +2310,16 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
 
-$(fig_dir)/figure_1C_mse.pdf: \
-		| $(weinberg_feat_nb_mses_file) \
-		$(weinberg_feat_nb_linreg_mses_file) \
-		$(weinberg_struc_mses_file) \
-		$(repro_dir)/figure_1C_mse.R $(fig_dir)
-	Rscript $(repro_dir)/figure_1C_mse.R \
-		$(weinberg_feat_nb_mses_file) \
-		$(weinberg_feat_nb_linreg_mses_file) \
-		$(weinberg_struc_mses_file) \
-		$(fig_dir)/figure_1C_mse.pdf
+# $(fig_dir)/figure_1C_mse.pdf: \
+# 		| $(weinberg_feat_nb_mses_file) \
+# 		$(weinberg_feat_nb_linreg_mses_file) \
+# 		$(weinberg_struc_mses_file) \
+# 		$(repro_dir)/figure_1C_mse.R $(fig_dir)
+# 	Rscript $(repro_dir)/figure_1C_mse.R \
+# 		$(weinberg_feat_nb_mses_file) \
+# 		$(weinberg_feat_nb_linreg_mses_file) \
+# 		$(weinberg_struc_mses_file) \
+# 		$(fig_dir)/figure_1C_mse.pdf
 
 $(fig_dir)/figure_1C_corrs.pdf: \
 		| $(weinberg_feat_nb_corrs_file) \
@@ -2339,6 +2341,15 @@ $(fig_dir)/figure_1D_scatter.pdf: \
 		$(weinberg_results_final_model_y_te) \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(fig_dir)/figure_1D_scatter.pdf
+
+$(fig_dir)/figure_1D_scatter_inset.pdf: \
+		| $(weinberg_results_final_model_y_te) \
+		$(weinberg_results_final_model_y_te_hat) \
+		$(repro_dir)/figure_1D_scatter_inset.R $(fig_dir)
+	Rscript $(repro_dir)/figure_1D_scatter_inset.R \
+		$(weinberg_results_final_model_y_te) \
+		$(weinberg_results_final_model_y_te_hat) \
+		$(fig_dir)/figure_1D_scatter_inset.pdf
 
 #NOTE: Update first parameter entries
 $(fig_dir)/figure_1E_indiv_gene.pdf: \
@@ -2362,11 +2373,11 @@ $(fig_dir)/figure_1F_binned_error.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(fig_dir)/figure_1F_binned_error.pdf
 
-$(fig_dir)/figure_2A_codonmse.pdf: \
-		| $(weinberg_leaveout_mses_file) \
-		$(repro_dir)/figure_2A_codonmse.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2A_codonmse.R $(weinberg_leaveout_mses_file) \
-		$(fig_dir)/figure_2A_codonmse.pdf
+# $(fig_dir)/figure_2A_codonmse.pdf: \
+# 		| $(weinberg_leaveout_mses_file) \
+# 		$(repro_dir)/figure_2A_codonmse.R $(fig_dir)
+# 	Rscript $(repro_dir)/figure_2A_codonmse.R $(weinberg_leaveout_mses_file) \
+# 		$(fig_dir)/figure_2A_codonmse.pdf
 
 $(fig_dir)/figure_2A_codoncorrs.pdf: \
 		| $(weinberg_leaveout_corrs_file) \
@@ -2395,72 +2406,61 @@ $(fig_dir)/figure_2C_tai.pdf: \
 		$(fig_dir)/figure_2C_tai.pdf
 
 #Check that liana wants this without struc features
-$(fig_dir)/figure_2D_wobble.pdf: \
+$(fig_dir)/figure_2C_wobble.pdf: \
 		| $(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(yeast_codon_anticodon_file) \
-		$(repro_dir)/figure_2D_wobble.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2D_wobble.R \
+		$(repro_dir)/figure_2C_wobble.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2C_wobble.R \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(yeast_codon_anticodon_file) \
-		$(fig_dir)/figure_2D_wobble.pdf
+		$(fig_dir)/figure_2C_wobble.pdf
 
 #Check that liana wants this for full models
-$(fig_dir)/figure_2E_lareaucodonmse.pdf: \
-		| $(lareau_leaveout_mses_file) \
-		$(repro_dir)/figure_2E_lareaucodonmse.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2E_lareaucodonmse.R $(lareau_leaveout_mses_file) \
-		$(fig_dir)/figure_2E_lareaucodonmse.pdf
+# $(fig_dir)/figure_2E_lareaucodonmse.pdf: \
+# 		| $(lareau_leaveout_mses_file) \
+# 		$(repro_dir)/figure_2E_lareaucodonmse.R $(fig_dir)
+# 	Rscript $(repro_dir)/figure_2E_lareaucodonmse.R $(lareau_leaveout_mses_file) \
+# 		$(fig_dir)/figure_2E_lareaucodonmse.pdf
 
-$(fig_dir)/figure_2E_lareaucodoncorrs.pdf: \
+$(fig_dir)/figure_2D_lareaucodoncorrs.pdf: \
 		| $(lareau_leaveout_corrs_file) \
 		$(lareau_feat_nb_corrs_file) \
-		$(repro_dir)/figure_2E_lareaucodoncorrs.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2E_lareaucodoncorrs.R \
+		$(repro_dir)/figure_2D_lareaucodoncorrs.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2D_lareaucodoncorrs.R \
 		$(lareau_leaveout_corrs_file) \
 		$(lareau_feat_nb_corrs_file) \
-		$(fig_dir)/figure_2E_lareaucodoncorrs.pdf
+		$(fig_dir)/figure_2D_lareaucodoncorrs.pdf
 
 #Check that liana wants this for 28mer models
-$(fig_dir)/figure_2F_5prime.pdf: \
+$(fig_dir)/figure_2E_5prime.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(repro_dir)/figure_2F_5prime.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2F_5prime.R \
+		$(repro_dir)/figure_2E_5prime.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2E_5prime.R \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(fig_dir)/figure_2F_5prime.pdf
+		$(fig_dir)/figure_2E_5prime.pdf
 
 #Check that liana wants this for 28mer models
-$(fig_dir)/figure_2G_asite.pdf: \
+$(fig_dir)/figure_2F_asite.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(repro_dir)/figure_2G_asite.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2G_asite.R \
+		$(repro_dir)/figure_2F_asite.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2F_asite.R \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(fig_dir)/figure_2G_asite.pdf
+		$(fig_dir)/figure_2F_asite.pdf
 
-$(fig_dir)/figure_2H_cl2.pdf: \
+$(fig_dir)/figure_2G_cl2.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(wetlab_dir)/circligase_qpcr.csv \
-		$(repro_dir)/figure_2H_cl2.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2H_cl2.R \
+		$(repro_dir)/figure_2G_cl2.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2G_cl2.R \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(wetlab_dir)/circligase_qpcr.csv \
-		$(fig_dir)/figure_2H_cl2.pdf
-
-$(fig_dir)/figure_2I_cl1.pdf: \
-		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
-		$(green_results_28_epoch_dir)/codon_scores.tsv \
-		$(wetlab_dir)/circligase_qpcr.csv \
-		$(repro_dir)/figure_2I_cl1.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2I_cl1.R \
-		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
-		$(green_results_28_epoch_dir)/codon_scores.tsv \
-		$(wetlab_dir)/circligase_qpcr.csv \
-		$(fig_dir)/figure_2I_cl1.pdf
+		$(fig_dir)/figure_2G_cl2.pdf
 
 $(fig_dir)/figure_3B_citrine_dist.pdf: \
 		| $(repro_dir)/figure_3B_citrine_dist.R \
@@ -2518,19 +2518,19 @@ $(fig_dir)/supp_figure_facs.pdf: \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(fig_dir)/supp_figure_facs.pdf
 
-$(fig_dir)/supp_figure_greenmse.pdf: \
-		| $(green_leaveout_mses_file) \
-		$(repro_dir)/supp_figure_greenmse.R $(fig_dir)
-	Rscript $(repro_dir)/supp_figure_greenmse.R \
-		$(green_leaveout_mses_file) \
-		$(fig_dir)/supp_figure_greenmse.pdf
+# $(fig_dir)/supp_figure_greenmse.pdf: \
+# 		| $(green_leaveout_mses_file) \
+# 		$(repro_dir)/supp_figure_greenmse.R $(fig_dir)
+# 	Rscript $(repro_dir)/supp_figure_greenmse.R \
+# 		$(green_leaveout_mses_file) \
+# 		$(fig_dir)/supp_figure_greenmse.pdf
 
-$(fig_dir)/supp_figure_iwasakimse.pdf: \
-		| $(iwasaki_leaveout_mses_file) \
-		$(repro_dir)/supp_figure_iwasakimse.R $(fig_dir)
-	Rscript $(repro_dir)/supp_figure_iwasakimse.R \
-		$(iwasaki_leaveout_mses_file) \
-		$(fig_dir)/supp_figure_iwasakimse.pdf
+# $(fig_dir)/supp_figure_iwasakimse.pdf: \
+# 		| $(iwasaki_leaveout_mses_file) \
+# 		$(repro_dir)/supp_figure_iwasakimse.R $(fig_dir)
+# 	Rscript $(repro_dir)/supp_figure_iwasakimse.R \
+# 		$(iwasaki_leaveout_mses_file) \
+# 		$(fig_dir)/supp_figure_iwasakimse.pdf
 
 $(fig_dir)/supp_figure_greencorrs.pdf: \
 		| $(green_leaveout_corrs_file) \
@@ -2549,6 +2549,17 @@ $(fig_dir)/supp_figure_iwasakicorrs.pdf: \
 		$(iwasaki_leaveout_corrs_file) \
 		$(iwasaki_feat_nb_corrs_file) \
 		$(fig_dir)/supp_figure_iwasakicorrs.pdf
+
+$(fig_dir)/supp_figure_cl1.pdf: \
+		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
+		$(green_results_28_epoch_dir)/codon_scores.tsv \
+		$(wetlab_dir)/circligase_qpcr.csv \
+		$(repro_dir)/supp_figure_cl1.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_cl1.R \
+		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
+		$(green_results_28_epoch_dir)/codon_scores.tsv \
+		$(wetlab_dir)/circligase_qpcr.csv \
+		$(fig_dir)/supp_figure_cl1.pdf
 
 $(fig_dir)/supp_figure_cl1v2.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \

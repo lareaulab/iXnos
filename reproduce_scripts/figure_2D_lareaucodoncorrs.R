@@ -52,6 +52,6 @@ axis( 2, at = seq(0,0.15,by=0.05), labels = c("0.0",NA,"0.1",NA), lwd = 0.75 )
 axis( 1, at = 1:15, padj = -1, labels = label1, tick = F, cex.axis = 0.7)
 axis( 1, at = 1:15, padj = -1, labels = label2, tick = F, cex.axis = 0.7)
 
-mtext( "E", font = 2, line = -3, side = 3, outer = T, adj = 0 )
+mtext( "D", font = 2, line = -3, side = 3, outer = T, adj = 0 )
 dev.off()
 

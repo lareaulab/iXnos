@@ -94,6 +94,6 @@ axis( 1, pos = min(bp$P.site.score,na.rm=T) - (max(bp$P.site.score,na.rm=T) - mi
       lwd = 0,
       at = which( P.pvals * n < 0.05 ),
       labels = rep("**",length(which(P.pvals * n < 0.05))))
-mtext( "D", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
+mtext( "C", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
 

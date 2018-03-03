@@ -55,5 +55,5 @@ smoothScatter( y_te$V1,
                postPlotHook = NULL)
 axis( 1, at = 0:2, lwd = 0.75 )
 axis( 2, at = 0:2, lwd = 0.75 )
-mtext( "F", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
+#mtext( "F", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
