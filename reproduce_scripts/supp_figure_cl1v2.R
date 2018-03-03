@@ -23,11 +23,12 @@ scores = data.frame( cl1.green = round( cl1[tested,]$X.5, 3 ),
 )
 row.names(scores) = tested
 
+#pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 pdf( out_fname, width=3, height=3, pointsize=7, useDingbats=F, bg="white" )
-#cairo_pdf( out_fname, width=3, height=3, pointsize=7 )
 par( mex = 0.65 ) # sets margin stuff
-par( mar =c(6,6.5,5,3) )
-par( oma = c(0,0.5,1,0) )
+par( lwd = 0.75 )
+par( oma = c(0,1.5,1,0) )
+par( mar = c(6,6,5,6) )
 par( xpd = NA )
 plot( cl2$X.5, 
       cl1$X.5, 
@@ -47,4 +48,7 @@ text( cl2[tested,]$X.5,
       cl1[tested,]$X.5,
       labels = tested,
       pos = 1 )
+
+mtext( "A", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
+
 dev.off()

@@ -1,11 +1,11 @@
 # circligase I test
-# figure 2I
+# supp figure
 # data: Lareau yeast, Green yeast
 
 args <- commandArgs(trailingOnly = TRUE)
 lareau_scores_fname = args[1] # 28mers only!
 green_scores_fname = args[2] # 28mers only!
-qpcr_fname = args[3] #qdat_summary_both.csv
+qpcr_fname = args[3]
 out_fname = args[4]
 
 codonrange1 = -5
@@ -85,22 +85,19 @@ ord = order(scores$cl1.green)
 down = ord[c(2,5)]
 up = ord[c(1,3,4,6)]
 
-pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
-#cairo_pdf( out_fname, width=2, height=1.67, pointsize=7 )
+pdf( out_fname, width=3, height=3, pointsize=7, useDingbats=F, bg="white" )
+#pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )
 par( mex = 0.65 ) # sets margin stuff
-par( mar = c(6,8.5,5,6) )
 par( oma = c(0,1.5,1,0) )
+par( mar = c(6,6,5,6) )
 par( lwd = 0.75 )
 plot( scores$cl1.green, cl1.ratio,
       xlab = "bias score", ylab = "relative ligation", 
-#      xlim = c(-1, 1.25), 
+      xlim = c(-1, 1), 
       ylim = c(0,ymax),
-      axes = F,
       pch = NA, bty = "n"
 )
 abline( lm(cl1.ratio ~ scores$cl1.green), col = "darkgray", lty = 3 )
-axis(1, lwd = 0.75)
-axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, NA, 0.5, NA, 1), lwd = 0.75)
 arrows( scores$cl1.green, cl1.ratio - cl1.se.abs,
         scores$cl1.green, cl1.ratio + cl1.se.abs,
         angle = 90, code = 3, length = 0.025, lwd = 0.75, col = "gray50" )
@@ -108,5 +105,5 @@ points( scores$cl1.green, cl1.ratio, pch=20, col = "blue" )
 par( xpd = NA )
 text( scores$cl1.green[down], cl1.ratio[down] - cl1.se.abs[down] - 0.075, labels = row.names(scores)[down], cex = 0.5, col = "gray50" )
 text( scores$cl1.green[up], cl1.ratio[up] + cl1.se.abs[up] + 0.075, labels = row.names(scores)[up], cex = 0.5, col = "gray50" )
-mtext( "I", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
+mtext( "B", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
