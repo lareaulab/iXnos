@@ -82,8 +82,8 @@ cl2.se.abs = cl2.ratio * cl2.se.percent
 ymax = max( cl1.ratio + cl1.se.abs, cl2.ratio + cl2.se.abs )
 
 ord = order(scores$cl1.green)
-down = ord[c(2,5)]
-up = ord[c(1,3,4,6)]
+up = ord[c(2,5)]
+down = ord[c(1,3,4,6)]
 
 pdf( out_fname, width=3, height=3, pointsize=7, useDingbats=F, bg="white" )
 #pdf( out_fname, width=2, height=1.67, pointsize=7, useDingbats = F, bg = "white" )

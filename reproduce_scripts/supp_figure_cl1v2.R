@@ -44,10 +44,15 @@ points( cl2[tested,]$X.5,
         col="red",
         pch=20 )
 
-text( cl2[tested,]$X.5,
-      cl1[tested,]$X.5,
-      labels = tested,
+text( cl2[tested[2:6],]$X.5,
+      cl1[tested[2:6],]$X.5,
+      labels = tested[2:6],
       pos = 1 )
+text( cl2[tested[1],]$X.5,
+      cl1[tested[1],]$X.5,
+      labels = tested[1],
+      pos = 2 )
+
 
 mtext( "A", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 
