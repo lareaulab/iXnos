@@ -51,7 +51,7 @@ text( cl2[tested[2:6],]$X.5,
 text( cl2[tested[1],]$X.5,
       cl1[tested[1],]$X.5,
       labels = tested[1],
-      pos = 2 )
+      pos = 3 )
 
 
 mtext( "A", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
