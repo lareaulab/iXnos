@@ -81,18 +81,15 @@ repro_files = \
 	$(repro_dir)/optimize_cds.py \
 	$(repro_dir)/pkl2txt.py \
 	$(repro_dir)/figure_1B_scaledcts.R \
-#	$(repro_dir)/figure_1C_mse.R
 	$(repro_dir)/figure_1C_corrs.R \
 	$(repro_dir)/figure_1D_scatter.R \
 	$(repro_dir)/figure_1D_scatter_inset.R \
 	$(repro_dir)/figure_1E_indiv_gene.R \
 	$(repro_dir)/figure_1F_binned_error.R \
-#	$(repro_dir)/figure_2A_codonmse.R
 	$(repro_dir)/figure_2A_codoncorrs.R \
 	$(repro_dir)/figure_2B_heatmap.R \
 	$(repro_dir)/figure_2C_tai.R \
 	$(repro_dir)/figure_2C_wobble.R \
-#	$(repro_dir)/figure_2E_lareaucodonmse.R
 	$(repro_dir)/figure_2D_lareaucodoncorrs.R \
 	$(repro_dir)/figure_2E_5prime.R \
 	$(repro_dir)/figure_2F_asite.R \
@@ -103,12 +100,15 @@ repro_files = \
 	$(repro_dir)/supp_table_codon_scores.py \
 	$(repro_dir)/supp_figure_facs.R \
 	$(repro_dir)/supp_figure_mrna_qpcr.R \
-#	$(repro_dir)/supp_figure_greenmse.R
-#	$(repro_dir)/supp_figure_iwasakimse.R
 	$(repro_dir)/supp_figure_greencorrs.R \
 	$(repro_dir)/supp_figure_iwasakicorrs.R \
 	$(repro_dir)/supp_figure_cl1.R \
 	$(repro_dir)/supp_figure_cl1v2.R
+#	$(repro_dir)/figure_1C_mse.R
+#	$(repro_dir)/figure_2A_codonmse.R
+#	$(repro_dir)/figure_2E_lareaucodonmse.R
+#	$(repro_dir)/supp_figure_greenmse.R
+#	$(repro_dir)/supp_figure_iwasakimse.R
 
 expts_dir_name = expts
 expts_dir = $(top_dir)/$(expts_dir_name)
@@ -894,17 +894,14 @@ green_leaveout_corrs_file = \
 fig_files = \
 	$(fig_dir)/figure_1B_scaledcts.pdf \
 	$(fig_dir)/figure_1C_corrs.pdf \
-#	$(fig_dir)/figure_1C_mse.pdf
 	$(fig_dir)/figure_1D_scatter.pdf \
 	$(fig_dir)/figure_1D_scatter_inset.pdf \
 	$(fig_dir)/figure_1E_indiv_gene.pdf \
 	$(fig_dir)/figure_1F_binned_error.pdf \
-#	$(fig_dir)/figure_2A_codonmse.pdf
 	$(fig_dir)/figure_2A_codoncorrs.pdf \
 	$(fig_dir)/figure_2B_heatmap.pdf \
 	$(fig_dir)/figure_2C_tai.pdf \
 	$(fig_dir)/figure_2C_wobble.pdf \
-#	$(fig_dir)/figure_2E_lareaucodonmse.pdf
 	$(fig_dir)/figure_2D_lareaucodoncorrs.pdf \
 	$(fig_dir)/figure_2E_5prime.pdf \
 	$(fig_dir)/figure_2F_asite.pdf \
@@ -915,13 +912,15 @@ fig_files = \
 	$(fig_dir)/supp_table_codon_scores.csv \
 	$(fig_dir)/supp_figure_mrna_qpcr.pdf \
 	$(fig_dir)/supp_figure_facs.pdf \
-#	$(fig_dir)/supp_figure_greenmse.pdf
-#	$(fig_dir)/supp_figure_iwasakimse.pdf
 	$(fig_dir)/supp_figure_greencorrs.pdf \
 	$(fig_dir)/supp_figure_iwasakicorrs.pdf \
 	$(fig_dir)/supp_figure_cl1.pdf \
 	$(fig_dir)/supp_figure_cl1v2.pdf
-#   Needs debugging - talk w. Liana
+#	$(fig_dir)/figure_1C_mse.pdf
+#	$(fig_dir)/figure_2A_codonmse.pdf
+#	$(fig_dir)/figure_2E_lareaucodonmse.pdf
+#	$(fig_dir)/supp_figure_greenmse.pdf
+#	$(fig_dir)/supp_figure_iwasakimse.pdf
 
 ### paper data files
 
@@ -2306,7 +2305,7 @@ $(fig_dir)/figure_1B_scaledcts.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(repro_dir)/figure_1B_scaledcts.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1B_scaledcts.R \
-		YGR192C 166 \
+		YOL086C 166 \
 		$(weinberg_27_31_te_data_table) \
 		$(fig_dir)/figure_1B_scaledcts.pdf
 
@@ -2358,7 +2357,7 @@ $(fig_dir)/figure_1E_indiv_gene.pdf: \
 		$(yeast_gene_symbol_file) \
 		$(repro_dir)/figure_1E_indiv_gene.R $(fig_dir)
 	Rscript $(repro_dir)/figure_1E_indiv_gene.R \
-		YGR192C \
+		YOL086C \
 		$(weinberg_27_31_te_data_table) \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(yeast_gene_symbol_file) \
