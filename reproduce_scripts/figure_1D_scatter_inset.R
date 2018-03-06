@@ -32,7 +32,7 @@ aspratio = max(y_te_hat) / max(y_te)
 
 pdf( out_fname, width=2, height=1.67, pointsize = 7, useDingbats = F, bg = "white" )
 par( mex = 0.65 )
-par( mar =c(6, 5.5, 2, 3))
+par( mar =c(6, 5.5, 2, 4))
 par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
 plot( NA, 
