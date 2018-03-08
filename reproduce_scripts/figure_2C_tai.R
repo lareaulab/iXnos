@@ -23,8 +23,8 @@ pos = codonrange1:codonrange2
 row.names(wb) = codons
 colnames(wb) = pos
 
-tai.cor = -cor( wb, prop$tAI, use = "pairwise.complete.obs", method = "spearman" )[,1]
-tai.pval = apply(wb, 2, function(x){ cor.test(x, prop$tAI, use="pairwise.complete.obs", method="spearman")$p.value})
+tai.cor = -cor( wb, prop$tAI, use = "pairwise.complete.obs", method = "pearson" )[,1]
+tai.pval = apply(wb, 2, function(x){ cor.test(x, prop$tAI, use="pairwise.complete.obs", method="pearson")$p.value})
 
 cols = rep("gray90", length(tai.pval))
 cols[tai.pval < 0.05/length(tai.pval)] = "gray60"
@@ -37,7 +37,7 @@ par( oma = c(0,1.5,1,0) )
 par( xpd = NA )
 centers.tai = barplot( tai.cor,
                        xlab = "codon position",
-                       ylab = "Spearman correlation",
+                       ylab = "Pearson correlation",
                        col = cols,
                        border = cols,
                        space = 0.3,

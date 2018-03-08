@@ -16,8 +16,8 @@ pos = codonrange1:codonrange2
 iwasaki = read.delim(iwasaki_cod_scores_fname, header=F, stringsAsFactors = F, colClasses = "numeric", row.names = codons, col.names = pos, na.strings="nan")
 lareau = read.delim(lareau_cod_scores_fname, header=F, stringsAsFactors = F, colClasses = "numeric", row.names = codons, col.names = pos, na.strings="nan")
 
-a.cor = round( cor(iwasaki$X0, lareau$X0, method="spearman", use="complete.obs"), 2)
-end.cor = round( cor(iwasaki$X.5, lareau$X.5, method="spearman", use="complete.obs"), 2)
+a.cor = round( cor(iwasaki$X0, lareau$X0, method="pearson", use="complete.obs"), 2)
+end.cor = round( cor(iwasaki$X.5, lareau$X.5, method="pearson", use="complete.obs"), 2)
 
 xmin = min( iwasaki$X0, na.rm = T )
 xmin = min( xmin, round(xmin) )
@@ -50,5 +50,6 @@ plot( iwasaki$X0, lareau$X0,
 axis( 1, lwd = 0.75, at = xat, labels = xlab )
 axis( 2, lwd = 0.75, at = round(ymin):round(ymax) )
 mtext( "F", font = 2, line = -3, side = 3, outer = T, adj = 0 )
-mtext( bquote(rho==.(a.cor)), side = 1, line = -2, adj = 1 )
+##mtext( bquote(rho==.(a.cor)), side = 1, line = -2, adj = 1 )
+mtext( bquote(r==.(a.cor)), side = 1, line = -2, adj = 1 )
 dev.off()
