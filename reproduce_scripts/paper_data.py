@@ -50,6 +50,8 @@ if __name__ == "__main__":
         if line[0] == "str_n17n15_cod_n5p4_nt_n15p14":
             avg_mse = float(line[11])
             std_mse = float(line[12])
+        if line[0] == "max_str_p13p42_cod_n5p4_nt_n15p14":
+            max_str_avg_mse = float(line[11])
    
     struc_corrs_file = open(struc_corrs_fname, "r")
     struc_corrs_file.readline()
@@ -57,11 +59,18 @@ if __name__ == "__main__":
         line = line.strip().split()
         if line[0] == "str_n17n15_cod_n5p4_nt_n15p14":
             med_corr = np.median([float(elt) for elt in line[1:]])
+        if line[0] == "max_str_p13p42_cod_n5p4_nt_n15p14":
+            max_str_med_corr = np.median([float(elt) for elt in line[1:]])
 
     out_file.write("Complete model with structure features rep_series:\n")
     out_file.write("Avg. MSE: {0}\n".format(avg_mse))
     out_file.write("Std. MSE: {0}\n".format(std_mse))
     out_file.write("Median pearson's r: {0}\n".format(med_corr))
+    out_file.write("\n")
+
+    out_file.write("Complete model with downstream struc windows (p13p42) rep_series:\n")
+    out_file.write("Avg. MSE: {0}\n".format(max_str_avg_mse))
+    out_file.write("Median pearson's r: {0}\n".format(max_str_med_corr))
     out_file.write("\n")
 
     # MSE for points with true scaled counts < 2:
@@ -201,13 +210,13 @@ if __name__ == "__main__":
         #print iwasaki_scores_i
         #print lareau_scores_i.size
         #print iwasaki_scores_i.size
-        spear_r, spear_p = spearmanr(lareau_scores_i, iwasaki_scores_i)
-        lareau_iwasaki_corrs_by_cod.append(spear_r)
+        pear_r, pear_p = pearsonr(lareau_scores_i, iwasaki_scores_i)
+        lareau_iwasaki_corrs_by_cod.append(pear_r)
     
     #NOTE: Assumes -5 to +4 codon feature neighborhood
     cod_idxs = range(-5, 4)
     out_file.write("Lareau/Iwasaki s28_cod_n5p4_nt_n15p14 codon score correlations by codon position\n")
-    out_file.write("codon_idx\tspear_r\n")
+    out_file.write("codon_idx\tpear_r\n")
     for i, cod_idx in enumerate(cod_idxs):
         out_file.write(
             "{0}\t{1}\n".format(cod_idx, lareau_iwasaki_corrs_by_cod[i]))
@@ -219,11 +228,11 @@ if __name__ == "__main__":
         keep_idxs = np.logical_not(np.isnan(weinberg_28_cod_scores[:,i]))
         weinberg_scores_i = weinberg_cod_scores[:,i][keep_idxs].ravel()
         green_scores_i = green_28_cod_scores[:,i][keep_idxs].ravel()
-        spear_r, spear_p = spearmanr(weinberg_scores_i, green_scores_i)
-        weinberg_green_28_corrs_by_cod.append(spear_r)
+        pear_r, pear_p = pearsonr(weinberg_scores_i, green_scores_i)
+        weinberg_green_28_corrs_by_cod.append(pear_r)
     
     out_file.write("Weinberg/Green s28_cod_n5p4_nt_n15p14 codon score correlations by codon position\n")
-    out_file.write("codon_idx\tspear_r\n")
+    out_file.write("codon_idx\tpear_r\n")
     for i, cod_idx in enumerate(cod_idxs):
         out_file.write(
             "{0}\t{1}\n".format(cod_idx, weinberg_green_28_corrs_by_cod[i]))
@@ -234,11 +243,11 @@ if __name__ == "__main__":
         keep_idxs = np.logical_not(np.isnan(weinberg_cod_scores[:,i]))
         weinberg_scores_i = weinberg_cod_scores[:,i][keep_idxs].ravel()
         green_scores_i = green_cod_scores[:,i][keep_idxs].ravel()
-        spear_r, spear_p = spearmanr(weinberg_scores_i, green_scores_i)
-        weinberg_green_corrs_by_cod.append(spear_r)
+        pear_r, pear_p = pearsonr(weinberg_scores_i, green_scores_i)
+        weinberg_green_corrs_by_cod.append(pear_r)
     
     out_file.write("Weinberg/Green full_cod_n5p4_nt_n15p14 codon score correlations by codon position\n")
-    out_file.write("codon_idx\tspear_r\n")
+    out_file.write("codon_idx\tpear_r\n")
     for i, cod_idx in enumerate(cod_idxs):
         out_file.write(
             "{0}\t{1}\n".format(cod_idx, weinberg_green_corrs_by_cod[i]))

@@ -64,8 +64,8 @@ axis( 1, at = c( codonrange1 - 0.5, codonrange2 + 0.5 ), labels = NA, tick = T, 
 axis( 1, at = c( codonrange1 - 0.5, codonrange2 + 0.5 ), labels = NA, tick = T, lwd.ticks=0, pos=61.5, lwd=0.75 )
 
 # label the legend (has to come before image.plot...)
-mtext("faster", side=4, line = -2.5, adj = 0.265)
-mtext("slower", side=4, line = -2.5, adj = 0.73)
+mtext("faster", side=4, line = -3.3, adj = 0.265)
+mtext("slower", side=4, line = -3.3, adj = 0.73)
 
 mtext( "B", font = 2, line = -3, side = 3, outer = T, adj = 0 )
 
@@ -82,7 +82,7 @@ image.plot( zlim=c(min(wb,na.rm=T), max(wb,na.rm=T)),
             col = jet.colors(256),
             add = T, legend.only = T,
             legend.shrink = 0.5,
-            legend.mar = 4,
+            legend.mar = 5,
             axis.args=list(las=0,lwd=0.75)
 )
 dev.off()
