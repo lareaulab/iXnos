@@ -1,11 +1,11 @@
 # comparison of three methods
 # supp figure, panel B
 # Liu data from running riboshape on the Weinberg dataset locally
-# O'Connor data from running RUST on the Weinberg dataset via their Galaxy server
+# O'Connor data from running RUST on 28mers from the Weinberg dataset via their Galaxy server (offset = 15)
 
 args <- commandArgs(trailingOnly = TRUE)
 tunney_fname = args[1] # corrs_by_gene_density.txt
-oconnor_fname = args[2] # oconnor_rust_weinberg.csv
+oconnor_fname = args[2] # oconnor_rust_weinberg_28mers.csv
 liu_fname = args[3] # ASK: corrs_by_gene.txt
 liu_s_fname = args[4] # ASK: subspace_corrs.txt
 liu_gene_fname = args[5] # ASK: gene_names.txt
@@ -131,7 +131,9 @@ mtext( "B", font = 2, line = 2, side = 3, outer = T, adj = 0 )
 dev.off()
 
 sapply(all.data, mean)
+# RUST28
 # > sapply(all.data, mean)
 # t         o         l       l.s 
-# 0.5590593 0.5103117 0.4108693 0.4750529 
+# 0.5590593 0.4802878 0.4108693 0.4750529 
+
 
