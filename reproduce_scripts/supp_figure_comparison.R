@@ -5,7 +5,7 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 tunney_fname = args[1] # corrs_by_gene_density.txt
-oconnor_fname = args[2] # oconnor_rust_weinberg_28mers.csv
+oconnor_fname = args[2] # oconnor_rust_weinberg.csv
 liu_fname = args[3] # ASK: corrs_by_gene.txt
 liu_s_fname = args[4] # ASK: subspace_corrs.txt
 liu_gene_fname = args[5] # ASK: gene_names.txt
