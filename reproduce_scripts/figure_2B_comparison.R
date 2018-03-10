@@ -53,24 +53,24 @@ liu.sub.loess = predict( loess( liu.subspace[liu.sub.x,8] ~ c(1:num.all) ),
 
 all.data = data.frame( t = tunney$pearson_r[tunney.x],
                        o = oconnor$Pearson.s.coefficient[oconnor.x],
-                       l = liu[liu.x, 8],
-                       l.s = liu.subspace[liu.sub.x, 8]
+                       l = liu[liu.x, 8]
+#                       l.s = liu.subspace[liu.sub.x, 8]
 )
 
 loess.fits = data.frame( t = tunney.loess$fit,
                          o = oconnor.loess$fit,
-                         l = liu.loess$fit,
-                         l.s = liu.sub.loess$fit
+                         l = liu.loess$fit
+#                          l.s = liu.sub.loess$fit
 )
 
 loess.ses = data.frame( t = tunney.loess$se.fit,
                         o = oconnor.loess$se.fit,
-                        l = liu.loess$se.fit,
-                        l.s = liu.sub.loess$se.fit
+                        l = liu.loess$se.fit
+#                        l.s = liu.sub.loess$se.fit
 )
 
-cols = c("red", "blue", "green", "orange")
-titles = c("Tunney", "O'Connor", "Liu", "Liu (subspace)")
+cols = c("red", "blue", "green")#, "orange")
+titles = c("Tunney", "O'Connor", "Liu")#, "Liu (subspace)")
 
 make.plot = function( x, y, z, w) {
   plot( 1:num.all,
