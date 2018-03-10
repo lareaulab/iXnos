@@ -213,7 +213,8 @@ if __name__ == "__main__":
         # Make column names header
         out_file.write(
             "gene_name\tfp_density\ttr_gene\tmse\tpearson_r\t"
-            "pearson_r_sub1000\tpearson_r_sub2000\tpearson_r_sub3000\n")
+            "pearson_r_sub1000\tpearson_r_sub2000\tpearson_r_sub3000\t"
+            "pearson_r_sub4000\n")
         # Record predictive performance for each gene in subsampled data set, 
         #    ordered by original fp density in genes
         for i, gene_name in enumerate(genes_by_density):

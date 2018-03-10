@@ -62,6 +62,13 @@ wetlab_files = \
 	$(facs_data_zip_file) \
 	$(facs_data_file) 
 
+comparison_dir_name = comparison_data
+comparison_dir = $(top_dir)/$(comparison_dir_name)
+oconnor_dir = $(comparison_dir)/OConnor
+liu_dir = $(comparison_dir)/Liu
+riboshape_dir = $(liu_dir)/riboshape
+ASK_dir = $(riboshape_dir)/density_prediction/ASK_sigma[1,3,5,12.5,25,37.5,50,75]
+
 repro_dir_name = reproduce_scripts
 repro_dir = $(top_dir)/$(repro_dir_name)
 repro_files = \
@@ -86,17 +93,19 @@ repro_files = \
 	$(repro_dir)/figure_1D_scatter_inset.R \
 	$(repro_dir)/figure_1E_indiv_gene.R \
 	$(repro_dir)/figure_1F_binned_error.R \
-	$(repro_dir)/figure_2A_codoncorrs.R \
-	$(repro_dir)/figure_2B_heatmap.R \
-	$(repro_dir)/figure_2C_tai.R \
-	$(repro_dir)/figure_2C_wobble.R \
-	$(repro_dir)/figure_2D_lareaucodoncorrs.R \
-	$(repro_dir)/figure_2E_5prime.R \
-	$(repro_dir)/figure_2F_asite.R \
-	$(repro_dir)/figure_2G_cl2.R \
-	$(repro_dir)/figure_3B_citrine_dist.R \
-	$(repro_dir)/figure_3C_facs.R \
-	$(repro_dir)/figure_3D_te.R \
+	$(repro_dir)/figure_2A_downsampling.R \
+	$(repro_dir)/figure_2B_comparison.R \
+	$(repro_dir)/figure_3A_codoncorrs.R \
+	$(repro_dir)/figure_3B_heatmap.R \
+	$(repro_dir)/figure_3C_tai.R \
+	$(repro_dir)/figure_3C_wobble.R \
+	$(repro_dir)/figure_3D_lareaucodoncorrs.R \
+	$(repro_dir)/figure_3E_5prime.R \
+	$(repro_dir)/figure_3F_asite.R \
+	$(repro_dir)/figure_3G_cl2.R \
+	$(repro_dir)/figure_4B_citrine_dist.R \
+	$(repro_dir)/figure_4C_facs.R \
+	$(repro_dir)/figure_4D_te.R \
 	$(repro_dir)/supp_table_codon_scores.py \
 	$(repro_dir)/supp_figure_facs.R \
 	$(repro_dir)/supp_figure_mrna_qpcr.R \
@@ -105,8 +114,8 @@ repro_files = \
 	$(repro_dir)/supp_figure_cl1.R \
 	$(repro_dir)/supp_figure_cl1v2.R
 #	$(repro_dir)/figure_1C_mse.R
-#	$(repro_dir)/figure_2A_codonmse.R
-#	$(repro_dir)/figure_2E_lareaucodonmse.R
+#	$(repro_dir)/figure_3A_codonmse.R
+#	$(repro_dir)/figure_3E_lareaucodonmse.R
 #	$(repro_dir)/supp_figure_greenmse.R
 #	$(repro_dir)/supp_figure_iwasakimse.R
 
@@ -898,17 +907,19 @@ fig_files = \
 	$(fig_dir)/figure_1D_scatter_inset.pdf \
 	$(fig_dir)/figure_1E_indiv_gene.pdf \
 	$(fig_dir)/figure_1F_binned_error.pdf \
-	$(fig_dir)/figure_2A_codoncorrs.pdf \
-	$(fig_dir)/figure_2B_heatmap.pdf \
-	$(fig_dir)/figure_2C_tai.pdf \
-	$(fig_dir)/figure_2C_wobble.pdf \
-	$(fig_dir)/figure_2D_lareaucodoncorrs.pdf \
-	$(fig_dir)/figure_2E_5prime.pdf \
-	$(fig_dir)/figure_2F_asite.pdf \
-	$(fig_dir)/figure_2G_cl2.pdf \
-	$(fig_dir)/figure_3B_citrine_dist.pdf \
-	$(fig_dir)/figure_3C_facs.pdf \
-	$(fig_dir)/figure_3D_te.pdf \
+	$(fig_dir)/figure_2A_downsampling.pdf \
+	$(fig_dir)/figure_2B_comparison.pdf \
+	$(fig_dir)/figure_3A_codoncorrs.pdf \
+	$(fig_dir)/figure_3B_heatmap.pdf \
+	$(fig_dir)/figure_3C_tai.pdf \
+	$(fig_dir)/figure_3C_wobble.pdf \
+	$(fig_dir)/figure_3D_lareaucodoncorrs.pdf \
+	$(fig_dir)/figure_3E_5prime.pdf \
+	$(fig_dir)/figure_3F_asite.pdf \
+	$(fig_dir)/figure_3G_cl2.pdf \
+	$(fig_dir)/figure_4B_citrine_dist.pdf \
+	$(fig_dir)/figure_4C_facs.pdf \
+	$(fig_dir)/figure_4D_te.pdf \
 	$(fig_dir)/supp_table_codon_scores.csv \
 	$(fig_dir)/supp_figure_mrna_qpcr.pdf \
 	$(fig_dir)/supp_figure_facs.pdf \
@@ -917,8 +928,8 @@ fig_files = \
 	$(fig_dir)/supp_figure_cl1.pdf \
 	$(fig_dir)/supp_figure_cl1v2.pdf
 #	$(fig_dir)/figure_1C_mse.pdf
-#	$(fig_dir)/figure_2A_codonmse.pdf
-#	$(fig_dir)/figure_2E_lareaucodonmse.pdf
+#	$(fig_dir)/figure_3A_codonmse.pdf
+#	$(fig_dir)/figure_3E_lareaucodonmse.pdf
 #	$(fig_dir)/supp_figure_greenmse.pdf
 #	$(fig_dir)/supp_figure_iwasakimse.pdf
 
@@ -2372,47 +2383,65 @@ $(fig_dir)/figure_1F_binned_error.pdf: \
 		$(weinberg_results_final_model_y_te_hat) \
 		$(fig_dir)/figure_1F_binned_error.pdf
 
+$(fig_dir)/figure_2A_downsampling.pdf: \
+		| $(weinberg_struc_corrs_by_gene_density_file)  \
+		$(repro_dir)/figure_2A_downsampling.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2A_downsampling.R \
+		$(weinberg_struc_corrs_by_gene_density_file)  \
+		$(fig_dir)/figure_2A_downsampling.pdf
+		
+$(fig_dir)/figure_2B_comparison.pdf: \
+		| $(weinberg_struc_corrs_by_gene_density_file)  \
+		$(repro_dir)/figure_2B_comparison.R $(fig_dir)
+	Rscript $(repro_dir)/figure_2B_comparison.R \
+		$(weinberg_struc_corrs_by_gene_density_file) \
+		$(oconnor_dir)/oconnor_rust_weinberg.csv \
+		$(ASK_dir)/corrs_by_gene.txt \
+		$(ASK_dir)/subspace_corrs.txt \
+		$(ASK_dir)/gene_names.txt \
+		$(fig_dir)/figure_2B_comparison.pdf
+		
 # $(fig_dir)/figure_2A_codonmse.pdf: \
 # 		| $(weinberg_leaveout_mses_file) \
 # 		$(repro_dir)/figure_2A_codonmse.R $(fig_dir)
 # 	Rscript $(repro_dir)/figure_2A_codonmse.R $(weinberg_leaveout_mses_file) \
 # 		$(fig_dir)/figure_2A_codonmse.pdf
 
-$(fig_dir)/figure_2A_codoncorrs.pdf: \
+$(fig_dir)/figure_3A_codoncorrs.pdf: \
 		| $(weinberg_leaveout_corrs_file) \
 		$(weinberg_feat_nb_corrs_file) \
-		$(repro_dir)/figure_2A_codoncorrs.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2A_codoncorrs.R \
+		$(repro_dir)/figure_3A_codoncorrs.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3A_codoncorrs.R \
 		$(weinberg_leaveout_corrs_file) \
 		$(weinberg_feat_nb_corrs_file) \
-		$(fig_dir)/figure_2A_codoncorrs.pdf
+		$(fig_dir)/figure_3A_codoncorrs.pdf
 
-$(fig_dir)/figure_2B_heatmap.pdf: \
+$(fig_dir)/figure_3B_heatmap.pdf: \
 		| $(weinberg_results_full_epoch_dir)/codon_scores.tsv \
-		$(repro_dir)/figure_2B_heatmap.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2B_heatmap.R \
+		$(repro_dir)/figure_3B_heatmap.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3B_heatmap.R \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
-		$(fig_dir)/figure_2B_heatmap.pdf
-
-#Check that liana wants this without struc features
-$(fig_dir)/figure_2C_tai.pdf: \
-		| $(weinberg_results_full_epoch_dir)/codon_scores.tsv \
-		$(yeast_codon_props_file) \
-		$(repro_dir)/figure_2C_tai.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2C_tai.R \
-		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
-		$(yeast_codon_props_file) \
-		$(fig_dir)/figure_2C_tai.pdf
+		$(fig_dir)/figure_3B_heatmap.pdf
 
 #Check that liana wants this without struc features
-$(fig_dir)/figure_2C_wobble.pdf: \
+$(fig_dir)/figure_3C_tai.pdf: \
+		| $(weinberg_results_full_epoch_dir)/codon_scores.tsv \
+		$(yeast_codon_props_file) \
+		$(repro_dir)/figure_3C_tai.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3C_tai.R \
+		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
+		$(yeast_codon_props_file) \
+		$(fig_dir)/figure_3C_tai.pdf
+
+#Check that liana wants this without struc features
+$(fig_dir)/figure_3C_wobble.pdf: \
 		| $(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(yeast_codon_anticodon_file) \
-		$(repro_dir)/figure_2C_wobble.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2C_wobble.R \
+		$(repro_dir)/figure_3C_wobble.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3C_wobble.R \
 		$(weinberg_results_full_epoch_dir)/codon_scores.tsv \
 		$(yeast_codon_anticodon_file) \
-		$(fig_dir)/figure_2C_wobble.pdf
+		$(fig_dir)/figure_3C_wobble.pdf
 
 #Check that liana wants this for full models
 # $(fig_dir)/figure_2E_lareaucodonmse.pdf: \
@@ -2421,75 +2450,75 @@ $(fig_dir)/figure_2C_wobble.pdf: \
 # 	Rscript $(repro_dir)/figure_2E_lareaucodonmse.R $(lareau_leaveout_mses_file) \
 # 		$(fig_dir)/figure_2E_lareaucodonmse.pdf
 
-$(fig_dir)/figure_2D_lareaucodoncorrs.pdf: \
+$(fig_dir)/figure_3D_lareaucodoncorrs.pdf: \
 		| $(lareau_leaveout_corrs_file) \
 		$(lareau_feat_nb_corrs_file) \
-		$(repro_dir)/figure_2D_lareaucodoncorrs.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2D_lareaucodoncorrs.R \
+		$(repro_dir)/figure_3D_lareaucodoncorrs.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3D_lareaucodoncorrs.R \
 		$(lareau_leaveout_corrs_file) \
 		$(lareau_feat_nb_corrs_file) \
-		$(fig_dir)/figure_2D_lareaucodoncorrs.pdf
+		$(fig_dir)/figure_3D_lareaucodoncorrs.pdf
 
 #Check that liana wants this for 28mer models
-$(fig_dir)/figure_2E_5prime.pdf: \
+$(fig_dir)/figure_3E_5prime.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(repro_dir)/figure_2E_5prime.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2E_5prime.R \
+		$(repro_dir)/figure_3E_5prime.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3E_5prime.R \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(fig_dir)/figure_2E_5prime.pdf
+		$(fig_dir)/figure_3E_5prime.pdf
 
 #Check that liana wants this for 28mer models
-$(fig_dir)/figure_2F_asite.pdf: \
+$(fig_dir)/figure_3F_asite.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(repro_dir)/figure_2F_asite.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2F_asite.R \
+		$(repro_dir)/figure_3F_asite.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3F_asite.R \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(iwasaki_results_28_epoch_dir)/codon_scores.tsv \
-		$(fig_dir)/figure_2F_asite.pdf
+		$(fig_dir)/figure_3F_asite.pdf
 
-$(fig_dir)/figure_2G_cl2.pdf: \
+$(fig_dir)/figure_3G_cl2.pdf: \
 		| $(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(wetlab_dir)/circligase_qpcr.csv \
-		$(repro_dir)/figure_2G_cl2.R $(fig_dir)
-	Rscript $(repro_dir)/figure_2G_cl2.R \
+		$(repro_dir)/figure_3G_cl2.R $(fig_dir)
+	Rscript $(repro_dir)/figure_3G_cl2.R \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(wetlab_dir)/circligase_qpcr.csv \
-		$(fig_dir)/figure_2G_cl2.pdf
+		$(fig_dir)/figure_3G_cl2.pdf
 
-$(fig_dir)/figure_3B_citrine_dist.pdf: \
-		| $(repro_dir)/figure_3B_citrine_dist.R \
+$(fig_dir)/figure_4B_citrine_dist.pdf: \
+		| $(repro_dir)/figure_4B_citrine_dist.R \
 		$(paper_data_dir)/random_citrine_score_dist.txt \
 		$(paper_data_dir)/natural_yeast_score_dist.txt \
 		$(paper_data_dir)/citrine_construct_scores.txt 
-	Rscript $(repro_dir)/figure_3B_citrine_dist.R \
+	Rscript $(repro_dir)/figure_4B_citrine_dist.R \
 		$(paper_data_dir)/random_citrine_score_dist.txt \
 		$(paper_data_dir)/natural_yeast_score_dist.txt \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(fig_dir)/figure_3B_citrine_dist.pdf
+		$(fig_dir)/figure_4B_citrine_dist.pdf
 
-$(fig_dir)/figure_3C_facs.pdf: \
-		| $(repro_dir)/figure_3C_facs.R \
+$(fig_dir)/figure_4C_facs.pdf: \
+		| $(repro_dir)/figure_4C_facs.R \
 		$(facs_data_file) \
 		$(paper_data_dir)/citrine_construct_scores.txt $(fig_dir)
-	Rscript $(repro_dir)/figure_3C_facs.R \
+	Rscript $(repro_dir)/figure_4C_facs.R \
 		$(facs_data_file) \
 		$(paper_data_dir)/citrine_construct_scores.txt \
-		$(fig_dir)/figure_3C_facs.pdf
+		$(fig_dir)/figure_4C_facs.pdf
 
-$(fig_dir)/figure_3D_te.pdf: \
-		| $(repro_dir)/figure_3D_te.R \
+$(fig_dir)/figure_4D_te.pdf: \
+		| $(repro_dir)/figure_4D_te.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(mrna_data_file1) $(mrna_data_file2) $(mrna_data_file3) \
 		$(facs_data_file)
-	Rscript $(repro_dir)/figure_3D_te.R \
+	Rscript $(repro_dir)/figure_4D_te.R \
 		$(paper_data_dir)/citrine_construct_scores.txt \
 		$(mrna_data_file1) $(mrna_data_file2) $(mrna_data_file3) \
-		$(facs_data_file) $(fig_dir)/figure_3D_te.pdf
+		$(facs_data_file) $(fig_dir)/figure_4D_te.pdf
 
 $(fig_dir)/supp_table_codon_scores.csv: \
 		| $(repro_dir)/supp_table_codon_scores.py \
