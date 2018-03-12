@@ -25,8 +25,8 @@ oconnor = read.delim( oconnor_fname, header=T, sep=",", row.names=1 )
 liu = read.delim( liu_fname, header=F, row.names=1)
 
 # liu.subspace = read.delim( liu_s_fname, header=F)
-liu.names = read.delim( liu_gene_fname, header=F)
-row.names(liu.subspace) = liu.names$V1
+#liu.names = read.delim( liu_gene_fname, header=F)
+#row.names(liu.subspace) = liu.names$V1
 
 #### combine them all -- genes that are found in all
 in.all = intersect( row.names(oconnor), intersect( tunney.names[nottraining], row.names(liu) ))
@@ -39,7 +39,7 @@ num.all = length(in.all)
 oconnor.x = match( in.all, row.names(oconnor) )
 liu.x = match( in.all, row.names(liu) )
 tunney.x = match( in.all, row.names(tunney) )
-liu.sub.x = match( in.all, row.names(liu.subspace) )
+#liu.sub.x = match( in.all, row.names(liu.subspace) )
 
 tunney.loess = predict( loess( tunney$pearson_r[tunney.x] ~ c(1:num.all) ),
                         1:num.all, se=T )
