@@ -99,7 +99,7 @@ se.polygon = function( x, y ){
 }
 
 pdf( out_fname, width=2, height=3.5, pointsize=7, useDingbats=F )
-par( mfrow = c(5,1) )
+par( mfrow = c(4,1) )
 par( mex = 0.65 ) # sets margin stuff
 par( lwd = 0.75 )
 par( xpd = NA )

@@ -31,23 +31,23 @@ num.all = length(in.all)
 tunney.x = match( in.all, row.names(tunney) )
 liu.sub.x = match( in.all, row.names(liu.subspace) )
 
-tunney.loess = predict( loess( tunney$pearson_r[tunney.x] ~ c(1:num.all) ),
-                        1:num.all, se=T )
-liu.sub.loess = lapply( 1:8, function(i){predict( loess( liu.subspace[liu.sub.x,i] ~ c(1:num.all) ),
-                         1:num.all, se=T )} ) 
+# tunney.loess = predict( loess( tunney$pearson_r[tunney.x] ~ c(1:num.all) ),
+#                         1:num.all, se=T )
+# liu.sub.loess = lapply( 1:8, function(i){predict( loess( liu.subspace[liu.sub.x,i] ~ c(1:num.all) ),
+#                          1:num.all, se=T )} ) 
 
 
 cnames = c(paste0( "Liu V", 0:7), "Tunney")
 
 all.data = as.data.frame( cbind(liu.subspace[liu.sub.x,],
-                                tunney$pearson_r[tunney.x] ), 
-                          col.names = cnames
+                                tunney$pearson_r[tunney.x] )
 )
+names( all.data ) = cnames
 
-loess.fits = as.data.frame( cbind( sapply( liu.sub.loess, function(i) {i$fit}),
-                                   tunney.loess$fit ),
-                            col.names = cnames
-)
+# loess.fits = as.data.frame( cbind( sapply( liu.sub.loess, function(i) {i$fit}),
+#                                    tunney.loess$fit ),
+#                             col.names = cnames
+# )
 
 cols = c( rev(gray.colors(8)), "red")
 
