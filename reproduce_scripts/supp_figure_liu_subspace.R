@@ -3,9 +3,9 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 tunney_fname = args[1] # corrs_by_gene_density.txt
-liu_s_fname = args[4] # ASK: subspace_corrs.txt
-liu_gene_fname = args[5] # ASK: gene_names.txt
-out_fname = args[6] 
+liu_s_fname = args[2] # ASK: subspace_corrs.txt
+liu_gene_fname = args[3] # ASK: gene_names.txt
+out_fname = args[4] 
 
 # our data
 tunney = read.delim( tunney_fname, header=T, comment.char = "#", row.names=1 )

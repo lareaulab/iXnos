@@ -7,7 +7,7 @@ args <- commandArgs(trailingOnly = TRUE)
 tunney_fname = args[1] # corrs_by_gene_density.txt
 oconnor_fname = args[2] # oconnor_rust_weinberg.csv
 liu_fname = args[3] # ASK: corrs_by_gene.txt
-out_fname = args[6] 
+out_fname = args[4] 
 
 # our data
 tunney = read.delim( tunney_fname, header=T, comment.char = "#", row.names=1 )
