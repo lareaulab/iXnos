@@ -35,7 +35,7 @@ plot_corrs = function( x, y, ylim1, ylim2 ) {
   loess.line = predict( loess( x[nottraining] ~ nottraining ),
                         1:num )
   lines( 1:num, loess.line, col="red", lwd = 1.5 )
-  mtext( y, side = 3, line = -3, cex = 0.75, adj = 1 )
+  mtext( y, side = 3, line = -2.5, cex = 0.75, adj = 1 )
 }
 
 
