@@ -24,7 +24,7 @@ oconnor = read.delim( oconnor_fname, header=T, sep=",", row.names=1 )
 
 liu = read.delim( liu_fname, header=F, row.names=1)
 
-liu.subspace = read.delim( liu_s_fname, header=F)
+# liu.subspace = read.delim( liu_s_fname, header=F)
 liu.names = read.delim( liu_gene_fname, header=F)
 row.names(liu.subspace) = liu.names$V1
 
@@ -47,8 +47,8 @@ oconnor.loess = predict( loess( oconnor$Pearson.s.coefficient[oconnor.x] ~ c(1:n
                          1:num.all, se=T )
 liu.loess =  predict( loess( liu[liu.x,8] ~ c(1:num.all) ),
                       1:num.all, se=T )
-liu.sub.loess = predict( loess( liu.subspace[liu.sub.x,8] ~ c(1:num.all) ),
-                         1:num.all, se=T ) 
+# liu.sub.loess = predict( loess( liu.subspace[liu.sub.x,8] ~ c(1:num.all) ),
+#                          1:num.all, se=T ) 
 
 
 all.data = data.frame( t = tunney$pearson_r[tunney.x],
@@ -98,7 +98,7 @@ se.polygon = function( x, y ){
   polygon(x.polygon, y.polygon, col="#00009933", border=NA)
 }
 
-pdf( out_fname, width=2, height=4, pointsize=7, useDingbats=F )
+pdf( out_fname, width=2, height=3.5, pointsize=7, useDingbats=F )
 par( mfrow = c(5,1) )
 par( mex = 0.65 ) # sets margin stuff
 par( lwd = 0.75 )

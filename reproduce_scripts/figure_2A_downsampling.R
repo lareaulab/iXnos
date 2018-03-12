@@ -39,7 +39,7 @@ plot_corrs = function( x, y, ylim1, ylim2 ) {
 }
 
 
-pdf( out_fname, width=2, height=4, pointsize=7, useDingbats=F)
+pdf( out_fname, width=2, height=3.5, pointsize=7, useDingbats=F)
 par( mfrow = c(5,1) )
 par( mex = 0.65 ) # sets margin stuff
 par( lwd = 0.75 )
