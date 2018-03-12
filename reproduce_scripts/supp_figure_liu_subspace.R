@@ -31,76 +31,42 @@ num.all = length(in.all)
 tunney.x = match( in.all, row.names(tunney) )
 liu.sub.x = match( in.all, row.names(liu.subspace) )
 
-# tunney.loess = predict( loess( tunney$pearson_r[tunney.x] ~ c(1:num.all) ),
-#                         1:num.all, se=T )
-# liu.sub.loess = lapply( 1:8, function(i){predict( loess( liu.subspace[liu.sub.x,i] ~ c(1:num.all) ),
-#                          1:num.all, se=T )} ) 
-
-
-cnames = c(paste0( "Liu V", 0:7), "Tunney")
-
 all.data = as.data.frame( cbind(liu.subspace[liu.sub.x,],
                                 tunney$pearson_r[tunney.x] )
 )
-names( all.data ) = cnames
-
-# loess.fits = as.data.frame( cbind( sapply( liu.sub.loess, function(i) {i$fit}),
-#                                    tunney.loess$fit ),
-#                             col.names = cnames
-# )
+names( all.data ) = c(paste0( "LiuV", 0:7), "Tunney")
 
 cols = c( rev(gray.colors(8)), "red")
 
-make.plot = function( x, y, z, w) {
-  plot( 1:num.all,
-        x,
-        pch = 21, 
-        cex = 0.5,
-        col = NA,
-        bg = "#00000040",
-        bty = "n",
-        axes = F,
-        ylim = c(0, 1),
-        xlab = NA,
-        ylab = NA
-  )
-  lines( 1:num.all, y, col=z, lwd = 1.5 )
-  axis( 2, at = c(0,0.5,1), labels = c(0, NA, 1), las = 1)
-  mtext( w, side = 3, line = -1.5, adj = 1, col=z )
-  
-}
 
-pdf( out_fname, width=3, height=3, pointsize=7, useDingbats=F )
+pdf( out_fname, width=4, height=3, pointsize=7, useDingbats=F )
 par( mex = 0.65 ) # sets margin stuff
 par( mar = c(6,5.5,5,3) )
 par( oma = c(0,1.5,1,0) )
 par( lwd = 0.75 )
-par( xpd = NA )
-
-plot( NA,
-      xlim = c(1, num.all),
-      ylim = c(0,1),
-      bty = "n",
-#      axes = F,
-      xlab = "genes sorted by footprint density",
-      ylab = "Pearson correlation per gene"
+par( xpd = F )
+boxplot( all.data,
+         notch = T,
+         bty = "n",
+         ylim = c(-1,1),
+         frame = F,
+         col = "grey",
+         boxwex = 0.6,
+         whisklty = 1,
+         axes = F
 )
-# plot all loess lines
-Map( function(x,y){ lines( 1:num.all, x, col=y) }, loess.fits, cols )
-
-#axis( 1 )
-#axis( 2, at = c(0,0.5,1), labels = c(0, NA, 1), las = 1)
-
-legend( "topright", inset=c( 0, 0 ), 
-        legend = cnames[5:9],
-        fill = cols[5:9],
-        border = NA,
-        bty="n")
-
-legend( "topright", inset=c( 0.3, 0), 
-        legend = cnames[1:4],
-        fill = cols[1:4],
-        border = NA,
-        bty="n")
+axis(2)
+axis(1, at = 1:9, 
+     lwd = 0,
+     labels = c( expression("Liu V"[0]), 
+                    expression("V"[1]),
+                    expression("V"[2]),
+                    expression("V"[3]),
+                    expression("V"[4]),
+                    expression("V"[5]),
+                    expression("V"[6]),
+                    expression("V"[7]),
+                    "Tunney"))
+abline( h = median( all.data$Tunney), lty = 2, col="red")
 
 dev.off()

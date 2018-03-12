@@ -112,7 +112,8 @@ repro_files = \
 	$(repro_dir)/supp_figure_greencorrs.R \
 	$(repro_dir)/supp_figure_iwasakicorrs.R \
 	$(repro_dir)/supp_figure_cl1.R \
-	$(repro_dir)/supp_figure_cl1v2.R
+	$(repro_dir)/supp_figure_cl1v2.R \
+	$(repro_dir)/supp_figure_liu_subspace.R
 #	$(repro_dir)/figure_1C_mse.R
 #	$(repro_dir)/figure_3A_codonmse.R
 #	$(repro_dir)/figure_3E_lareaucodonmse.R
@@ -926,7 +927,8 @@ fig_files = \
 	$(fig_dir)/supp_figure_greencorrs.pdf \
 	$(fig_dir)/supp_figure_iwasakicorrs.pdf \
 	$(fig_dir)/supp_figure_cl1.pdf \
-	$(fig_dir)/supp_figure_cl1v2.pdf
+	$(fig_dir)/supp_figure_cl1v2.pdf \
+	$(fig_dir)/supp_figure_liu_subspace.pdf
 #	$(fig_dir)/figure_1C_mse.pdf
 #	$(fig_dir)/figure_3A_codonmse.pdf
 #	$(fig_dir)/figure_3E_lareaucodonmse.pdf
@@ -2389,7 +2391,7 @@ $(fig_dir)/figure_2A_downsampling.pdf: \
 	Rscript $(repro_dir)/figure_2A_downsampling.R \
 		$(weinberg_struc_corrs_by_gene_density_file)  \
 		$(fig_dir)/figure_2A_downsampling.pdf
-		
+
 $(fig_dir)/figure_2B_comparison.pdf: \
 		| $(weinberg_struc_corrs_by_gene_density_file)  \
 		$(repro_dir)/figure_2B_comparison.R $(fig_dir)
@@ -2397,10 +2399,8 @@ $(fig_dir)/figure_2B_comparison.pdf: \
 		$(weinberg_struc_corrs_by_gene_density_file) \
 		$(oconnor_dir)/oconnor_rust_weinberg.csv \
 		$(ASK_dir)/corrs_by_gene.txt \
-		$(ASK_dir)/subspace_corrs.txt \
-		$(ASK_dir)/gene_names.txt \
 		$(fig_dir)/figure_2B_comparison.pdf
-		
+
 # $(fig_dir)/figure_2A_codonmse.pdf: \
 # 		| $(weinberg_leaveout_mses_file) \
 # 		$(repro_dir)/figure_2A_codonmse.R $(fig_dir)
@@ -2597,6 +2597,15 @@ $(fig_dir)/supp_figure_cl1v2.pdf: \
 		$(lareau_results_28_epoch_dir)/codon_scores.tsv \
 		$(green_results_28_epoch_dir)/codon_scores.tsv \
 		$(fig_dir)/supp_figure_cl1v2.pdf
+
+$(fig_dir)/supp_figure_liu_subspace.pdf: \
+		| $(weinberg_struc_corrs_by_gene_density_file)  \
+		$(repro_dir)/supp_figure_liu_subspace.R $(fig_dir)
+	Rscript $(repro_dir)/supp_figure_liu_subspace.R \
+		$(weinberg_struc_corrs_by_gene_density_file) \
+		$(ASK_dir)/subspace_corrs.txt \
+		$(ASK_dir)/gene_names.txt \
+		$(fig_dir)/supp_figure_liu_subspace.pdf
 
 #################
 ### Paper data

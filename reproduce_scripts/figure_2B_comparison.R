@@ -7,8 +7,6 @@ args <- commandArgs(trailingOnly = TRUE)
 tunney_fname = args[1] # corrs_by_gene_density.txt
 oconnor_fname = args[2] # oconnor_rust_weinberg.csv
 liu_fname = args[3] # ASK: corrs_by_gene.txt
-liu_s_fname = args[4] # ASK: subspace_corrs.txt
-liu_gene_fname = args[5] # ASK: gene_names.txt
 out_fname = args[6] 
 
 # our data
@@ -24,10 +22,6 @@ oconnor = read.delim( oconnor_fname, header=T, sep=",", row.names=1 )
 
 liu = read.delim( liu_fname, header=F, row.names=1)
 
-# liu.subspace = read.delim( liu_s_fname, header=F)
-#liu.names = read.delim( liu_gene_fname, header=F)
-#row.names(liu.subspace) = liu.names$V1
-
 #### combine them all -- genes that are found in all
 in.all = intersect( row.names(oconnor), intersect( tunney.names[nottraining], row.names(liu) ))
 
@@ -39,7 +33,6 @@ num.all = length(in.all)
 oconnor.x = match( in.all, row.names(oconnor) )
 liu.x = match( in.all, row.names(liu) )
 tunney.x = match( in.all, row.names(tunney) )
-#liu.sub.x = match( in.all, row.names(liu.subspace) )
 
 tunney.loess = predict( loess( tunney$pearson_r[tunney.x] ~ c(1:num.all) ),
                         1:num.all, se=T )
@@ -47,30 +40,24 @@ oconnor.loess = predict( loess( oconnor$Pearson.s.coefficient[oconnor.x] ~ c(1:n
                          1:num.all, se=T )
 liu.loess =  predict( loess( liu[liu.x,8] ~ c(1:num.all) ),
                       1:num.all, se=T )
-# liu.sub.loess = predict( loess( liu.subspace[liu.sub.x,8] ~ c(1:num.all) ),
-#                          1:num.all, se=T ) 
-
 
 all.data = data.frame( t = tunney$pearson_r[tunney.x],
                        o = oconnor$Pearson.s.coefficient[oconnor.x],
                        l = liu[liu.x, 8]
-#                       l.s = liu.subspace[liu.sub.x, 8]
 )
 
 loess.fits = data.frame( t = tunney.loess$fit,
                          o = oconnor.loess$fit,
                          l = liu.loess$fit
-#                          l.s = liu.sub.loess$fit
 )
 
 loess.ses = data.frame( t = tunney.loess$se.fit,
                         o = oconnor.loess$se.fit,
                         l = liu.loess$se.fit
-#                        l.s = liu.sub.loess$se.fit
 )
 
-cols = c("red", "blue", "green")#, "orange")
-titles = c("Tunney", "O'Connor", "Liu")#, "Liu (subspace)")
+cols = c("red", "blue", "green")
+titles = c("Tunney", "O'Connor", "Liu")
 
 make.plot = function( x, y, z, w) {
   plot( 1:num.all,
@@ -130,7 +117,6 @@ mtext( "Pearson correlation per gene", side = 2, outer = T, line = -2.5)
 mtext( "B", font = 2, line = 2, side = 3, outer = T, adj = 0 ) 
 dev.off()
 
-sapply(all.data, mean)
 # RUST28
 # > sapply(all.data, mean)
 # t         o         l       l.s 
