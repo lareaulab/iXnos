@@ -6,8 +6,8 @@ y_fname = args[1] # /mnt/lareaulab/rtunney/iXnos/expts/weinberg/process/te_set_b
 # asite_fname = args[2] # /mnt/lareaulab/rtunney/iXnos/expts/weinberg/lasagne_nn/full_cod_p0_nt_p0p2_rep0/epoch60/y_te_hat.txt
 # noa_fname = args[3] # /mnt/lareaulab/rtunney/iXnos/expts/weinberg/lasagne_nn/noAsite_cod_n3p2_nt_n9p8/epoch60/y_te_hat.txt
 # out_list_fname = args[4] # high_asite.csv - write the high A site error output
-contexts_fname = args[5] # /mnt/lareaulab/rtunney/iXnos/results/paper_data/high_asite_contexts.txt - pull in the contexts from those sites (separate perl script...)
-out_fname = args[6] # supp_figure_contexts.pdf
+contexts_fname = args[2] # /mnt/lareaulab/rtunney/iXnos/results/paper_data/high_asite_contexts.txt - pull in the contexts from those sites (separate perl script...)
+out_fname = args[3] # supp_figure_contexts.pdf
 
 # observed data
 y = read.delim( y_fname, header=T )
