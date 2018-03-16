@@ -327,6 +327,9 @@ weinberg_fp_struc_pattern = $(addprefix $(weinberg_nn_dir)/str_%/,$(nn_55_epoch_
 weinberg_max_struc_files = $(foreach rep,$(10_reps),$(addprefix $(weinberg_nn_dir)/max_str_p13p42_cod_n5p4_nt_n15p14_rep$(rep)/,$(nn_70_epoch_files)))
 weinberg_max_struc_pattern = $(addprefix $(weinberg_nn_dir)/max_str_%/,$(nn_70_epoch_files))
 
+weinberg_noAsite_n3p2_series_files = $(addprefix $(weinberg_nn_dir)/noAsite_cod_n3p2_nt_n9p8/,$(nn_60_epoch_files))
+weinberg_noAsite_n3p2_series_pattern = $(addprefix $(weinberg_nn_dir)/noAsite%/,$(nn_60_epoch_files))
+
 weinberg_linreg_series_files = $(foreach feat_nb,$(feat_neighborhoods),$(addprefix $(weinberg_lr_dir)/lr_$(feat_nb)/,$(linreg_data_files)))
 weinberg_linreg_series_pattern = $(addprefix $(weinberg_lr_dir)/lr_%/,$(linreg_data_files)) 
 
@@ -377,6 +380,12 @@ weinberg_results_28_dir = $(weinberg_results_dir)/s28_cod_n5p4_nt_n15p14
 weinberg_results_28_epoch_dir = $(weinberg_results_28_dir)/epoch$(weinberg_28_num_epochs)
 weinberg_results_opt_model_dir = $(weinberg_results_dir)/full_cod_n3p2_nt_n9p8_rep0
 weinberg_results_opt_model_epoch_dir = $(weinberg_results_opt_model_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
+#weinberg_results_n3p2_dir = $(weinberg_results_dir)/full_cod_n3p2_nt_n9p8_rep0
+#weinberg_results_n3p2_epoch_dir = $(weinberg_results_n3p2_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_results_p0_dir = $(weinberg_results_dir)/full_cod_p0_nt_p0p2_rep0
+weinberg_results_p0_epoch_dir = $(weinberg_results_p0_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_results_noAsite_n3p2_dir = $(weinberg_results_dir)/noAsite_cod_n3p2_nt_n9p8
+weinberg_results_noAsite_n3p2_epoch_dir = $(weinberg_results_noAsite_n3p2_dir)/epoch$(weinberg_feat_nb_series_num_epochs)
 
 weinberg_full_analysis_epoch_dir = $(weinberg_nn_dir)/full_cod_n5p4_nt_n15p14_rep0/epoch$(weinberg_feat_nb_series_num_epochs)
 weinberg_28_analysis_epoch_dir = $(weinberg_nn_dir)/s28_cod_n5p4_nt_n15p14/epoch$(weinberg_28_num_epochs)
@@ -425,6 +434,13 @@ weinberg_results_final_model_y_te = $(weinberg_results_struc_epoch_dir)/y_te.txt
 weinberg_results_final_model_y_te_hat = $(weinberg_results_struc_epoch_dir)/y_te_hat.txt
 
 weinberg_opt_series_file = $(weinberg_results_opt_model_epoch_dir)/citrine_opt_series.txt
+
+weinberg_opt_model_epoch_dir = $(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_results_opt_model_y_te_hat = $(weinberg_results_opt_model_epoch_dir)/y_te_hat.txt
+weinberg_p0_epoch_dir = $(weinberg_nn_dir)/full_cod_p0_nt_p0p2_rep0/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_results_p0_y_te_hat = $(weinberg_results_p0_epoch_dir)/y_te_hat.txt
+weinberg_noAsite_n3p2_epoch_dir = $(weinberg_nn_dir)/noAsite_cod_n3p2_nt_n9p8/epoch$(weinberg_feat_nb_series_num_epochs)
+weinberg_results_noAsite_n3p2_y_te_hat = $(weinberg_results_noAsite_n3p2_epoch_dir)/y_te_hat.txt
 
 ### Lareau variable definitions
 
@@ -1041,6 +1057,7 @@ weinberg_expt: \
 		$(weinberg_linreg_series_files) \
 		$(weinberg_full_codon_scores_results_files) \
 		$(weinberg_28_codon_scores_results_files) \
+		$(weinberg_noAsite_n3p2_series_files) \
 		$(weinberg_feat_nb_mses_file) \
 		$(weinberg_leaveout_mses_file) \
 		$(weinberg_feat_nb_linreg_mses_file) \
@@ -1055,10 +1072,13 @@ weinberg_expt: \
 		$(weinberg_28_plot_files) \
 		$(weinberg_struc_gene_plot_dir) \
 		$(weinberg_final_model_y_te) \
-		$(weinberg_final_model_y_te_hat)\
-		$(weinberg_results_final_model_y_te)\
-		$(weinberg_results_final_model_y_te_hat)\
+		$(weinberg_final_model_y_te_hat) \
+		$(weinberg_results_final_model_y_te) \
+		$(weinberg_results_final_model_y_te_hat) \
 		$(weinberg_opt_series_file) \
+		$(weinberg_results_opt_model_y_te_hat) \
+		$(weinberg_results_p0_y_te_hat) \
+		$(weinberg_results_noAsite_n3p2_y_te_hat) \
 		| $(weinberg_expt_dir) $(weinberg_subdirs)
 
 $(weinberg_expt_dir): | $(expts_dir)
@@ -1232,6 +1252,26 @@ $(weinberg_max_struc_pattern): \
 		$(weinberg_27_31_outputs) $(weinberg_max_struc_num_epochs) \
 		$(weinberg_max_struc_lr_decay)
 
+$(weinberg_noAsite_n3p2_series_pattern): \
+		| $(weinberg_sam_file) \
+		$(weinberg_27_31_proc_sam_files) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
+		$(weinberg_27_31_outputs) $(weinberg_nn_dir) \
+		$(weinberg_expt_dir)
+	$(eval model_name=noAsite$(firstword $(subst _rep, ,$*)))
+	echo
+	echo ...Making model $(model_name)
+	echo
+	python $(repro_dir)/noAsite_model.py \
+		$(model_name) \
+		$(weinberg_expt_dir) $(weinberg_sam_file) \
+		$(yeast_gene_len_file) $(yeast_gene_seq_file) \
+		$(weinberg_27_31_tr_bounds) $(weinberg_27_31_te_bounds) \
+		$(weinberg_27_31_outputs) \
+		$(weinberg_feat_nb_series_num_epochs) \
+		$(weinberg_feat_nb_series_lr_decay)
+
 $(weinberg_linreg_series_pattern): \
 		| $(weinberg_sam_file) \
 		$(weinberg_27_31_proc_sam_files) \
@@ -1284,6 +1324,26 @@ $(weinberg_results_opt_model_dir): | $(weinberg_results_dir)
 
 $(weinberg_results_opt_model_epoch_dir): | $(weinberg_results_opt_model_dir)
 	mkdir $(weinberg_results_opt_model_epoch_dir)
+
+#$(weinberg_results_n3p2_dir): | $(weinberg_results_dir)
+#	mkdir $(weinberg_results_n3p2_dir)
+#
+#$(weinberg_results_n3p2_epoch_dir): | $(weinberg_results_n3p2_dir)
+#	mkdir $(weinberg_results_n3p2_epoch_dir)
+#
+$(weinberg_results_p0_dir): | $(weinberg_results_dir)
+	mkdir $(weinberg_results_p0_dir)
+
+$(weinberg_results_p0_epoch_dir): | $(weinberg_results_p0_dir)
+	mkdir $(weinberg_results_p0_epoch_dir)
+
+$(weinberg_results_noAsite_n3p2_dir): | $(weinberg_results_dir)
+	mkdir $(weinberg_results_noAsite_n3p2_dir)
+
+$(weinberg_results_noAsite_n3p2_epoch_dir): \
+		| $(weinberg_results_noAsite_n3p2_dir)
+	mkdir $(weinberg_results_noAsite_n3p2_epoch_dir)
+
 
 #NOTE: We put an example .pkl file as a dependency so we can be sure this
 # epoch is made. We can't put the epoch file as a dependency bc there's no
@@ -1479,13 +1539,40 @@ $(weinberg_results_final_model_y_te_hat): \
 		$(weinberg_results_struc_epoch_dir)/y_te_hat.txt
 
 $(weinberg_opt_series_file): \
-		| $(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0/epoch$(weinberg_feat_nb_series_num_epochs)/y_te_hat.pkl \
+		| $(weinberg_opt_model_epoch_dir)/y_te_hat.pkl \
 		$(repro_dir)/optimize_cds.py \
 		$(weinberg_results_opt_model_epoch_dir) 
 	python $(repro_dir)/optimize_cds.py \
 		$(weinberg_nn_dir)/full_cod_n3p2_nt_n9p8_rep0 \
 		$(weinberg_feat_nb_series_num_epochs) True \
 		$(citrine_aa_seq) $(weinberg_opt_series_file) 
+
+$(weinberg_results_opt_model_y_te_hat): \
+		| $(weinberg_opt_model_epoch_dir)/y_te_hat.pkl \
+		$(weinberg_results_opt_model_epoch_dir) 
+	python $(repro_dir)/pkl2txt.py \
+		$(weinberg_opt_model_epoch_dir)/y_te_hat.pkl \
+		$(weinberg_opt_model_epoch_dir)/y_te_hat.txt
+	cp $(weinberg_opt_model_epoch_dir)/y_te_hat.txt \
+		$(weinberg_results_opt_model_epoch_dir)/y_te_hat.txt
+
+$(weinberg_results_p0_y_te_hat): \
+		| $(weinberg_p0_epoch_dir)/y_te_hat.pkl \
+		$(weinberg_results_p0_epoch_dir) 
+	python $(repro_dir)/pkl2txt.py \
+		$(weinberg_p0_epoch_dir)/y_te_hat.pkl \
+		$(weinberg_p0_epoch_dir)/y_te_hat.txt
+	cp $(weinberg_p0_epoch_dir)/y_te_hat.txt \
+		$(weinberg_results_p0_epoch_dir)/y_te_hat.txt
+
+$(weinberg_results_noAsite_n3p2_y_te_hat): \
+		| $(weinberg_noAsite_n3p2_epoch_dir)/y_te_hat.pkl \
+		$(weinberg_results_noAsite_n3p2_epoch_dir) 
+	python $(repro_dir)/pkl2txt.py \
+		$(weinberg_noAsite_n3p2_epoch_dir)/y_te_hat.pkl \
+		$(weinberg_noAsite_n3p2_epoch_dir)/y_te_hat.txt
+	cp $(weinberg_noAsite_n3p2_epoch_dir)/y_te_hat.txt \
+		$(weinberg_results_noAsite_n3p2_epoch_dir)/y_te_hat.txt
 
 weinberg_clean: 
 	rm $(weinberg_mapped_sam_file)
