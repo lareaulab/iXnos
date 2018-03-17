@@ -113,7 +113,9 @@ repro_files = \
 	$(repro_dir)/supp_figure_iwasakicorrs.R \
 	$(repro_dir)/supp_figure_cl1.R \
 	$(repro_dir)/supp_figure_cl1v2.R \
-	$(repro_dir)/supp_figure_liu_subspace.R
+	$(repro_dir)/supp_figure_liu_subspace.R \
+	$(repro_dir)/supp_figure_a_site.R \
+	$(repro_dir)/supp_figure_contexts.R
 #	$(repro_dir)/figure_1C_mse.R
 #	$(repro_dir)/figure_3A_codonmse.R
 #	$(repro_dir)/figure_3E_lareaucodonmse.R
@@ -944,7 +946,9 @@ fig_files = \
 	$(fig_dir)/supp_figure_iwasakicorrs.pdf \
 	$(fig_dir)/supp_figure_cl1.pdf \
 	$(fig_dir)/supp_figure_cl1v2.pdf \
-	$(fig_dir)/supp_figure_liu_subspace.pdf
+	$(fig_dir)/supp_figure_liu_subspace.pdf \
+	$(fig_dir)/supp_figure_a_site.pdf \
+	$(fig_dir)/supp_figure_contexts.pdf
 #	$(fig_dir)/figure_1C_mse.pdf
 #	$(fig_dir)/figure_3A_codonmse.pdf
 #	$(fig_dir)/figure_3E_lareaucodonmse.pdf
@@ -2693,6 +2697,26 @@ $(fig_dir)/supp_figure_liu_subspace.pdf: \
 		$(ASK_dir)/subspace_corrs.txt \
 		$(ASK_dir)/gene_names.txt \
 		$(fig_dir)/supp_figure_liu_subspace.pdf
+
+$(fig_dir)/supp_figure_a_site.pdf: \
+		| $(weinberg_27_31_te_data_table) \
+		$(weinberg_results_opt_model_y_te_hat) \
+		$(weinberg_results_noAsite_n3p2_y_te_hat)
+	Rscript $(fig_dir)/supp_figure_a_site.R: \
+		$(weinberg_27_31_te_data_table) \
+		$(weinberg_results_opt_model_y_te_hat) \
+		$(weinberg_results_noAsite_n3p2_y_te_hat) \
+		$(fig_dir)/supp_figure_a_site.pdf
+
+$(fig_dir)/supp_figure_contexts.pdf: \
+		| $(weinberg_27_31_te_data_table) \
+		$(paper_data_dir)/high_asite_contexts.txt \
+		$(fig_dir)/supp_figure_contexts.R
+	Rscript $(fig_dir)/supp_figure_contexts.R: \
+		$(weinberg_27_31_te_data_table) \
+		$(paper_data_dir)/high_asite_contexts.txt \
+		$(fig_dir)/supp_figure_contexts.pdf
+
 
 #################
 ### Paper data
