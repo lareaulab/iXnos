@@ -40,7 +40,7 @@ par( lwd = 0.75 )
 plot( cor.n3p2.percodon, 
       cor.noa.percodon, 
       xlab = "correlation, -3 to +2 region",
-      ylab = "correlation, -3 to +2 region\nwithout A site",
+      ylab = "correlation,\n-3 to +2 without A site",
       bty = "n",
       xaxs = "i",
       asp = 1,
@@ -52,4 +52,6 @@ plot( cor.n3p2.percodon,
 points( cor.n3p2.percodon[sig], cor.noa.percodon[sig], pch = 19, cex = 0.5, col = "red" )
 text( cor.n3p2.percodon[sig], cor.noa.percodon[sig], labels = names(sig), pos = c(1,4), cex = 0.5, col = "red" )
 abline( 0, 1, col = "grey", lty = 2 )
+
+mtext( "A", font = 2, line = -3, side = 3, outer = T, adj = 0 ) 
 dev.off()
