@@ -2702,7 +2702,7 @@ $(fig_dir)/supp_figure_a_site.pdf: \
 		| $(weinberg_27_31_te_data_table) \
 		$(weinberg_results_opt_model_y_te_hat) \
 		$(weinberg_results_noAsite_n3p2_y_te_hat)
-	Rscript $(fig_dir)/supp_figure_a_site.R: \
+	Rscript $(repro_dir)/supp_figure_a_site.R \
 		$(weinberg_27_31_te_data_table) \
 		$(weinberg_results_opt_model_y_te_hat) \
 		$(weinberg_results_noAsite_n3p2_y_te_hat) \
@@ -2712,7 +2712,7 @@ $(fig_dir)/supp_figure_contexts.pdf: \
 		| $(weinberg_27_31_te_data_table) \
 		$(paper_data_dir)/high_asite_contexts.txt \
 		$(fig_dir)/supp_figure_contexts.R
-	Rscript $(fig_dir)/supp_figure_contexts.R: \
+	Rscript $(repro_dir)/supp_figure_contexts.R \
 		$(weinberg_27_31_te_data_table) \
 		$(paper_data_dir)/high_asite_contexts.txt \
 		$(fig_dir)/supp_figure_contexts.pdf

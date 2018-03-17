@@ -1,6 +1,10 @@
 ## supp figure to identify contexts that do better than their A site
 ## data: Weinberg A site model and -3:2 model with no A site
 
+library("fields")
+
+options("preferRaster" = F) # set just in case; later for scale bar will set to T
+
 args <- commandArgs(trailingOnly = TRUE)
 y_fname = args[1] # /mnt/lareaulab/rtunney/iXnos/expts/weinberg/process/te_set_bounds.size.27.31.trunc.20.20.min_cts.200.min_cod.100.top.500.data_table.txt
 # asite_fname = args[2] # /mnt/lareaulab/rtunney/iXnos/expts/weinberg/lasagne_nn/full_cod_p0_nt_p0p2_rep0/epoch60/y_te_hat.txt
