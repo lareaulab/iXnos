@@ -152,6 +152,9 @@ class RegressionMLP(object):
                 tr_pred_var, target_var).mean()
         elif loss_fn == "L1":
             return abs(tr_pred_var - target_var).mean()
+        elif loss_fn == "poisson":
+            return (target_var * theano.tensor.log(tr_pred_var)) - tr_pred_var
+        
 
     def get_te_loss_var(self, te_pred_var, target_var, loss_fn):
         if loss_fn == "L2":
@@ -159,6 +162,8 @@ class RegressionMLP(object):
                 te_pred_var, target_var).mean()
         elif loss_fn == "L1":
             return abs(te_pred_var - target_var).mean()
+        elif loss_fn == "poisson":
+            return (target_var * theano.tensor.log(te_pred_var)) - te_pred_var
 
     def get_all_updates(self, network, tr_loss_var, update_method, 
                         learning_rate, momentum=0.9):
